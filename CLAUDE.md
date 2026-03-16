@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-Claudeline is an opinionated, block-based status line for Claude Code. It reads JSON session data from stdin (piped by Claude Code's `statusLine.command` setting) and renders multi-block terminal output with ANSI colors, box-drawing characters, and adaptive row wrapping.
+Claudeck is an opinionated, block-based status line for Claude Code. It reads JSON session data from stdin (piped by Claude Code's `statusLine.command` setting) and renders multi-block terminal output with ANSI colors, box-drawing characters, and adaptive row wrapping.
 
 ## Commands
 

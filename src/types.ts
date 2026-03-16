@@ -69,7 +69,7 @@ export interface Campaign {
   };
 }
 
-export interface ClaudelineConfig {
+export interface ClaudeckConfig {
   segments?: string[];
   theme?: 'default' | 'minimal' | 'full';
   showCampaigns?: boolean;
