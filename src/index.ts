@@ -20,7 +20,7 @@ process.stdin.on('end', () => {
         const tty = execSync('ps -o tty= -p $(ps -o ppid= -p $$)', {
           encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'], shell: '/bin/sh'
         }).trim();
-        if (tty && tty !== '?' && tty !== '??') {
+        if (tty && tty !== '?' && tty !== '??' && /^[a-zA-Z0-9/]+$/.test(tty)) {
           termWidth = parseInt(execSync(`stty size < /dev/${tty} | awk '{print $2}'`, {
             encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'], shell: '/bin/sh'
           }).trim(), 10) || 0;

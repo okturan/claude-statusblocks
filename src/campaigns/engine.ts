@@ -73,8 +73,8 @@ export function getActiveCampaign(): CampaignStatus | null {
       const daysUntilMon = 8 - dowNum; // Sat→2, Sun→1
       const secsUntilPeak = daysUntilMon * 86400 + peakStartSecs - currentSecs;
       // Progress: how far through the weekend off-peak period
-      // Off-peak started Friday 2PM, ends Monday 8AM = 66 hours
-      const totalWeekendSecs = 66 * 3600;
+      // From Friday peakEnd to Monday peakStart
+      const totalWeekendSecs = (2 * 86400) + peakStartSecs + (86400 - peakEndSecs);
       const daysSinceFri = dowNum - 5; // Sat→1, Sun→2
       const secsSinceFriPeak = daysSinceFri * 86400 + (currentSecs - peakEndSecs);
       const progress = Math.max(0, Math.min(1, secsSinceFriPeak / totalWeekendSecs));

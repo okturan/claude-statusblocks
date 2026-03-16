@@ -123,7 +123,7 @@ export function render(data: StatusLineData, termWidth: number, config: Claudeli
     const bestRow2 = Array.from({ length: n }, (_, i) => i).filter(i => !bestRow1.includes(i));
     const r1w = rowWidth(bestRow1.map(i => widths[i]!));
     const r2w = rowWidth(bestRow2.map(i => widths[i]!));
-    if (r1w <= maxRowWidth && r2w <= maxRowWidth) {
+    if (bestScore !== -Infinity && r1w <= maxRowWidth && r2w <= maxRowWidth) {
       rowGroups = [
         { blocks: bestRow1.map(i => blocks[i]!), widths: bestRow1.map(i => widths[i]!) },
         { blocks: bestRow2.map(i => blocks[i]!), widths: bestRow2.map(i => widths[i]!) },

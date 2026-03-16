@@ -22,7 +22,10 @@ function miniBar(pct: number, width: number): string {
 export const usageSegment: Segment = {
   id: 'usage',
   priority: 15,
-  enabled: () => fetchUsage() !== null,
+  enabled: () => {
+    // Check cache only — don't trigger a fetch during layout filtering
+    try { return !!fetchUsage(); } catch { return false; }
+  },
   render() {
     const data = fetchUsage();
     if (!data) return { id: 'usage', priority: 2, width: 0, lines: [''] };
