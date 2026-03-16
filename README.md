@@ -9,14 +9,14 @@
 ╰───────────────╯ ╰────────────────────╯ ╰──────────────────────╯
 ```
 
-# claudeck
+# claude-statusblocks
 
 Adaptive, block-based status line for [Claude Code](https://claude.ai/code). Cards reflow into a pyramid layout based on available terminal width.
 
 ## Install
 
 ```sh
-npx claudeck init
+npx claude-statusblocks init
 ```
 
 This writes `statusLine.command` into `~/.claude/settings.json`. Restart Claude Code to activate.
@@ -25,23 +25,23 @@ This writes `statusLine.command` into `~/.claude/settings.json`. Restart Claude 
 
 | Card | Shows |
 |------|-------|
-| **context** | Context window fill — progress bar, percentage, token count |
-| **model** | Model name, working directory (tilde-shortened), session duration, Claude Code version |
-| **promo** | Active rate promotions — 2× off-peak status with countdown to next transition |
-| **git** | Branch, staged/modified file counts, lines added/removed |
-| **usage** | 5-hour and 7-day API utilization with reset countdowns (fetched from Anthropic's OAuth API) |
+| **context** | Context window fill bar, percentage, token count |
+| **model** | Model name, tilde-shortened directory, session duration, version |
+| **promo** | 2x off-peak status, countdown to next transition |
+| **git** | Branch, staged/modified counts, lines added/removed |
+| **usage** | 5-hour and 7-day API utilization with reset countdowns |
 
-Cards appear and disappear based on context — `git` only shows in repos, `promo` only during active promotions, `usage` only when OAuth credentials are available.
+Cards show up based on context: `git` only in repos, `promo` only during active promotions, `usage` only when OAuth credentials exist.
 
 ## Layout
 
-Cards flow into rows with a pyramid shape — row 1 is narrower than row 2. When all cards don't fit on a single row, claudeck tries every possible card-to-row assignment and picks the tightest pyramid.
+Cards flow into rows with a pyramid shape: row 1 is narrower than row 2. When cards don't fit on a single row, it tries every possible assignment and picks the tightest pyramid.
 
 On narrow terminals, lower-priority cards are dropped entirely rather than wrapping badly.
 
 ## Configure
 
-`~/.claudeck.json`:
+`~/.claude-statusblocks.json`:
 
 ```json
 {
@@ -52,12 +52,12 @@ On narrow terminals, lower-priority cards are dropped entirely rather than wrapp
 Or via environment:
 
 ```sh
-CLAUDECK_SEGMENTS=context,model,usage
+CLAUDE_STATUSBLOCKS_SEGMENTS=context,model,usage
 ```
 
 ## Width detection
 
-Claude Code doesn't pass terminal width to status line commands ([#22115](https://github.com/anthropics/claude-code/issues/22115)). Claudeck walks up the process tree to find the parent's TTY via `ps`, then queries its width with `stty`. Falls back to `tput cols`, then 120.
+Claude Code doesn't pass terminal width to status line commands ([#22115](https://github.com/anthropics/claude-code/issues/22115)). We walk up the process tree to find the parent's TTY via `ps`, then query its width with `stty`. Falls back to `tput cols`, then 120.
 
 ## Usage API
 
@@ -66,5 +66,5 @@ The `usage` card fetches utilization data from `api.anthropic.com/api/oauth/usag
 ## Preview
 
 ```sh
-npx claudeck preview
+npx claude-statusblocks preview
 ```

@@ -1,4 +1,4 @@
-import type { Segment, Block, StatusLineData, ClaudeckConfig } from './types.js';
+import type { Segment, Block, StatusLineData, StatusBlocksConfig } from './types.js';
 import { padRight, color, c, visibleLength } from './colors.js';
 
 import { contextSegment } from './segments/context.js';
@@ -11,7 +11,7 @@ const ALL_SEGMENTS: Segment[] = [contextSegment, modelSegment, gitSegment, campa
 const DEFAULT_ORDER = ['context', 'model', 'promo', 'git', 'usage'];
 const INK_PADDING = 4; // Claude Code's outer paddingX: 2 on each side
 
-function getSegmentOrder(config: ClaudeckConfig): string[] {
+function getSegmentOrder(config: StatusBlocksConfig): string[] {
   return config.segments ?? DEFAULT_ORDER;
 }
 
@@ -63,7 +63,7 @@ function renderRow(blocks: Block[], widths: number[]): string[] {
   return rows;
 }
 
-export function render(data: StatusLineData, termWidth: number, config: ClaudeckConfig): string {
+export function render(data: StatusLineData, termWidth: number, config: StatusBlocksConfig): string {
   // Account for Claude Code's notification panel on the right
   const maxRowWidth = Math.max(40, termWidth - INK_PADDING);
 

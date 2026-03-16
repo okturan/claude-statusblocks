@@ -1,10 +1,10 @@
 {
-  "name": "claudeck",
+  "name": "claude-statusblocks",
   "version": "0.1.0",
   "description": "Opinionated, adaptive status line for Claude Code",
   "type": "module",
   "bin": {
-    "claudeck": "./dist/cli.js"
+    "claude-statusblocks": "./dist/cli.js"
   },
   "main": "./dist/index.js",
   "scripts": {

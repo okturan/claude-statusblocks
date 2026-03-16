@@ -23,7 +23,7 @@ function preview() {
   const config = loadConfig();
   const widths = [120, 80, 50];
 
-  console.log('\n\x1b[1mclaudeck\x1b[0m preview\n');
+  console.log('\n\x1b[1mclaude-statusblocks\x1b[0m preview\n');
 
   for (const w of widths) {
     console.log(`\x1b[2m${'─'.repeat(w)}\x1b[0m`);
@@ -35,15 +35,15 @@ function preview() {
 }
 
 function init() {
-  console.log('\n\x1b[38;2;217;119;87m\x1b[1mclaudeck\x1b[0m setup\n');
+  console.log('\n\x1b[38;2;217;119;87m\x1b[1mclaude-statusblocks\x1b[0m setup\n');
   try {
     const raw = readFileSync(SETTINGS_PATH, 'utf8');
     const settings = JSON.parse(raw);
     const oldCommand = settings.statusLine?.command;
-    settings.statusLine = { type: 'command', command: 'npx -y claudeck@latest', padding: 0 };
+    settings.statusLine = { type: 'command', command: 'npx -y claude-statusblocks@latest', padding: 0 };
     writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2) + '\n');
     if (oldCommand) console.log(`  Replaced: \x1b[2m${oldCommand}\x1b[0m`);
-    console.log('  Installed: \x1b[32mnpx -y claudeck@latest\x1b[0m');
+    console.log('  Installed: \x1b[32mnpx -y claude-statusblocks@latest\x1b[0m');
     console.log('  Settings:  \x1b[2m~/.claude/settings.json\x1b[0m\n');
   } catch (err) {
     console.error(`  Error: Could not update ${SETTINGS_PATH}`);
@@ -54,12 +54,12 @@ function init() {
 
 function help() {
   console.log(`
-\x1b[38;2;217;119;87m\x1b[1mclaudeck\x1b[0m — block-based status line for Claude Code
+\x1b[38;2;217;119;87m\x1b[1mclaude-statusblocks\x1b[0m — block-based status line for Claude Code
 
 \x1b[1mUsage:\x1b[0m
-  claudeck init       Install into Claude Code settings
-  claudeck preview    Preview with mock data at various widths
-  claudeck help       Show this help
+  claude-statusblocks init       Install into Claude Code settings
+  claude-statusblocks preview    Preview with mock data at various widths
+  claude-statusblocks help       Show this help
 
 \x1b[1mBlocks:\x1b[0m
   context    Context bar + percentage + tokens (3-line card)
@@ -67,8 +67,8 @@ function help() {
   git        Branch + staged/modified
 
 \x1b[1mCustomize:\x1b[0m
-  ~/.claudeck.json:  { "segments": ["context", "model", "git"] }
-  Env vars:            CLAUDECK_SEGMENTS=context,model
+  ~/.claude-statusblocks.json:  { "segments": ["context", "model", "git"] }
+  Env vars:            CLAUDE_STATUSBLOCKS_SEGMENTS=context,model
 `);
 }
 
