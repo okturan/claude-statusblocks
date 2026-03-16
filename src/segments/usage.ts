@@ -40,7 +40,7 @@ export const usageSegment: Segment = {
     const s5Color = s5 >= 90 ? c.red : s5 >= 70 ? c.yellow : c.green;
     const s5Reset = resetCountdown(data.sessionResetAt);
     const pct5 = padRight(color(`${s5}%`, s5Color, c.bold), 4);
-    const rst5 = padRight(color('↻', c.dim) + s5Reset, 9);
+    const rst5 = padRight(color('↻', c.dim) + ' ' + s5Reset, 9);
     const line1 = `${miniBar(s5, barW)} ${pct5}${dot}${rst5}${dot}${color('5h', c.dim)}`;
 
     // Line 2: 7-day usage
@@ -48,7 +48,7 @@ export const usageSegment: Segment = {
     const s7Color = s7 >= 90 ? c.red : s7 >= 70 ? c.yellow : c.green;
     const s7Reset = resetCountdown(data.weeklyResetAt);
     const pct7 = padRight(color(`${s7}%`, s7Color, c.bold), 4);
-    const rst7 = padRight(color('↻', c.dim) + s7Reset, 9);
+    const rst7 = padRight(color('↻', c.dim) + ' ' + s7Reset, 9);
     const line2 = `${miniBar(s7, barW)} ${pct7}${dot}${rst7}${dot}${color('7d', c.dim)}`;
 
     const lines = [line1, line2];
