@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-Claudeline is an opinionated, block-based status line for Claude Code. It reads JSON session data from stdin (piped by Claude Code's `statusLine.command` setting) and renders a multi-block terminal output with ANSI colors and box-drawing characters.
+Claudeline is an opinionated, block-based status line for Claude Code. It reads JSON session data from stdin (piped by Claude Code's `statusLine.command` setting) and renders multi-block terminal output with ANSI colors, box-drawing characters, and adaptive row wrapping.
 
 ## Commands
 
@@ -18,17 +18,22 @@ There are no tests or linters configured.
 
 ## Architecture
 
-**Data flow:** Claude Code pipes JSON (`StatusLineData`) to stdin → `src/index.ts` parses it, loads config, detects terminal width → `src/layout.ts` renders segments into boxified blocks arranged horizontally → stdout.
+**Data flow:** Claude Code pipes JSON (`StatusLineData`) to stdin → `src/index.ts` parses it, loads config, detects terminal width → `src/layout.ts` renders segments into boxified blocks with flexbox-like row wrapping → stdout.
+
+**Terminal width detection** (`src/index.ts`): Claude Code doesn't pass terminal width to status line commands (known issue #22115). Detection cascade: `process.stderr.columns` → walk parent process tree via `ps` to find TTY, then `stty size` on that TTY → `tput cols` → fallback 120. The detected width has a 44-char reserve subtracted for Claude Code's Ink notification panel on the right side.
 
 **Segments** (`src/segments/`) are the core rendering units. Each implements the `Segment` interface (`id`, `priority`, `enabled()`, `render()`). Available segments:
-- `context` (priority 1) — context window usage bar with token counts
-- `model` (priority 2) — model name, directory, cost, duration, lines changed
-- `git` (priority 3) — branch name + staged/modified file counts (shells out to `git`)
-- `campaign` (priority 4) — Anthropic rate promotion status with peak/off-peak tracking
+- `context` (priority 10) — context window usage bar with token counts
+- `usage` (priority 15) — 5-hour and 7-day API utilization from Anthropic OAuth API
+- `promo` (priority 20) — rate promotion status with peak/off-peak countdown
+- `model` (priority 30) — model name, tilde-shortened directory, duration, version
+- `git` (priority 40) — branch name, staged/modified counts, lines added/removed
 
-**Layout** (`src/layout.ts`) renders all enabled segments, then drops lowest-priority segments (highest priority number) one at a time until everything fits within terminal width. Each segment is wrapped in a Unicode box (`╭╮╰╯│`).
+**Layout** (`src/layout.ts`): Flows segments into rows using flexbox-like wrapping. Cards are placed left-to-right; when the next card would exceed `maxRowWidth`, a new row starts. After initial flow, single-card rows are merged if they fit together. Within each row, shorter boxes are height-padded with blank bordered rows (required because Claude Code's Ink renderer strips leading whitespace, breaking alignment when boxes have different heights). Priority numbers are only used as a last resort for dropping segments that don't fit even alone.
 
-**Campaigns** (`src/campaigns/`) track Anthropic promotional rate periods. `data.ts` holds campaign definitions (dates, peak hours, multipliers). `engine.ts` evaluates current time against campaigns to determine state (`active-boosted`, `active-normal`, `weekend`, `upcoming`).
+**Campaigns** (`src/campaigns/`) track Anthropic promotional rate periods. `data.ts` holds campaign definitions (dates, peak hours, multipliers). `engine.ts` evaluates current time against campaigns using `Intl.DateTimeFormat` with `formatToParts` for precise timezone-aware peak detection. Returns state (`active-boosted`, `active-normal`, `weekend`, `upcoming`) with countdown and progress.
+
+**Usage API** (`src/usage/fetch.ts`): Fetches utilization data from `api.anthropic.com/api/oauth/usage` using the user's OAuth token from macOS Keychain (`security find-generic-password`) or `~/.claude/.credentials.json`. Cached for 3 minutes with a 30-second rate-limit lock. Returns 5-hour and 7-day utilization percentages with reset timestamps.
 
 **Config** (`src/config.ts`) loads from `~/.claudeline.json` with env var overrides (`CLAUDELINE_SEGMENTS`, `CLAUDELINE_THEME`). Controls segment order and theme.
 
@@ -38,6 +43,8 @@ There are no tests or linters configured.
 
 - All ANSI color handling goes through `src/colors.ts` — use `color()`, `c.*` constants, `visibleLength()`, `padRight()`, and `truncate()` for ANSI-aware string operations.
 - Segments return raw lines (no box chrome); boxing is applied by `layout.ts`.
+- Box titles are rendered in the top border: `╭─ title ──────╮`.
 - The `Block` type's `width` is the visible (ANSI-stripped) width, not byte length.
 - The git segment caches results for 5 seconds to avoid repeated subprocess calls.
-- ESM-only (`"type": "module"` in package.json) — all local imports use `.js` extensions.
+- ESM-only (`"type": "module"` in package.json) — all local imports use `.js` extensions. Do NOT use `require()` — it will crash silently in production.
+- Claude Code's Ink renderer uses `wrap="truncate"` (hardcoded). Lines exceeding available width get truncated with `…`. Design all output to fit within `termWidth - 44` chars.
