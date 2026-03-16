@@ -11,8 +11,8 @@ Claudeline is an opinionated, block-based status line for Claude Code. It reads 
 - `npm run build` — compile TypeScript (`tsc`) to `dist/`
 - `npm run dev` — watch mode (`tsc --watch`)
 - `npm run preview` — render with mock JSON data piped to the built output
-- `claudeline init` — writes `statusLine` config into `~/.claude/settings.json`
-- `claudeline preview` — renders at 120/80/50 column widths with mock data
+- `claudeck init` — writes `statusLine` config into `~/.claude/settings.json`
+- `claudeck preview` — renders at 120/80/50 column widths with mock data
 
 There are no tests or linters configured.
 
@@ -35,7 +35,7 @@ There are no tests or linters configured.
 
 **Usage API** (`src/usage/fetch.ts`): Fetches utilization data from `api.anthropic.com/api/oauth/usage` using the user's OAuth token from macOS Keychain (`security find-generic-password`) or `~/.claude/.credentials.json`. Cached for 3 minutes with a 30-second rate-limit lock. Returns 5-hour and 7-day utilization percentages with reset timestamps.
 
-**Config** (`src/config.ts`) loads from `~/.claudeline.json` with env var overrides (`CLAUDELINE_SEGMENTS`, `CLAUDELINE_THEME`). Controls segment order and theme.
+**Config** (`src/config.ts`) loads from `~/.claudeck.json` with env var overrides (`CLAUDECK_SEGMENTS`, `CLAUDECK_THEME`). Controls segment order and theme.
 
 **CLI** (`src/cli.ts`) handles subcommands (`init`, `preview`, `help`). When no TTY is detected (piped input), delegates to `src/index.ts`.
 

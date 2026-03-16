@@ -14,7 +14,7 @@ export interface UsageData {
   extraUsageUtilization: number;
 }
 
-const CACHE_DIR = join(homedir(), '.cache', 'claudeline');
+const CACHE_DIR = join(homedir(), '.cache', 'claudeck');
 const CACHE_FILE = join(CACHE_DIR, 'usage.json');
 const LOCK_FILE = join(CACHE_DIR, 'usage.lock');
 const CACHE_MAX_AGE_MS = 180_000;  // 3 minutes

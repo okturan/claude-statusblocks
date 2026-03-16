@@ -9,14 +9,14 @@
 ╰───────────────╯ ╰────────────────────╯ ╰──────────────────────╯
 ```
 
-# claudeline
+# claudeck
 
 Adaptive, block-based status line for [Claude Code](https://claude.ai/code). Cards reflow into a pyramid layout based on available terminal width.
 
 ## Install
 
 ```sh
-npx claudeline init
+npx claudeck init
 ```
 
 This writes `statusLine.command` into `~/.claude/settings.json`. Restart Claude Code to activate.
@@ -35,13 +35,13 @@ Cards appear and disappear based on context — `git` only shows in repos, `prom
 
 ## Layout
 
-Cards flow into rows with a pyramid shape — row 1 is narrower than row 2. When all cards don't fit on a single row, claudeline tries every possible card-to-row assignment and picks the tightest pyramid.
+Cards flow into rows with a pyramid shape — row 1 is narrower than row 2. When all cards don't fit on a single row, claudeck tries every possible card-to-row assignment and picks the tightest pyramid.
 
 On narrow terminals, lower-priority cards are dropped entirely rather than wrapping badly.
 
 ## Configure
 
-`~/.claudeline.json`:
+`~/.claudeck.json`:
 
 ```json
 {
@@ -52,12 +52,12 @@ On narrow terminals, lower-priority cards are dropped entirely rather than wrapp
 Or via environment:
 
 ```sh
-CLAUDELINE_SEGMENTS=context,model,usage
+CLAUDECK_SEGMENTS=context,model,usage
 ```
 
 ## Width detection
 
-Claude Code doesn't pass terminal width to status line commands ([#22115](https://github.com/anthropics/claude-code/issues/22115)). Claudeline walks up the process tree to find the parent's TTY via `ps`, then queries its width with `stty`. Falls back to `tput cols`, then 120.
+Claude Code doesn't pass terminal width to status line commands ([#22115](https://github.com/anthropics/claude-code/issues/22115)). Claudeck walks up the process tree to find the parent's TTY via `ps`, then queries its width with `stty`. Falls back to `tput cols`, then 120.
 
 ## Usage API
 
@@ -66,5 +66,5 @@ The `usage` card fetches utilization data from `api.anthropic.com/api/oauth/usag
 ## Preview
 
 ```sh
-npx claudeline preview
+npx claudeck preview
 ```

@@ -3,12 +3,12 @@ import { join } from 'path';
 import { homedir } from 'os';
 import type { ClaudelineConfig } from './types.js';
 
-const CONFIG_PATH = join(homedir(), '.claudeline.json');
+const CONFIG_PATH = join(homedir(), '.claudeck.json');
 
 export function loadConfig(): ClaudelineConfig {
   // Env var overrides
-  const envSegments = process.env['CLAUDELINE_SEGMENTS'];
-  const envTheme = process.env['CLAUDELINE_THEME'];
+  const envSegments = process.env['CLAUDECK_SEGMENTS'];
+  const envTheme = process.env['CLAUDECK_THEME'];
 
   try {
     const raw = readFileSync(CONFIG_PATH, 'utf8');
