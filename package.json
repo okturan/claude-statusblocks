@@ -1,0 +1,21 @@
+{
+  "name": "claudeline",
+  "version": "0.1.0",
+  "description": "Opinionated, adaptive status line for Claude Code",
+  "type": "module",
+  "bin": {
+    "claudeline": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "preview": "echo '{\"model\":{\"id\":\"claude-opus-4-6\",\"display_name\":\"Opus 4.6\"},\"workspace\":{\"current_dir\":\"/Users/demo/code/myproject\",\"project_dir\":\"/Users/demo/code/myproject\"},\"version\":\"1.0.80\",\"cost\":{\"total_cost_usd\":12.47,\"total_duration_ms\":3600000,\"total_api_duration_ms\":1800000,\"total_lines_added\":342,\"total_lines_removed\":89},\"context_window\":{\"context_window_size\":1000000,\"used_percentage\":34,\"remaining_percentage\":66,\"total_input_tokens\":340000,\"total_output_tokens\":28000},\"exceeds_200k_tokens\":true,\"session_id\":\"preview123\"}' | node dist/index.js"
+  },
+  "keywords": ["claude", "claude-code", "statusline", "terminal", "cli"],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0"
+  }
+}
