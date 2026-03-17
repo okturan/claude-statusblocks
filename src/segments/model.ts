@@ -63,10 +63,11 @@ export const modelSegment: Segment = {
       const vLen = visibleLength(versionStr);
       const contentWidth = eLen + dLen + vLen;
       const spareWithDots = line1Width - contentWidth - dotLen * 2;
-      // Use dots when items are close together (avg gap <= 3 chars), plain spacing otherwise
-      if (spareWithDots >= 0 && spareWithDots <= 12) {
-        const g = Math.floor(spareWithDots / 4);
-        const extra = spareWithDots - g * 4;
+      // Use dots when items are close together (spare <= 12 chars), plain spacing otherwise
+      if (spareWithDots <= 12) {
+        const clamped = Math.max(0, spareWithDots);
+        const g = Math.floor(clamped / 4);
+        const extra = clamped - g * 4;
         const g1 = g;
         const g2 = g + Math.min(extra, 1);
         const g3 = g + (extra >= 2 ? 1 : 0);
