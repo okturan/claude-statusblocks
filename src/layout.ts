@@ -94,42 +94,35 @@ export function render(data: StatusLineData, termWidth: number, config: StatusBl
     // Everything fits on one row
     rowGroups = [{ blocks: [...blocks], widths: [...widths] }];
   } else {
-    // Try all 2-row distributions to find best pyramid (row1 < row2, minimize diff)
+    // Order-preserving 2-row split: try each contiguous split point k,
+    // where row1 = blocks[0..k), row2 = blocks[k..n). This guarantees
+    // segments never jump between rows as the terminal width changes.
     const n = blocks.length;
-    let bestRow1: number[] = [0];
+    let bestK = -1;
     let bestScore = -Infinity;
 
-    // Enumerate all subsets for row 1 (at least 1 card, at most n-1)
-    for (let mask = 1; mask < (1 << n) - 1; mask++) {
-      const r1idx: number[] = [];
-      const r2idx: number[] = [];
-      for (let b = 0; b < n; b++) {
-        if (mask & (1 << b)) r1idx.push(b);
-        else r2idx.push(b);
-      }
-      if (r1idx.length === 0 || r2idx.length === 0) continue;
-      const r1w = rowWidth(r1idx.map(i => widths[i]!));
-      const r2w = rowWidth(r2idx.map(i => widths[i]!));
+    for (let k = 1; k < n; k++) {
+      const r1w = rowWidth(widths.slice(0, k));
+      const r2w = rowWidth(widths.slice(k));
       if (r1w > maxRowWidth || r2w > maxRowWidth) continue;
-      // Pyramid: row1 should be narrower. Score: prefer r1 < r2 with smallest gap
-      if (r1w > r2w) continue; // not a pyramid
-      const score = r1w; // maximize row1 width while still < row2
+      // Prefer pyramid (row1 narrower), then minimize width gap
+      const pyramid = r1w <= r2w;
+      const gap = Math.abs(r1w - r2w);
+      // Score: pyramid splits beat non-pyramid; among same type, smaller gap wins
+      const score = (pyramid ? 1e6 : 0) - gap;
       if (score > bestScore) {
         bestScore = score;
-        bestRow1 = r1idx;
+        bestK = k;
       }
     }
 
-    const bestRow2 = Array.from({ length: n }, (_, i) => i).filter(i => !bestRow1.includes(i));
-    const r1w = rowWidth(bestRow1.map(i => widths[i]!));
-    const r2w = rowWidth(bestRow2.map(i => widths[i]!));
-    if (bestScore !== -Infinity && r1w <= maxRowWidth && r2w <= maxRowWidth) {
+    if (bestK !== -1) {
       rowGroups = [
-        { blocks: bestRow1.map(i => blocks[i]!), widths: bestRow1.map(i => widths[i]!) },
-        { blocks: bestRow2.map(i => blocks[i]!), widths: bestRow2.map(i => widths[i]!) },
+        { blocks: blocks.slice(0, bestK), widths: widths.slice(0, bestK) },
+        { blocks: blocks.slice(bestK), widths: widths.slice(bestK) },
       ];
     } else {
-      // Fallback: sequential flow with wrapping
+      // No valid 2-row split — sequential flow with wrapping (3+ rows)
       rowGroups = [];
       let currentRow: RowGroup = { blocks: [], widths: [] };
       let currentW = 0;
