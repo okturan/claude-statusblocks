@@ -75,12 +75,11 @@ export function render(data: StatusLineData, termWidth: number, config: StatusBl
   if (active.length === 0) return '';
 
   // Render all segments and measure natural widths
-  const blocks = active.map(s => s.render(data, 80));
+  const allocWidth = Math.max(20, maxRowWidth - BOX_CHROME);
+  const blocks = active.map(s => s.render(data, allocWidth));
   const widths = blocks.map(b => Math.max(...b.lines.map(l => visibleLength(l))));
 
-  // Smart 2-row layout: row 1 gets the fewest cards (safe from notification truncation),
-  // row 2 carries the bulk. Find the split point where row 1 has the fewest cards
-  // while everything still fits in 2 rows.
+  // Row width helper for layout calculations
   function rowWidth(ws: number[]): number {
     if (ws.length === 0) return 0;
     return ws.reduce((sum, w) => sum + w + BOX_CHROME, 0) + (ws.length - 1) * GAP;

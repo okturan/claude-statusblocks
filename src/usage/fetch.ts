@@ -98,7 +98,7 @@ export function fetchUsage(): UsageData | null {
 
   // Don't hit API if locked
   if (isLocked()) {
-    return fileCache?.data ?? memCache?.data ?? null;
+    return memCache?.data ?? fileCache?.data ?? null;
   }
 
   const token = getOAuthToken();

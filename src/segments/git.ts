@@ -34,7 +34,8 @@ export const gitSegment: Segment = {
     return info !== null && info.branch !== '';
   },
   render(data) {
-    const info = getGitInfo(data.workspace.current_dir)!;
+    const info = getGitInfo(data.workspace.current_dir);
+    if (!info) return { id: 'git', priority: 40, width: 0, lines: [''] };
     // Line 1: branch name
     const line1 = color(info.branch, c.cyan);
     // Line 2: file counts + line counts

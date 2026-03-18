@@ -1,12 +1,12 @@
 ```
-╭─ context ──╮ ╭─ model ────────────────╮
-│ ████▒▒▒▒▒▒ │ │ Opus 4.6 · ~/my-proj   │
-│ 24% · 1.0M │ │ 2h15m          v2.1.76 │
-╰────────────╯ ╰────────────────────────╯
-╭─ promo ───────╮ ╭─ git ──────────────╮ ╭─ usage ──────────────╮
-│ 2× off-peak   │ │ main               │ │ ████▒▒▒▒ 42% 5h ↻3h  │
-│ → peak 3h 12m │ │ 2 staged · +47 -12 │ │ ██▒▒▒▒▒▒ 18% 7d ↻4d  │
-╰───────────────╯ ╰────────────────────╯ ╰──────────────────────╯
+╭─ context ──────╮ ╭─ model ────────────────────╮
+│ ████▒▒▒▒▒▒▒▒▒▒ │ │ Opus 4.6 · ~/my-proj       │
+│ 24% · 245K/1.0M│ │ high · 2h15m · v2.1.76     │
+╰────────────────╯ ╰────────────────────────────╯
+╭─ promo ───────╮ ╭─ git ──────────────╮ ╭─ usage ─────────────────╮
+│ 2× off-peak   │ │ main               │ │ ████▒▒▒▒ 42% · ↻3h · 5h │
+│ → peak 3h 12m │ │ 2 staged · +47 -12 │ │ ██▒▒▒▒▒▒ 18% · ↻4d · 7d │
+╰───────────────╯ ╰────────────────────╯ ╰─────────────────────────╯
 ```
 
 # claude-statusblocks
@@ -25,8 +25,8 @@ This writes `statusLine.command` into `~/.claude/settings.json`. Restart Claude 
 
 | Card | Shows |
 |------|-------|
-| **context** | Context window fill bar, percentage, token count |
-| **model** | Model name, tilde-shortened directory, session duration, version |
+| **context** | Context window fill bar, percentage, used/total token count |
+| **model** | Model name, tilde-shortened directory, effort level, session duration, version |
 | **promo** | 2x off-peak status, countdown to next transition |
 | **git** | Branch, staged/modified counts, lines added/removed |
 | **usage** | 5-hour and 7-day API utilization with reset countdowns |
