@@ -140,6 +140,20 @@ export function render(data: StatusLineData, termWidth: number, config: StatusBl
     }
   }
 
+  // Expand multi-block rows to fill maxRowWidth so rows align
+  for (const group of rowGroups) {
+    if (group.widths.length < 2) continue;
+    const currentW = rowWidth(group.widths);
+    const slack = maxRowWidth - currentW;
+    if (slack > 0) {
+      const perBlock = Math.floor(slack / group.widths.length);
+      const remainder = slack % group.widths.length;
+      for (let i = 0; i < group.widths.length; i++) {
+        group.widths[i]! += perBlock + (i < remainder ? 1 : 0);
+      }
+    }
+  }
+
   // Render each row independently
   const allRows: string[] = [];
   for (const group of rowGroups) {
