@@ -86,8 +86,9 @@ export const modelSegment: Segment = {
     const ms = data.cost?.total_duration_ms ?? 0;
     if (ms > 0) {
       const totalSec = Math.floor(ms / 1000);
-      const h = Math.floor(totalSec / 3600);
-      const m = Math.floor((totalSec % 3600) / 60);
+      const SECS_PER_HOUR = 3600;
+      const h = Math.floor(totalSec / SECS_PER_HOUR);
+      const m = Math.floor((totalSec % SECS_PER_HOUR) / 60);
       durationStr = color(h > 0 ? `${h}h${m}m` : `${m}m`, c.dim);
     }
     const versionStr = data.version ? color(`v${data.version}`, c.dim) : '';
