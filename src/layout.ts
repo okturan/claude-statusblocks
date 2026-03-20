@@ -131,7 +131,9 @@ export function findOptimalAssignment(
       }
       if (!valid) continue;
 
-      // Score: fewer rows first, then smaller widest row
+      // Score: row count dominates (1e9 weight), widest row is tiebreaker (1e3).
+      // Higher score = better layout. Both terms are negative so fewer rows
+      // and smaller widest row both increase the score.
       let widestRow = 0;
       for (let row = 0; row < targetRows; row++) {
         if (rowWidths[row]! > widestRow) widestRow = rowWidths[row]!;
