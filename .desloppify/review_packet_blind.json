@@ -376,26 +376,26 @@
       "god_modules": [
         {
           "file": "src/types.ts",
-          "importers": 13,
+          "importers": 14,
           "excerpt": "export interface StatusLineData {\n  model: { id: string; display_name: string };\n  cwd?: string;\n  workspace: { current_dir: string; project_dir: string };\n  version: string;\n  cost: {\n    total_cost_usd: number;\n    total_duration_ms: number;\n    total_api_duration_ms: number;\n    total_lines_added: number;\n    total_lines_removed: number;\n  };\n  context_window: {\n    context_window_size: number;\n    used_percentage: number | null;\n    remaining_percentage: number | null;\n    total_input_tokens: number;\n    total_output_tokens: number;\n    current_usage: {\n      input_tokens: number;\n      output_tokens: number;\n      cache_creation_input_tokens: number;\n      cache_read_input_tokens: number;\n    } | null;\n  };\n  rate_limits?: {\n    five_hour?: { used_percentage: number; resets_at: number };\n    seven_day?: { used_percentage: number; resets_at: number };\n  };\n  exceeds_200k_tokens: boolean;\n\n... (51 more lines)"
         },
         {
           "file": "src/colors.ts",
-          "importers": 10,
+          "importers": 11,
           "excerpt": "const ESC = '\\x1b[';\n\nexport const c = {\n  reset: `${ESC}0m`,\n  bold: `${ESC}1m`,\n  dim: `${ESC}2m`,\n  italic: `${ESC}3m`,\n\n  red: `${ESC}31m`,\n  green: `${ESC}32m`,\n  yellow: `${ESC}33m`,\n  blue: `${ESC}34m`,\n  magenta: `${ESC}35m`,\n  cyan: `${ESC}36m`,\n  white: `${ESC}37m`,\n  gray: `${ESC}90m`,\n\n  orange: `${ESC}38;2;217;119;87m`,\n  offpeak: `${ESC}32m`,\n  peak: `${ESC}38;2;200;100;80m`,\n};\n\nexport function color(text: string, ...codes: string[]): string {\n  return codes.join('') + text + c.reset;\n}\n\n/** ANSI color code for a percentage threshold: red \u226590%, yellow \u226570%, green below */\nexport function pctColor(pct: number): string {\n  return pct >= 90 ? c.red : pct >= 70 ? c.yellow : c.green;\n}\n\n... (35 more lines)"
         }
       ],
       "top_imported": {
-        "src/types.ts": 13,
-        "src/colors.ts": 10,
+        "src/types.ts": 14,
+        "src/colors.ts": 11,
         "src/layout.ts": 3,
         "src/config.ts": 3,
         "src/campaigns/engine.ts": 2,
         "src/effort.ts": 2,
         "src/segments/context.ts": 2,
         "src/segments/model.ts": 2,
-        "src/segments/promo.ts": 2,
-        "src/segments/usage.ts": 2
+        "src/segments/git.ts": 2,
+        "src/segments/promo.ts": 2
       }
     },
     "coupling": {},
@@ -405,7 +405,7 @@
           "camelCase": 8
         },
         "src/": {
-          "camelCase": 10
+          "camelCase": 12
         },
         "segments/": {
           "camelCase": 6
@@ -416,7 +416,8 @@
     "errors": {
       "strategy_by_directory": {
         "src/": {
-          "try_catch": 8
+          "try_catch": 8,
+          "returns_null": 2
         },
         "segments/": {
           "try_catch": 1,
@@ -429,7 +430,7 @@
       "summary": {
         "wrapper_rate": 0.0,
         "total_wrappers": 0,
-        "total_function_signatures": 21,
+        "total_function_signatures": 23,
         "one_impl_interface_count": 0,
         "indirection_hotspot_count": 1,
         "wide_param_bag_count": 1,
@@ -468,7 +469,7 @@
       "critical_untested": [
         {
           "file": "src/colors.ts",
-          "importers": 10
+          "importers": 11
         },
         {
           "file": "src/config.ts",
@@ -514,7 +515,7 @@
             "types.ts"
           ],
           "total_loc": 564,
-          "avg_fan_in": 4.4,
+          "avg_fan_in": 4.7,
           "avg_fan_out": 2.1,
           "zones": {
             "production": 7
@@ -523,7 +524,7 @@
             "src/segments/": 5
           },
           "imported_by_dirs": {
-            "src/segments/": 11,
+            "src/segments/": 13,
             "src/campaigns/": 2
           }
         },
@@ -537,7 +538,7 @@
             "usage.ts"
           ],
           "total_loc": 296,
-          "avg_fan_in": 1.8,
+          "avg_fan_in": 2.0,
           "avg_fan_out": 2.4,
           "zones": {
             "production": 5
@@ -703,10 +704,10 @@
         "load": 1,
         "find": 1
       },
-      "total_names": 41
+      "total_names": 43
     },
     "error_conventions": {
-      "returns_null": 2,
+      "returns_null": 3,
       "try_catch": 5
     },
     "module_patterns": {
@@ -719,23 +720,23 @@
     },
     "import_graph_summary": {
       "top_imported": {
-        "src/types.ts": 13,
-        "src/colors.ts": 10,
+        "src/types.ts": 14,
+        "src/colors.ts": 11,
         "src/layout.ts": 3,
         "src/config.ts": 3,
         "src/campaigns/engine.ts": 2,
         "src/effort.ts": 2,
         "src/segments/context.ts": 2,
         "src/segments/model.ts": 2,
+        "src/segments/git.ts": 2,
         "src/segments/promo.ts": 2,
         "src/segments/usage.ts": 2,
-        "src/campaigns/data.ts": 1,
-        "src/segments/git.ts": 1
+        "src/campaigns/data.ts": 1
       }
     },
     "zone_distribution": {
       "production": 14,
-      "test": 8,
+      "test": 9,
       "config": 1
     },
     "existing_issues": {
@@ -858,39 +859,39 @@
   },
   "historical_review_issues": {
     "summary": {
-      "total_review_issues": 115,
-      "open_review_issues": 9,
+      "total_review_issues": 119,
+      "open_review_issues": 8,
       "status_counts": {
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 103,
-        "open": 9,
+        "fixed": 108,
+        "open": 8,
         "triaged_out": 0,
         "wontfix": 3
       },
       "dimension_open_counts": {
         "test_strategy": 3,
-        "low_level_elegance": 2,
         "design_coherence": 1,
         "error_consistency": 1,
         "logic_clarity": 1,
+        "low_level_elegance": 1,
         "type_safety": 1
       }
     },
     "recent_issues": [
       {
         "dimension": "low_level_elegance",
-        "status": "open",
+        "status": "fixed",
         "summary": "resolveEffort has 3 levels of nested try-catch creating unnecessary depth",
         "suggestion": "The inner JSON.parse try-catch on line 27 is necessary per-line. The two source blocks could be extracted into small helpers like readEffortFromTranscript(path) and readEffortFromSettings() to flat...",
         "related_files": [
           "src/effort.ts"
         ],
-        "note": "",
+        "note": "Extracted readEffortFromTranscript() and readEffortFromSettings() from resolveEffort, flattened to single nesting level",
         "confidence": "low",
         "first_seen": "2026-03-20T20:00:37+00:00",
-        "last_seen": "2026-03-20T21:03:37+00:00"
+        "last_seen": "2026-03-20T21:16:42+00:00"
       },
       {
         "dimension": "test_strategy",
@@ -900,10 +901,10 @@
         "related_files": [
           "src/effort.test.ts"
         ],
-        "note": "",
+        "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
         "confidence": "high",
         "first_seen": "2026-03-20T20:00:37+00:00",
-        "last_seen": "2026-03-20T21:03:37+00:00"
+        "last_seen": "2026-03-20T21:16:42+00:00"
       },
       {
         "dimension": "error_consistency",
@@ -916,7 +917,7 @@
         "note": "",
         "confidence": "low",
         "first_seen": "2026-03-20T21:03:37+00:00",
-        "last_seen": "2026-03-20T21:03:37+00:00"
+        "last_seen": "2026-03-20T21:16:42+00:00"
       },
       {
         "dimension": "low_level_elegance",
@@ -929,7 +930,7 @@
         "note": "",
         "confidence": "low",
         "first_seen": "2026-03-20T21:03:37+00:00",
-        "last_seen": "2026-03-20T21:03:37+00:00"
+        "last_seen": "2026-03-20T21:16:42+00:00"
       },
       {
         "dimension": "test_strategy",
@@ -939,10 +940,10 @@
         "related_files": [
           "src/campaigns/engine.test.ts"
         ],
-        "note": "",
+        "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
         "confidence": "medium",
         "first_seen": "2026-03-20T21:03:37+00:00",
-        "last_seen": "2026-03-20T21:03:37+00:00"
+        "last_seen": "2026-03-20T21:16:42+00:00"
       },
       {
         "dimension": "test_strategy",
@@ -952,10 +953,10 @@
         "related_files": [
           "src/cli.ts"
         ],
-        "note": "",
+        "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
         "confidence": "medium",
         "first_seen": "2026-03-20T21:03:37+00:00",
-        "last_seen": "2026-03-20T21:03:37+00:00"
+        "last_seen": "2026-03-20T21:16:42+00:00"
       },
       {
         "dimension": "design_coherence",
@@ -969,7 +970,7 @@
         "note": "",
         "confidence": "low",
         "first_seen": "2026-03-20T21:03:37+00:00",
-        "last_seen": "2026-03-20T21:03:37+00:00"
+        "last_seen": "2026-03-20T21:16:42+00:00"
       },
       {
         "dimension": "logic_clarity",
@@ -982,7 +983,7 @@
         "note": "",
         "confidence": "medium",
         "first_seen": "2026-03-20T21:03:37+00:00",
-        "last_seen": "2026-03-20T21:03:37+00:00"
+        "last_seen": "2026-03-20T21:16:42+00:00"
       },
       {
         "dimension": "type_safety",
@@ -995,7 +996,59 @@
         "note": "",
         "confidence": "medium",
         "first_seen": "2026-03-20T21:03:37+00:00",
-        "last_seen": "2026-03-20T21:03:37+00:00"
+        "last_seen": "2026-03-20T21:16:42+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "fixed",
+        "summary": "effort.test.ts test 4 has tautological assertion that accepts any return value and never fails",
+        "suggestion": "Clear the cache before this test (or use a fresh module import), then assert the specific expected value: expect(resolveEffort()).toBeNull() for no-transcript-no-settings, or mock ~/.claude/setting...",
+        "related_files": [
+          "src/effort.test.ts"
+        ],
+        "note": "",
+        "confidence": "high",
+        "first_seen": "2026-03-20T21:14:51+00:00",
+        "last_seen": "2026-03-20T21:14:51+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "fixed",
+        "summary": "Campaign engine lacks tests for exact peak boundary timestamps where off-by-one bugs would hide",
+        "suggestion": "Add three boundary tests with vi.useFakeTimers: (1) exactly 08:00:00 ET Wednesday should be active-normal, (2) exactly 14:00:00 ET Wednesday should be active-boosted (not peak), (3) exactly 14:00:0...",
+        "related_files": [
+          "src/campaigns/engine.test.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T21:14:51+00:00",
+        "last_seen": "2026-03-20T21:14:51+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "fixed",
+        "summary": "PromoSegment's 3 tests silently become no-ops after campaign end dates, creating false confidence",
+        "suggestion": "Use vi.useFakeTimers() to set a known active campaign time before testing promo rendering, similar to how engine.test.ts does it. This makes the tests deterministic and guarantees they always exerc...",
+        "related_files": [
+          "src/segments.test.ts"
+        ],
+        "note": "",
+        "confidence": "high",
+        "first_seen": "2026-03-20T21:14:51+00:00",
+        "last_seen": "2026-03-20T21:14:51+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "fixed",
+        "summary": "git.ts parsing logic (numstat parsing, line counting, branch detection) has zero test coverage",
+        "suggestion": "Extract the numstat parsing logic into a testable pure function (e.g., parseNumstat(output: string): {staged: number, modified: number, added: number, removed: number}) and add unit tests for empty...",
+        "related_files": [
+          "src/segments/git.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T21:14:51+00:00",
+        "last_seen": "2026-03-20T21:14:51+00:00"
       },
       {
         "dimension": "cross_module_architecture",
@@ -1222,63 +1275,6 @@
         "confidence": "medium",
         "first_seen": "2026-03-20T19:47:29+00:00",
         "last_seen": "2026-03-20T19:47:29+00:00"
-      },
-      {
-        "dimension": "test_strategy",
-        "status": "fixed",
-        "summary": "cli.ts (92 LOC) has zero test coverage for init, preview, and help commands",
-        "suggestion": "Add basic tests for preview (verify it produces output without throwing) and help (verify it contains expected keywords). init() is harder to test without mocking fs, but at minimum test that it re...",
-        "related_files": [
-          "src/cli.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T19:47:29+00:00",
-        "last_seen": "2026-03-20T19:47:29+00:00"
-      },
-      {
-        "dimension": "api_surface_coherence",
-        "status": "fixed",
-        "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
-        "suggestion": "This is a pragmatic interface design for a 5-segment codebase -- making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments a...",
-        "related_files": [
-          "src/types.ts",
-          "src/segments/model.ts",
-          "src/segments/context.ts",
-          "src/segments/promo.ts",
-          "src/segments/git.ts",
-          "src/segments/usage.ts"
-        ],
-        "note": "",
-        "confidence": "low",
-        "first_seen": "2026-03-20T19:47:29+00:00",
-        "last_seen": "2026-03-20T19:47:29+00:00"
-      },
-      {
-        "dimension": "logic_clarity",
-        "status": "fixed",
-        "summary": "layout.ts applies an additional 5-char offset for row 1 beyond the existing INK_PADDING",
-        "suggestion": "Expand the comment to explain the mechanism: '// Row 1 overlaps with Claude Code's notification/status badge in the top-right corner; subsequent rows render below it and don't need the extra cleara...",
-        "related_files": [
-          "src/layout.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T19:47:29+00:00",
-        "last_seen": "2026-03-20T19:47:29+00:00"
-      },
-      {
-        "dimension": "type_safety",
-        "status": "fixed",
-        "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
-        "suggestion": "Expand the guard on lines 15-17 to validate the fields that segments actually access: if (!parsed?.model?.display_name || !parsed?.context_window || !parsed?.workspace?.current_dir || !parsed?.vers...",
-        "related_files": [
-          "src/index.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T19:47:29+00:00",
-        "last_seen": "2026-03-20T19:47:29+00:00"
       }
     ]
   },
@@ -1348,6 +1344,9 @@
         "convention_outlier"
       ],
       "why": "convention_outlier review",
+      "judgment_finding_counts": {
+        "signature": 1
+      },
       "concern_signals": [],
       "historical_issue_focus": {
         "dimensions": [
@@ -1386,7 +1385,7 @@
             "note": "",
             "confidence": "low",
             "first_seen": "2026-03-20T21:03:37+00:00",
-            "last_seen": "2026-03-20T21:03:37+00:00"
+            "last_seen": "2026-03-20T21:16:42+00:00"
           },
           {
             "dimension": "error_consistency",
@@ -1484,16 +1483,16 @@
         "issues": [
           {
             "dimension": "low_level_elegance",
-            "status": "open",
+            "status": "fixed",
             "summary": "resolveEffort has 3 levels of nested try-catch creating unnecessary depth",
             "suggestion": "The inner JSON.parse try-catch on line 27 is necessary per-line. The two source blocks could be extracted into small helpers like readEffortFromTranscript(path) and readEffortFromSettings() to flat...",
             "related_files": [
               "src/effort.ts"
             ],
-            "note": "",
+            "note": "Extracted readEffortFromTranscript() and readEffortFromSettings() from resolveEffort, flattened to single nesting level",
             "confidence": "low",
             "first_seen": "2026-03-20T20:00:37+00:00",
-            "last_seen": "2026-03-20T21:03:37+00:00"
+            "last_seen": "2026-03-20T21:16:42+00:00"
           },
           {
             "dimension": "low_level_elegance",
@@ -1506,7 +1505,7 @@
             "note": "",
             "confidence": "low",
             "first_seen": "2026-03-20T21:03:37+00:00",
-            "last_seen": "2026-03-20T21:03:37+00:00"
+            "last_seen": "2026-03-20T21:16:42+00:00"
           },
           {
             "dimension": "low_level_elegance",
@@ -1581,7 +1580,7 @@
           "test_strategy"
         ],
         "max_items": 20,
-        "selected_count": 8,
+        "selected_count": 11,
         "issues": [
           {
             "dimension": "test_strategy",
@@ -1589,10 +1588,10 @@
             "summary": "effort.test.ts has tautological assertions that accept any return value and never fail",
             "suggestion": "Replace with a specific expectation. Since there is no transcript and settings.json is not mocked, assert expect(resolveEffort()).toBeNull() or mock the settings file to test a specific path.",
             "related_files": [],
-            "note": "",
+            "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
             "confidence": "high",
             "first_seen": "2026-03-20T20:00:37+00:00",
-            "last_seen": "2026-03-20T21:03:37+00:00"
+            "last_seen": "2026-03-20T21:16:42+00:00"
           },
           {
             "dimension": "test_strategy",
@@ -1600,10 +1599,10 @@
             "summary": "Campaign engine's timezone-aware date arithmetic lacks peak boundary edge case tests",
             "suggestion": "Add tests for exact boundary timestamps: exactly at peak start (08:00:00 ET), exactly at peak end (14:00:00 ET), and Friday at 14:00:00 ET to verify the weekend transition.",
             "related_files": [],
-            "note": "",
+            "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
             "confidence": "medium",
             "first_seen": "2026-03-20T21:03:37+00:00",
-            "last_seen": "2026-03-20T21:03:37+00:00"
+            "last_seen": "2026-03-20T21:16:42+00:00"
           },
           {
             "dimension": "test_strategy",
@@ -1613,10 +1612,56 @@
             "related_files": [
               "src/cli.ts"
             ],
-            "note": "",
+            "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
             "confidence": "medium",
             "first_seen": "2026-03-20T21:03:37+00:00",
-            "last_seen": "2026-03-20T21:03:37+00:00"
+            "last_seen": "2026-03-20T21:16:42+00:00"
+          },
+          {
+            "dimension": "test_strategy",
+            "status": "fixed",
+            "summary": "effort.test.ts test 4 has tautological assertion that accepts any return value and never fails",
+            "suggestion": "Clear the cache before this test (or use a fresh module import), then assert the specific expected value: expect(resolveEffort()).toBeNull() for no-transcript-no-settings, or mock ~/.claude/setting...",
+            "related_files": [],
+            "note": "",
+            "confidence": "high",
+            "first_seen": "2026-03-20T21:14:51+00:00",
+            "last_seen": "2026-03-20T21:14:51+00:00"
+          },
+          {
+            "dimension": "test_strategy",
+            "status": "fixed",
+            "summary": "Campaign engine lacks tests for exact peak boundary timestamps where off-by-one bugs would hide",
+            "suggestion": "Add three boundary tests with vi.useFakeTimers: (1) exactly 08:00:00 ET Wednesday should be active-normal, (2) exactly 14:00:00 ET Wednesday should be active-boosted (not peak), (3) exactly 14:00:0...",
+            "related_files": [],
+            "note": "",
+            "confidence": "medium",
+            "first_seen": "2026-03-20T21:14:51+00:00",
+            "last_seen": "2026-03-20T21:14:51+00:00"
+          },
+          {
+            "dimension": "test_strategy",
+            "status": "fixed",
+            "summary": "PromoSegment's 3 tests silently become no-ops after campaign end dates, creating false confidence",
+            "suggestion": "Use vi.useFakeTimers() to set a known active campaign time before testing promo rendering, similar to how engine.test.ts does it. This makes the tests deterministic and guarantees they always exerc...",
+            "related_files": [],
+            "note": "",
+            "confidence": "high",
+            "first_seen": "2026-03-20T21:14:51+00:00",
+            "last_seen": "2026-03-20T21:14:51+00:00"
+          },
+          {
+            "dimension": "test_strategy",
+            "status": "fixed",
+            "summary": "git.ts parsing logic (numstat parsing, line counting, branch detection) has zero test coverage",
+            "suggestion": "Extract the numstat parsing logic into a testable pure function (e.g., parseNumstat(output: string): {staged: number, modified: number, added: number, removed: number}) and add unit tests for empty...",
+            "related_files": [
+              "src/segments/git.ts"
+            ],
+            "note": "",
+            "confidence": "medium",
+            "first_seen": "2026-03-20T21:14:51+00:00",
+            "last_seen": "2026-03-20T21:14:51+00:00"
           },
           {
             "dimension": "test_strategy",
@@ -1663,19 +1708,6 @@
             "confidence": "medium",
             "first_seen": "2026-03-20T19:47:29+00:00",
             "last_seen": "2026-03-20T19:47:29+00:00"
-          },
-          {
-            "dimension": "test_strategy",
-            "status": "fixed",
-            "summary": "cli.ts (92 LOC) has zero test coverage for init, preview, and help commands",
-            "suggestion": "Add basic tests for preview (verify it produces output without throwing) and help (verify it contains expected keywords). init() is harder to test without mocking fs, but at minimum test that it re...",
-            "related_files": [
-              "src/cli.ts"
-            ],
-            "note": "",
-            "confidence": "medium",
-            "first_seen": "2026-03-20T19:47:29+00:00",
-            "last_seen": "2026-03-20T19:47:29+00:00"
           }
         ]
       }
@@ -1695,7 +1727,7 @@
           "api_surface_coherence"
         ],
         "max_items": 20,
-        "selected_count": 2,
+        "selected_count": 1,
         "issues": [
           {
             "dimension": "api_surface_coherence",
@@ -1714,24 +1746,6 @@
             "confidence": "low",
             "first_seen": "2026-03-20T20:00:37+00:00",
             "last_seen": "2026-03-20T20:00:37+00:00"
-          },
-          {
-            "dimension": "api_surface_coherence",
-            "status": "fixed",
-            "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
-            "suggestion": "This is a pragmatic interface design for a 5-segment codebase -- making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments a...",
-            "related_files": [
-              "src/types.ts",
-              "src/segments/model.ts",
-              "src/segments/context.ts",
-              "src/segments/promo.ts",
-              "src/segments/git.ts",
-              "src/segments/usage.ts"
-            ],
-            "note": "",
-            "confidence": "low",
-            "first_seen": "2026-03-20T19:47:29+00:00",
-            "last_seen": "2026-03-20T19:47:29+00:00"
           }
         ]
       }
@@ -1872,7 +1886,7 @@
             "note": "",
             "confidence": "low",
             "first_seen": "2026-03-20T21:03:37+00:00",
-            "last_seen": "2026-03-20T21:03:37+00:00"
+            "last_seen": "2026-03-20T21:16:42+00:00"
           },
           {
             "dimension": "design_coherence",
@@ -1951,7 +1965,7 @@
           "logic_clarity"
         ],
         "max_items": 20,
-        "selected_count": 3,
+        "selected_count": 2,
         "issues": [
           {
             "dimension": "logic_clarity",
@@ -1964,7 +1978,7 @@
             "note": "",
             "confidence": "medium",
             "first_seen": "2026-03-20T21:03:37+00:00",
-            "last_seen": "2026-03-20T21:03:37+00:00"
+            "last_seen": "2026-03-20T21:16:42+00:00"
           },
           {
             "dimension": "logic_clarity",
@@ -1978,19 +1992,6 @@
             "confidence": "medium",
             "first_seen": "2026-03-20T20:00:37+00:00",
             "last_seen": "2026-03-20T20:00:37+00:00"
-          },
-          {
-            "dimension": "logic_clarity",
-            "status": "fixed",
-            "summary": "layout.ts applies an additional 5-char offset for row 1 beyond the existing INK_PADDING",
-            "suggestion": "Expand the comment to explain the mechanism: '// Row 1 overlaps with Claude Code's notification/status badge in the top-right corner; subsequent rows render below it and don't need the extra cleara...",
-            "related_files": [
-              "src/layout.ts"
-            ],
-            "note": "",
-            "confidence": "medium",
-            "first_seen": "2026-03-20T19:47:29+00:00",
-            "last_seen": "2026-03-20T19:47:29+00:00"
           }
         ]
       }
@@ -2007,7 +2008,7 @@
           "type_safety"
         ],
         "max_items": 20,
-        "selected_count": 3,
+        "selected_count": 2,
         "issues": [
           {
             "dimension": "type_safety",
@@ -2020,7 +2021,7 @@
             "note": "",
             "confidence": "medium",
             "first_seen": "2026-03-20T21:03:37+00:00",
-            "last_seen": "2026-03-20T21:03:37+00:00"
+            "last_seen": "2026-03-20T21:16:42+00:00"
           },
           {
             "dimension": "type_safety",
@@ -2034,19 +2035,6 @@
             "confidence": "medium",
             "first_seen": "2026-03-20T20:00:37+00:00",
             "last_seen": "2026-03-20T20:00:37+00:00"
-          },
-          {
-            "dimension": "type_safety",
-            "status": "fixed",
-            "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
-            "suggestion": "Expand the guard on lines 15-17 to validate the fields that segments actually access: if (!parsed?.model?.display_name || !parsed?.context_window || !parsed?.workspace?.current_dir || !parsed?.vers...",
-            "related_files": [
-              "src/index.ts"
-            ],
-            "note": "",
-            "confidence": "medium",
-            "first_seen": "2026-03-20T19:47:29+00:00",
-            "last_seen": "2026-03-20T19:47:29+00:00"
           }
         ]
       }

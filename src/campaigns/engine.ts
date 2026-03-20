@@ -1,6 +1,9 @@
 import type { Campaign } from '../types.js';
 import { campaigns } from './data.js';
 
+const SECS_PER_DAY = 86400;
+const SECS_PER_HOUR = 3600;
+
 export interface CampaignStatus {
   campaign: Campaign;
   state: 'active-boosted' | 'active-normal' | 'upcoming' | 'ended' | 'weekend';
@@ -37,8 +40,8 @@ function getDowNum(dow: string): number {
 
 function formatCountdown(totalSeconds: number): string {
   if (totalSeconds <= 0) return '';
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
+  const h = Math.floor(totalSeconds / SECS_PER_HOUR);
+  const m = Math.floor((totalSeconds % SECS_PER_HOUR) / 60);
   if (h > 0) return `${h}h${m > 0 ? ` ${m}m` : ''}`;
   return `${m}m`;
 }
@@ -54,12 +57,12 @@ function resolveWeekendState(ctx: TimingContext, campaign: Campaign): CampaignSt
   const { currentSecs, peakStartSecs, peakEndSecs, dow } = ctx;
   const dowNum = getDowNum(dow);
   const daysUntilMon = 8 - dowNum;
-  const secsUntilPeak = daysUntilMon * 86400 + peakStartSecs - currentSecs;
+  const secsUntilPeak = daysUntilMon * SECS_PER_DAY + peakStartSecs - currentSecs;
 
-  const totalWeekendSecs = (2 * 86400) + peakStartSecs + (86400 - peakEndSecs);
+  const totalWeekendSecs = (2 * SECS_PER_DAY) + peakStartSecs + (SECS_PER_DAY - peakEndSecs);
   const daysSinceFri = dowNum - 5;
   // Can be negative on early Saturday before peak-end time; clamped below
-  const secsSinceFriPeak = daysSinceFri * 86400 + (currentSecs - peakEndSecs);
+  const secsSinceFriPeak = daysSinceFri * SECS_PER_DAY + (currentSecs - peakEndSecs);
   const progress = Math.max(0, Math.min(1, secsSinceFriPeak / totalWeekendSecs));
 
   return { campaign, state: 'weekend', countdown: formatCountdown(secsUntilPeak), progress };
@@ -81,12 +84,12 @@ function resolveOffPeakState(ctx: TimingContext, campaign: Campaign): CampaignSt
   } else {
     const dowNum = getDowNum(dow);
     const daysUntil = dowNum === 5 ? 3 : 1;
-    secsUntilPeak = daysUntil * 86400 + peakStartSecs - currentSecs;
+    secsUntilPeak = daysUntil * SECS_PER_DAY + peakStartSecs - currentSecs;
   }
 
   const secsSinceLastPeak = currentSecs >= peakEndSecs
     ? currentSecs - peakEndSecs
-    : 86400 - peakEndSecs + currentSecs;
+    : SECS_PER_DAY - peakEndSecs + currentSecs;
   const totalOffPeak = secsSinceLastPeak + secsUntilPeak;
   const progress = totalOffPeak > 0 ? secsSinceLastPeak / totalOffPeak : 0;
 
@@ -107,9 +110,9 @@ export function getActiveCampaign(): CampaignStatus | null {
     const tz = rules.peakHours?.tz ?? 'America/New_York';
     const time = getTimeInTz(tz);
     const ctx: TimingContext = {
-      currentSecs: time.hour * 3600 + time.minute * 60 + time.second,
-      peakStartSecs: (rules.peakHours?.start ?? 8) * 3600,
-      peakEndSecs: (rules.peakHours?.end ?? 14) * 3600,
+      currentSecs: time.hour * SECS_PER_HOUR + time.minute * 60 + time.second,
+      peakStartSecs: (rules.peakHours?.start ?? 8) * SECS_PER_HOUR,
+      peakEndSecs: (rules.peakHours?.end ?? 14) * SECS_PER_HOUR,
       dow: time.dow,
     };
 

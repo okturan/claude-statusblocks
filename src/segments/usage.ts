@@ -1,13 +1,17 @@
 import type { Segment } from '../types.js';
 import { color, c, visibleLength, padRight, pctColor } from '../colors.js';
 
+const MS_PER_DAY = 86400000;
+const MS_PER_HOUR = 3600000;
+const MS_PER_MIN = 60000;
+
 function formatResetTime(epochSec: number): string {
   if (!epochSec) return '';
   const ms = epochSec * 1000 - Date.now();
   if (ms <= 0) return 'now';
-  const d = Math.floor(ms / 86400000);
-  const h = Math.floor((ms % 86400000) / 3600000);
-  const m = Math.floor((ms % 3600000) / 60000);
+  const d = Math.floor(ms / MS_PER_DAY);
+  const h = Math.floor((ms % MS_PER_DAY) / MS_PER_HOUR);
+  const m = Math.floor((ms % MS_PER_HOUR) / MS_PER_MIN);
   if (d > 0) return `${d}d${h > 0 ? `${h}h` : ''}${m > 0 ? `${m}m` : ''}`;
   if (h > 0) return `${h}h${m > 0 ? `${m}m` : ''}`;
   return `${m}m`;

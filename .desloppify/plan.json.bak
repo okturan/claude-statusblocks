@@ -1,9 +1,8 @@
 {
   "version": 8,
   "created": "2026-03-20T17:37:28+00:00",
-  "updated": "2026-03-20T21:22:57+00:00",
+  "updated": "2026-03-20T21:23:32+00:00",
   "queue_order": [
-    "review::.::holistic::low_level_elegance::resolve_effort_nested_try",
     "review::.::holistic::design_coherence::time_constant_magic_numbers",
     "review::.::holistic::error_consistency::effort_nested_catch_rationale",
     "review::.::holistic::logic_clarity::row1_notif_margin_comment",
@@ -341,16 +340,11 @@
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {
-    "strict": 85.9,
-    "overall": 86.6,
-    "objective": 94.9,
-    "verified": 94.9
-  },
+  "plan_start_scores": {},
   "refresh_state": {
     "lifecycle_phase": "review_initial",
     "subjective_review_completed_at_scan_count": 33,
-    "postflight_scan_completed_at_scan_count": 32
+    "postflight_scan_completed_at_scan_count": 34
   },
   "execution_log": [
     {
@@ -2254,6 +2248,40 @@
       "actor": "user",
       "note": "Extracted readEffortFromTranscript() and readEffortFromSettings() from resolveEffort, flattened to single nesting level",
       "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T21:22:57+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::low_level_elegance::resolve_effort_nested_try"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Extracted readEffortFromTranscript() and readEffortFromSettings() from resolveEffort, flattened to single nesting level",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually Extracted readEffortFromTranscript() and readEffortFromSettings() from resolveEffort, flattened to single nesting level and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-03-20T21:23:32+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T21:23:32+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 34
+      }
     }
   ],
   "epic_triage_meta": {},
@@ -2268,7 +2296,8 @@
     "review::.::holistic::logic_clarity::promo_contentwidth_misleading",
     "review::.::holistic::logic_clarity::weekend_negative_intermediate",
     "review::.::holistic::design_coherence::systemic_magic_numbers",
-    "review::.::holistic::contract_coherence::promo_enabled_render_coupling"
+    "review::.::holistic::contract_coherence::promo_enabled_render_coupling",
+    "review::.::holistic::low_level_elegance::resolve_effort_nested_try"
   ],
   "commit_tracking_branch": null,
   "scan_count_at_plan_start": 32
