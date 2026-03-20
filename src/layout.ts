@@ -74,72 +74,72 @@ function renderRow(group: RowGroup): string[] {
  * Rows are sorted by width ascending (pyramid shape).
  * Returns the best assignment as a row-index-per-block array, or null.
  */
+/** Decode a combo number into per-block row assignments and check all rows are used */
+function decodeAssignment(
+  combo: number, blockCount: number, targetRows: number,
+  blockRow: number[], rowUsed: boolean[],
+): boolean {
+  let encoded = combo;
+  for (let b = 0; b < blockCount; b++) {
+    blockRow[b] = encoded % targetRows;
+    encoded = Math.floor(encoded / targetRows);
+  }
+  rowUsed.fill(false, 0, targetRows);
+  for (let b = 0; b < blockCount; b++) rowUsed[blockRow[b]!] = true;
+  for (let r = 0; r < targetRows; r++) { if (!rowUsed[r]) return false; }
+  return true;
+}
+
+/** Compute the total rendered width of each row from block assignments */
+function computeRowWidths(
+  blockRow: number[], blockCount: number, targetRows: number,
+  blockWidths: number[], rowWidths: number[],
+): void {
+  for (let r = 0; r < targetRows; r++) rowWidths[r] = 0;
+  for (let b = 0; b < blockCount; b++) rowWidths[blockRow[b]!] += blockWidths[b]! + BOX_CHROME;
+  for (let r = 0; r < targetRows; r++) {
+    let count = 0;
+    for (let b = 0; b < blockCount; b++) { if (blockRow[b] === r) count++; }
+    if (count > 1) rowWidths[r] += (count - 1) * GAP;
+  }
+}
+
+/** Check rows fit within width limits (pyramid order) and return a score, or -Infinity if invalid */
+function scoreAssignment(
+  targetRows: number, rowWidths: number[], row1MaxWidth: number, maxRowWidth: number,
+): number {
+  // Sort by width ascending — narrowest row displayed first (pyramid)
+  const displayOrder: number[] = [];
+  for (let r = 0; r < targetRows; r++) displayOrder.push(r);
+  displayOrder.sort((a, b) => rowWidths[a]! - rowWidths[b]!);
+
+  for (let pos = 0; pos < displayOrder.length; pos++) {
+    const limit = pos === 0 ? row1MaxWidth : maxRowWidth;
+    if (rowWidths[displayOrder[pos]!]! > limit) return -Infinity;
+  }
+
+  // Row count dominates (1e9), widest row is tiebreaker (1e3)
+  let widest = 0;
+  for (let r = 0; r < targetRows; r++) { if (rowWidths[r]! > widest) widest = rowWidths[r]!; }
+  return -(targetRows * 1e9) - (widest * 1e3);
+}
+
 export function findOptimalAssignment(
   blockCount: number, blockWidths: number[], row1MaxWidth: number, maxRowWidth: number,
 ): number[] | null {
   let bestAssignment: number[] | null = null;
   let bestScore = -Infinity;
 
-  // Reusable buffers to avoid per-iteration allocations
   const blockRow = new Array<number>(blockCount);
   const rowUsed = new Array<boolean>(blockCount);
   const rowWidths = new Array<number>(blockCount);
 
   for (let targetRows = 1; targetRows <= blockCount; targetRows++) {
     const totalCombinations = targetRows ** blockCount;
-
     for (let combo = 0; combo < totalCombinations; combo++) {
-      // Decode combo into per-block row assignments (base-targetRows digits)
-      let encoded = combo;
-      for (let block = 0; block < blockCount; block++) {
-        blockRow[block] = encoded % targetRows;
-        encoded = Math.floor(encoded / targetRows);
-      }
-
-      // Verify all target rows are occupied
-      rowUsed.fill(false, 0, targetRows);
-      for (let block = 0; block < blockCount; block++) rowUsed[blockRow[block]!] = true;
-      let allRowsOccupied = true;
-      for (let row = 0; row < targetRows; row++) {
-        if (!rowUsed[row]) { allRowsOccupied = false; break; }
-      }
-      if (!allRowsOccupied) continue;
-
-      // Compute total width per row (block widths + chrome + gaps)
-      for (let row = 0; row < targetRows; row++) rowWidths[row] = 0;
-      for (let block = 0; block < blockCount; block++) {
-        rowWidths[blockRow[block]!] += blockWidths[block]! + BOX_CHROME;
-      }
-      for (let row = 0; row < targetRows; row++) {
-        let blocksInRow = 0;
-        for (let block = 0; block < blockCount; block++) {
-          if (blockRow[block] === row) blocksInRow++;
-        }
-        if (blocksInRow > 1) rowWidths[row] += (blocksInRow - 1) * GAP;
-      }
-
-      // Sort rows by width ascending (pyramid: narrowest on top)
-      const displayOrder: number[] = [];
-      for (let row = 0; row < targetRows; row++) displayOrder.push(row);
-      displayOrder.sort((a, b) => rowWidths[a]! - rowWidths[b]!);
-
-      // Validate: narrowest row (displayed first) uses tighter width limit
-      let valid = true;
-      for (let pos = 0; pos < displayOrder.length; pos++) {
-        const widthLimit = pos === 0 ? row1MaxWidth : maxRowWidth;
-        if (rowWidths[displayOrder[pos]!]! > widthLimit) { valid = false; break; }
-      }
-      if (!valid) continue;
-
-      // Score: row count dominates (1e9 weight), widest row is tiebreaker (1e3).
-      // Higher score = better layout. Both terms are negative so fewer rows
-      // and smaller widest row both increase the score.
-      let widestRow = 0;
-      for (let row = 0; row < targetRows; row++) {
-        if (rowWidths[row]! > widestRow) widestRow = rowWidths[row]!;
-      }
-      const score = -(targetRows * 1e9) - (widestRow * 1e3);
-
+      if (!decodeAssignment(combo, blockCount, targetRows, blockRow, rowUsed)) continue;
+      computeRowWidths(blockRow, blockCount, targetRows, blockWidths, rowWidths);
+      const score = scoreAssignment(targetRows, rowWidths, row1MaxWidth, maxRowWidth);
       if (score > bestScore) {
         bestScore = score;
         bestAssignment = blockRow.slice(0, blockCount);
