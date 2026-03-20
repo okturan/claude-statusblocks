@@ -18,13 +18,55 @@ const EFFORT_COLORS: Record<string, string> = {
   max: c.orange,
 };
 
+/** Spread styled parts evenly across a target width, with optional dot separators */
+function spreadLine(parts: string[], targetWidth: number): string {
+  if (parts.length === 0) return '';
+  if (parts.length === 1) return parts[0]!;
+
+  const widths = parts.map(visibleLength);
+  const contentWidth = widths.reduce((a, b) => a + b, 0);
+  const totalGap = Math.max(0, targetWidth - contentWidth);
+
+  if (parts.length === 2) {
+    return parts[0]! + ' '.repeat(Math.max(1, totalGap)) + parts[1]!;
+  }
+
+  // 3 parts: try dot separators first, fall back to even spacing
+  const dot = color(' · ', c.dim);
+  const dotWidth = 3;
+  const spareAfterDots = totalGap - dotWidth * (parts.length - 1);
+
+  if (spareAfterDots <= 12 && spareAfterDots >= 0) {
+    // Compact: distribute spare space evenly around dots
+    const gaps = parts.length * 2 - 2; // gaps on each side of each dot
+    const base = Math.floor(Math.max(0, spareAfterDots) / gaps);
+    const remainder = Math.max(0, spareAfterDots) % gaps;
+    const result: string[] = [parts[0]!];
+    for (let i = 1; i < parts.length; i++) {
+      const leftPad = base + (((i - 1) * 2) < remainder ? 1 : 0);
+      const rightPad = base + (((i - 1) * 2 + 1) < remainder ? 1 : 0);
+      result.push(' '.repeat(leftPad), dot, ' '.repeat(rightPad), parts[i]!);
+    }
+    return result.join('');
+  }
+
+  // Wide: spread evenly without dots
+  const gapCount = parts.length - 1;
+  const baseGap = Math.floor(totalGap / gapCount);
+  const extraGap = totalGap % gapCount;
+  const result: string[] = [parts[0]!];
+  for (let i = 1; i < parts.length; i++) {
+    result.push(' '.repeat(baseGap + (i <= extraGap ? 1 : 0)), parts[i]!);
+  }
+  return result.join('');
+}
+
 export const modelSegment: Segment = {
   id: 'model',
   priority: 30,
   enabled: () => true,
   render(data, allocWidth) {
     const name = data.model.display_name;
-    // Strip "(1M context)" etc. from display name — keep just the model name
     const shortName = name.replace(/\s*\(.*?\)\s*/g, '').trim();
 
     // Line 1: model name · directory (tilde-shortened, basename fallback)
@@ -50,43 +92,10 @@ export const modelSegment: Segment = {
     }
     const versionStr = data.version ? color(`v${data.version}`, c.dim) : '';
 
-    // Layout: effort (left) — duration (center) — version (right), no dots
-    const line1Width = visibleLength(line1);
-    const parts = [effortStr, durationStr, versionStr].filter(Boolean);
-    let line2: string;
-
-    if (parts.length === 3) {
-      const dot = color(' · ', c.dim);
-      const dotLen = 3;
-      const eLen = visibleLength(effortStr);
-      const dLen = visibleLength(durationStr);
-      const vLen = visibleLength(versionStr);
-      const contentWidth = eLen + dLen + vLen;
-      const spareWithDots = line1Width - contentWidth - dotLen * 2;
-      // Use dots when items are close together (spare <= 12 chars), plain spacing otherwise
-      if (spareWithDots <= 12) {
-        const clamped = Math.max(0, spareWithDots);
-        const g = Math.floor(clamped / 4);
-        const extra = clamped - g * 4;
-        const g1 = g;
-        const g2 = g + Math.min(extra, 1);
-        const g3 = g + (extra >= 2 ? 1 : 0);
-        const g4 = g + (extra >= 3 ? 1 : 0);
-        line2 = effortStr + ' '.repeat(g1) + dot + ' '.repeat(g2) + durationStr + ' '.repeat(g3) + dot + ' '.repeat(g4) + versionStr;
-      } else {
-        const remaining = Math.max(0, line1Width - contentWidth);
-        const leftGap = Math.floor(remaining / 2);
-        const rightGap = remaining - leftGap;
-        line2 = effortStr + ' '.repeat(leftGap) + durationStr + ' '.repeat(rightGap) + versionStr;
-      }
-    } else if (parts.length === 2) {
-      const leftStr = parts[0]!;
-      const rightStr = parts[1]!;
-      const gap = Math.max(1, line1Width - visibleLength(leftStr) - visibleLength(rightStr));
-      line2 = leftStr + ' '.repeat(gap) + rightStr;
-    } else {
-      line2 = parts[0] ?? '';
-    }
+    const line2 = spreadLine(
+      [effortStr, durationStr, versionStr].filter(Boolean),
+      visibleLength(line1),
+    );
 
     const lines = [line1, line2];
     const width = Math.max(...lines.map(visibleLength));

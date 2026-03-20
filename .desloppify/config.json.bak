@@ -22,7 +22,10 @@
     "test_coverage::src/cli.ts",
     "test_coverage::src/cli.ts::untested_module",
     "test_coverage::src/index.ts",
-    "test_coverage::src/index.ts::untested_module"
+    "test_coverage::src/index.ts::untested_module",
+    "test_coverage::src/segments/context.ts",
+    "test_coverage::src/segments/model.ts",
+    "test_coverage::src/segments/git.ts"
   ],
   "ignore_metadata": {},
   "zone_overrides": {},
