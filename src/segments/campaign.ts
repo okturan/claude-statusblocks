@@ -34,10 +34,10 @@ export const campaignSegment: Segment = {
       line2 = color('upcoming', c.dim);
     }
 
-    const barWidth = Math.max(visibleLength(line1), visibleLength(line2));
+    const contentWidth = Math.max(visibleLength(line1), visibleLength(line2));
     const lines = [
       line1,
-      line2 || color('─'.repeat(barWidth), c.gray),
+      line2 || color('─'.repeat(contentWidth), c.gray),
     ];
 
     const width = Math.max(...lines.map(visibleLength));

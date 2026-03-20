@@ -38,7 +38,7 @@ export function padRight(str: string, width: number): string {
 }
 
 /** Truncate a string with ANSI codes to a max visible width */
-export function truncate(str: string, maxWidth: number): string {
+function truncate(str: string, maxWidth: number): string {
   if (maxWidth <= 0) return '';
   let visible = 0;
   let i = 0;

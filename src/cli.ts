@@ -7,7 +7,9 @@ import { render } from './layout.js';
 import { loadConfig } from './config.js';
 import type { StatusLineData } from './types.js';
 
-const SETTINGS_PATH = join(homedir(), '.claude', 'settings.json');
+function settingsPath(): string {
+  return join(homedir(), '.claude', 'settings.json');
+}
 
 const MOCK_DATA: StatusLineData = {
   model: { id: 'claude-opus-4-6', display_name: 'Opus 4.6' },
@@ -41,16 +43,16 @@ function preview() {
 function init() {
   console.log('\n\x1b[38;2;217;119;87m\x1b[1mclaude-statusblocks\x1b[0m setup\n');
   try {
-    const raw = readFileSync(SETTINGS_PATH, 'utf8');
+    const raw = readFileSync(settingsPath(), 'utf8');
     const settings = JSON.parse(raw);
     const oldCommand = settings.statusLine?.command;
     settings.statusLine = { type: 'command', command: 'npx -y claude-statusblocks@latest', padding: 0 };
-    writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2) + '\n');
+    writeFileSync(settingsPath(), JSON.stringify(settings, null, 2) + '\n');
     if (oldCommand) console.log(`  Replaced: \x1b[2m${oldCommand}\x1b[0m`);
     console.log('  Installed: \x1b[32mnpx -y claude-statusblocks@latest\x1b[0m');
     console.log('  Settings:  \x1b[2m~/.claude/settings.json\x1b[0m\n');
   } catch (err) {
-    console.error(`  Error: Could not update ${SETTINGS_PATH}`);
+    console.error(`  Error: Could not update ${settingsPath()}`);
     console.error(`  ${err instanceof Error ? err.message : err}\n`);
     process.exit(1);
   }
@@ -66,9 +68,11 @@ function help() {
   claude-statusblocks help       Show this help
 
 \x1b[1mBlocks:\x1b[0m
-  context    Context bar + percentage + tokens (3-line card)
-  model      Model, dir, cost, duration, campaign, lines changed
-  git        Branch + staged/modified
+  context    Context window fill bar, percentage, token counts
+  model      Model name, directory, effort, duration, version
+  promo      Rate promotion status with peak/off-peak countdown
+  git        Branch, staged/modified counts, lines added/removed
+  usage      5-hour and 7-day rate limit utilization
 
 \x1b[1mCustomize:\x1b[0m
   ~/.claude-statusblocks.json:  { "segments": ["context", "model", "git"] }
