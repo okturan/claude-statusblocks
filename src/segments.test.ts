@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { visibleLength } from './colors.js';
 import { contextSegment } from './segments/context.js';
 import { modelSegment } from './segments/model.js';
@@ -124,24 +124,39 @@ describe('usageSegment', () => {
 });
 
 describe('promoSegment', () => {
-  it('returns correct id and priority', () => {
-    if (!promoSegment.enabled(makeData())) return;
+  afterEach(() => { vi.useRealTimers(); });
+
+  it('returns correct id and priority during active campaign', () => {
+    vi.useFakeTimers();
+    // Wednesday 10:00 ET during the March 2026 campaign
+    vi.setSystemTime(new Date('2026-03-18T10:00:00-04:00'));
+    expect(promoSegment.enabled(makeData())).toBe(true);
     const block = promoSegment.render(makeData(), 80);
     expect(block.id).toBe('promo');
     expect(block.priority).toBe(promoSegment.priority);
   });
 
-  it('renders 2 lines when enabled', () => {
-    if (!promoSegment.enabled(makeData())) return;
+  it('renders 2 lines during active campaign', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-18T10:00:00-04:00'));
+    promoSegment.enabled(makeData());
     const block = promoSegment.render(makeData(), 80);
     expect(block.lines).toHaveLength(2);
   });
 
   it('width matches max visible line length', () => {
-    if (!promoSegment.enabled(makeData())) return;
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-18T10:00:00-04:00'));
+    promoSegment.enabled(makeData());
     const block = promoSegment.render(makeData(), 80);
     const maxLineWidth = Math.max(...block.lines.map(visibleLength));
     expect(block.width).toBe(maxLineWidth);
+  });
+
+  it('is disabled after all campaigns end', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2099-01-01T00:00:00Z'));
+    expect(promoSegment.enabled(makeData())).toBe(false);
   });
 });
 

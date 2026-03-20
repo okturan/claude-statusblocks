@@ -37,10 +37,8 @@ describe('resolveEffort', () => {
     expect(['low', 'medium', 'high', 'max']).toContain(result);
   });
 
-  it('returns null or valid effort without transcript path', () => {
-    // Without a transcript, falls through to settings.json
-    const result = resolveEffort();
-    // Cache from previous test may still return 'max'
-    expect(result === null || ['low', 'medium', 'high', 'max'].includes(result!)).toBe(true);
+  it('returns max from cache even without transcript path', () => {
+    // Cache from test 1 still holds 'max' within the 5s TTL
+    expect(resolveEffort()).toBe('max');
   });
 });
