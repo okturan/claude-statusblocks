@@ -6853,10 +6853,7 @@
     "design_coherence": {
       "score": 84.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T20:00:37+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_wontfix",
-      "stale_since": "2026-03-20T20:01:22+00:00"
+      "assessed_at": "2026-03-20T20:00:37+00:00"
     },
     "error_consistency": {
       "score": 82.0,

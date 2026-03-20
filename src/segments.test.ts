@@ -3,6 +3,7 @@ import { visibleLength } from './colors.js';
 import { contextSegment } from './segments/context.js';
 import { modelSegment } from './segments/model.js';
 import { usageSegment } from './segments/usage.js';
+import { promoSegment } from './segments/promo.js';
 import type { StatusLineData } from './types.js';
 
 function makeData(overrides: Partial<StatusLineData> = {}): StatusLineData {
@@ -119,5 +120,56 @@ describe('usageSegment', () => {
     const block = usageSegment.render(data, 80);
     const maxLineWidth = Math.max(...block.lines.map(visibleLength));
     expect(block.width).toBe(maxLineWidth);
+  });
+});
+
+describe('promoSegment', () => {
+  it('returns correct id and priority', () => {
+    if (!promoSegment.enabled(makeData())) return;
+    const block = promoSegment.render(makeData(), 80);
+    expect(block.id).toBe('promo');
+    expect(block.priority).toBe(promoSegment.priority);
+  });
+
+  it('renders 2 lines when enabled', () => {
+    if (!promoSegment.enabled(makeData())) return;
+    const block = promoSegment.render(makeData(), 80);
+    expect(block.lines).toHaveLength(2);
+  });
+
+  it('width matches max visible line length', () => {
+    if (!promoSegment.enabled(makeData())) return;
+    const block = promoSegment.render(makeData(), 80);
+    const maxLineWidth = Math.max(...block.lines.map(visibleLength));
+    expect(block.width).toBe(maxLineWidth);
+  });
+});
+
+describe('modelSegment line2 layout', () => {
+  it('spreads 3 parts (effort, duration, version) across line1 width', () => {
+    const data = makeData({
+      version: '2.1.80',
+      cost: { total_cost_usd: 0, total_duration_ms: 7200000, total_api_duration_ms: 0, total_lines_added: 0, total_lines_removed: 0 },
+    });
+    const block = modelSegment.render(data, 80);
+    const line2Stripped = block.lines[1]!.replace(/\x1b\[[0-9;]*m/g, '');
+    expect(line2Stripped).toContain('2h0m');
+    expect(line2Stripped).toContain('v2.1.80');
+  });
+
+  it('handles missing duration gracefully', () => {
+    const data = makeData({
+      version: '1.0',
+      cost: { total_cost_usd: 0, total_duration_ms: 0, total_api_duration_ms: 0, total_lines_added: 0, total_lines_removed: 0 },
+    });
+    const block = modelSegment.render(data, 80);
+    expect(block.lines).toHaveLength(2);
+    expect(block.width).toBeGreaterThan(0);
+  });
+
+  it('handles missing version gracefully', () => {
+    const data = makeData({ version: '' });
+    const block = modelSegment.render(data, 80);
+    expect(block.lines).toHaveLength(2);
   });
 });
