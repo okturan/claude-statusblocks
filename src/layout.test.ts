@@ -133,4 +133,21 @@ describe('render', () => {
       expect(rowWidths[0]).toBeLessThanOrEqual(rowWidths[rowWidths.length - 1]!);
     }
   });
+
+  it('respects termWidth - INK_PADDING as max row width', () => {
+    const INK_PADDING = 4;
+    for (const termWidth of [60, 80, 120, 200]) {
+      const maxAllowed = termWidth - INK_PADDING;
+      const data = makeData({
+        rate_limits: {
+          five_hour: { used_percentage: 10, resets_at: Math.floor(Date.now() / 1000) + 3600 },
+          seven_day: { used_percentage: 50, resets_at: Math.floor(Date.now() / 1000) + 86400 },
+        },
+      });
+      const result = render(data, termWidth, {});
+      for (const line of result.split('\n')) {
+        expect(visibleLength(line)).toBeLessThanOrEqual(maxAllowed);
+      }
+    }
+  });
 });

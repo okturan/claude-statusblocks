@@ -56,6 +56,29 @@ describe('padRight', () => {
     expect(visibleLength(result)).toBe(5);
   });
 
+  it('truncates ANSI-styled text to exact visible width', () => {
+    const styled = color('hello world', c.red, c.bold);
+    const result = padRight(styled, 5);
+    expect(visibleLength(result)).toBe(5);
+    // Should preserve content up to the cut point
+    expect(result.replace(/\x1b\[[0-9;]*m/g, '')).toBe('hello');
+  });
+
+  it('truncates at ANSI boundary without breaking sequences', () => {
+    // "ab" styled red + "cd" styled green — truncate to 3 chars
+    const input = color('ab', c.red) + color('cd', c.green);
+    const result = padRight(input, 3);
+    expect(visibleLength(result)).toBe(3);
+    // Should contain 'abc' (2 from first + 1 from second)
+    expect(result.replace(/\x1b\[[0-9;]*m/g, '')).toBe('abc');
+  });
+
+  it('truncates to 1 character', () => {
+    const result = padRight(color('hello', c.red), 1);
+    expect(visibleLength(result)).toBe(1);
+    expect(result.replace(/\x1b\[[0-9;]*m/g, '')).toBe('h');
+  });
+
   it('returns empty string for zero width', () => {
     expect(padRight('hello', 0)).toBe('');
   });
