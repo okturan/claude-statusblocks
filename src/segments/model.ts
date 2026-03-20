@@ -90,6 +90,6 @@ export const modelSegment: Segment = {
 
     const lines = [line1, line2];
     const width = Math.max(...lines.map(visibleLength));
-    return { id: 'model', priority: 2, width, lines };
+    return { id: 'model', priority: 30, width, lines };
   },
 };

@@ -8,9 +8,9 @@ export const campaignSegment: Segment = {
   enabled: () => getActiveCampaign() !== null,
   render() {
     const status = getActiveCampaign();
-    if (!status) return { id: 'promo', priority: 4, width: 0, lines: [''] };
+    if (!status) return { id: 'promo', priority: 20, width: 0, lines: [''] };
 
-    const { state, countdown, progress } = status;
+    const { state, countdown } = status;
     let line1 = '';
     let line2 = '';
 
@@ -34,24 +34,13 @@ export const campaignSegment: Segment = {
       line2 = color('upcoming', c.dim);
     }
 
-    // Build progress bar matching line1 width
     const barWidth = Math.max(visibleLength(line1), visibleLength(line2));
-    const filled = Math.round(progress * barWidth);
-    const empty = barWidth - filled;
-    const barColor = state === 'active-normal' ? c.peak : c.offpeak;
-    const bar = color('▓'.repeat(filled), barColor) + color('░'.repeat(empty), c.gray);
-
-    const lines = [line1, bar];
-    if (line2) lines.push(line2);
-    // Ensure exactly 2 lines: combine bar into line2 area
-    // Actually keep 2 lines: line1 + line2 with bar info
-    // Simpler: line1 = status + bar, line2 = countdown
-    const finalLines = [
+    const lines = [
       line1,
       line2 || color('─'.repeat(barWidth), c.gray),
     ];
 
-    const width = Math.max(...finalLines.map(visibleLength));
-    return { id: 'promo', priority: 4, width, lines: finalLines };
+    const width = Math.max(...lines.map(visibleLength));
+    return { id: 'promo', priority: 20, width, lines };
   },
 };

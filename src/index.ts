@@ -35,7 +35,8 @@ process.stdin.on('end', () => {
     if (!termWidth) { termWidth = 120; }
     const output = render(data, termWidth, config);
     process.stdout.write(output + '\n');
-  } catch {
+  } catch (err) {
+    process.stderr.write(`[claude-statusblocks] ${err instanceof Error ? err.message : err}\n`);
     process.stdout.write('\n');
   }
 });

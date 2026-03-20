@@ -26,7 +26,7 @@ export const usageSegment: Segment = {
   enabled: (data) => !!data.rate_limits,
   render(data) {
     const rl = data.rate_limits;
-    if (!rl) return { id: 'usage', priority: 2, width: 0, lines: [''] };
+    if (!rl) return { id: 'usage', priority: 15, width: 0, lines: [''] };
 
     const barW = 8;
     const dot = color(' · ', c.dim);
@@ -49,6 +49,6 @@ export const usageSegment: Segment = {
 
     const lines = [line1, line2];
     const width = Math.max(...lines.map(visibleLength));
-    return { id: 'usage', priority: 2, width, lines };
+    return { id: 'usage', priority: 15, width, lines };
   },
 };
