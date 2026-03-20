@@ -31,7 +31,7 @@ This writes `statusLine.command` into `~/.claude/settings.json`. Restart Claude 
 | **git** | Branch, staged/modified counts, lines added/removed |
 | **usage** | 5-hour and 7-day API utilization with reset countdowns |
 
-Cards show up based on context: `git` only in repos, `promo` only during active promotions, `usage` only when OAuth credentials exist.
+Cards show up based on context: `git` only in repos, `promo` only during active promotions, `usage` when rate limit data is available (Claude Code ≥2.1.80).
 
 ## Layout
 
@@ -59,9 +59,9 @@ CLAUDE_STATUSBLOCKS_SEGMENTS=context,model,usage
 
 Claude Code doesn't pass terminal width to status line commands ([#22115](https://github.com/anthropics/claude-code/issues/22115)). We walk up the process tree to find the parent's TTY via `ps`, then query its width with `stty`. Falls back to `tput cols`, then 120.
 
-## Usage API
+## Usage data
 
-The `usage` card fetches utilization data from `api.anthropic.com/api/oauth/usage` using your Claude Code OAuth token (read from macOS Keychain or `~/.claude/.credentials.json`). Results are cached for 3 minutes. No data is sent anywhere except Anthropic's API.
+The `usage` card reads rate limit data directly from Claude Code's `rate_limits` field in the statusline JSON (available since v2.1.80). No external API calls, OAuth tokens, or caching needed.
 
 ## Preview
 

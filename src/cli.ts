@@ -15,6 +15,10 @@ const MOCK_DATA: StatusLineData = {
   version: '1.0.80',
   cost: { total_cost_usd: 8.42, total_duration_ms: 2700000, total_api_duration_ms: 1200000, total_lines_added: 245, total_lines_removed: 67 },
   context_window: { context_window_size: 1000000, used_percentage: 34, remaining_percentage: 66, total_input_tokens: 340000, total_output_tokens: 28000, current_usage: { input_tokens: 8000, output_tokens: 1200, cache_creation_input_tokens: 12000, cache_read_input_tokens: 320000 } },
+  rate_limits: {
+    five_hour: { used_percentage: 12, resets_at: Math.floor(Date.now() / 1000) + 7200 },
+    seven_day: { used_percentage: 70, resets_at: Math.floor(Date.now() / 1000) + 75600 },
+  },
   exceeds_200k_tokens: true,
   session_id: 'preview',
 };

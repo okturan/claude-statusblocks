@@ -23,6 +23,10 @@ export interface StatusLineData {
       cache_read_input_tokens: number;
     } | null;
   };
+  rate_limits?: {
+    five_hour?: { used_percentage: number; resets_at: number };
+    seven_day?: { used_percentage: number; resets_at: number };
+  };
   exceeds_200k_tokens: boolean;
   session_id: string;
   transcript_path?: string;

@@ -24,16 +24,16 @@ There are no tests or linters configured.
 
 **Segments** (`src/segments/`) are the core rendering units. Each implements the `Segment` interface (`id`, `priority`, `enabled()`, `render()`). Available segments:
 - `context` (priority 10) — context window usage bar with token counts
-- `usage` (priority 15) — 5-hour and 7-day API utilization from Anthropic OAuth API
+- `usage` (priority 15) — 5-hour and 7-day rate limit utilization from `rate_limits` field in statusline JSON (requires Claude Code ≥2.1.80)
 - `promo` (priority 20) — rate promotion status with peak/off-peak countdown
 - `model` (priority 30) — model name, tilde-shortened directory, duration, version
 - `git` (priority 40) — branch name, staged/modified counts, lines added/removed
 
-**Layout** (`src/layout.ts`): Flows segments into rows using flexbox-like wrapping. Cards are placed left-to-right; when the next card would exceed `maxRowWidth`, a new row starts. After initial flow, single-card rows are merged if they fit together. Within each row, shorter boxes are height-padded with blank bordered rows (required because Claude Code's Ink renderer strips leading whitespace, breaking alignment when boxes have different heights). Priority numbers are only used as a last resort for dropping segments that don't fit even alone.
+**Layout** (`src/layout.ts`): Flows segments into rows using flexbox-like wrapping. Cards are placed left-to-right; when the next card would exceed `maxRowWidth`, a new row starts. Multi-block rows are expanded to fill `maxRowWidth` by distributing extra space evenly across blocks, ensuring consistent row alignment. Within each row, shorter boxes are height-padded with blank bordered rows (required because Claude Code's Ink renderer strips leading whitespace, breaking alignment when boxes have different heights). Priority numbers are only used as a last resort for dropping segments that don't fit even alone.
 
 **Campaigns** (`src/campaigns/`) track Anthropic promotional rate periods. `data.ts` holds campaign definitions (dates, peak hours, multipliers). `engine.ts` evaluates current time against campaigns using `Intl.DateTimeFormat` with `formatToParts` for precise timezone-aware peak detection. Returns state (`active-boosted`, `active-normal`, `weekend`, `upcoming`) with countdown and progress.
 
-**Usage API** (`src/usage/fetch.ts`): Fetches utilization data from `api.anthropic.com/api/oauth/usage` using the user's OAuth token from macOS Keychain (`security find-generic-password`) or `~/.claude/.credentials.json`. Cached for 3 minutes with a 30-second rate-limit lock. Returns 5-hour and 7-day utilization percentages with reset timestamps.
+**Usage data**: Since Claude Code ≥2.1.80, rate limit data (5-hour and 7-day windows) is provided directly in the `rate_limits` field of the statusline JSON. No external API calls or OAuth tokens needed.
 
 **Config** (`src/config.ts`) loads from `~/.claude-statusblocks.json` with env var overrides (`CLAUDE_STATUSBLOCKS_SEGMENTS`, `CLAUDE_STATUSBLOCKS_THEME`). Controls segment order and theme.
 
