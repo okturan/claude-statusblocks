@@ -13,7 +13,10 @@ export function loadConfig(): StatusBlocksConfig {
   try {
     const raw = readFileSync(join(homedir(), '.claude-statusblocks.json'), 'utf8');
     const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === 'object') config = parsed as StatusBlocksConfig;
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      if (Array.isArray(parsed.segments)) config.segments = parsed.segments.filter((s: unknown) => typeof s === 'string');
+      if (typeof parsed.theme === 'string' && VALID_THEMES.has(parsed.theme)) config.theme = parsed.theme as StatusBlocksConfig['theme'];
+    }
   } catch { /* no config file — use defaults */ }
 
   if (envSegments) config.segments = envSegments.split(',');

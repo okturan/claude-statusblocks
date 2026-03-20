@@ -1,19 +1,19 @@
 {
   "version": 3,
   "created": "2026-03-20T17:37:17+00:00",
-  "last_scan": "2026-03-20T19:27:23+00:00",
-  "scan_count": 18,
+  "last_scan": "2026-03-20T19:36:41+00:00",
+  "scan_count": 19,
   "overall_score": 86.9,
-  "objective_score": 92.3,
+  "objective_score": 92.4,
   "strict_score": 86.3,
-  "verified_strict_score": 92.3,
+  "verified_strict_score": 92.4,
   "stats": {
     "total": 142,
     "auto_resolved": 7,
     "deferred": 0,
     "false_positive": 0,
-    "fixed": 96,
-    "open": 39,
+    "fixed": 97,
+    "open": 38,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -30,8 +30,8 @@
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 38,
-        "open": 8,
+        "fixed": 39,
+        "open": 7,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -150,7 +150,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -538,13 +538,13 @@
         "severity": "medium",
         "count": 1,
         "lines": [
-          95
+          96
         ]
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -574,7 +574,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -604,7 +604,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -635,7 +635,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -662,17 +662,17 @@
           40,
           57,
           59,
-          61,
-          83,
-          109,
+          62,
+          84,
           110,
-          111
+          111,
+          112
         ]
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -703,7 +703,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -734,7 +734,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -795,7 +795,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -828,7 +828,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -858,7 +858,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -900,7 +900,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -934,7 +934,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -968,7 +968,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1002,7 +1002,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1036,7 +1036,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1070,7 +1070,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1104,7 +1104,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1138,7 +1138,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1172,7 +1172,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1206,7 +1206,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1240,7 +1240,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1274,7 +1274,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1308,7 +1308,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1342,7 +1342,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1376,7 +1376,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1410,7 +1410,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1444,7 +1444,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1478,7 +1478,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1512,7 +1512,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1546,7 +1546,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:27:23+00:00",
+        "scan_verified_at": "2026-03-20T19:36:41+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -3596,7 +3596,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3605,7 +3605,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T19:27:23+00:00",
+      "suppressed_at": "2026-03-20T19:36:41+00:00",
       "suppression_pattern": "test_coverage::src/index.ts"
     },
     "test_coverage::src/campaigns/engine.ts::transitive_only": {
@@ -3652,7 +3652,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3661,7 +3661,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T19:27:23+00:00",
+      "suppressed_at": "2026-03-20T19:36:41+00:00",
       "suppression_pattern": "test_coverage::src/campaigns/data.ts"
     },
     "test_coverage::src/config.ts::untested_module": {
@@ -3708,7 +3708,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3717,7 +3717,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T19:27:23+00:00",
+      "suppressed_at": "2026-03-20T19:36:41+00:00",
       "suppression_pattern": "test_coverage::src/cli.ts"
     },
     "test_coverage::src/segments/git.ts::transitive_only": {
@@ -3726,17 +3726,17 @@
       "file": "src/segments/git.ts",
       "tier": 3,
       "confidence": "medium",
-      "summary": "No direct tests (54 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "summary": "No direct tests (55 LOC, 1 importers) \u2014 covered only via imports from tested modules",
       "detail": {
         "kind": "transitive_only",
-        "loc": 54,
+        "loc": 55,
         "importer_count": 1,
-        "loc_weight": 7.3484692283495345
+        "loc_weight": 7.416198487095663
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3745,7 +3745,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T19:27:23+00:00",
+      "suppressed_at": "2026-03-20T19:36:41+00:00",
       "suppression_pattern": "test_coverage::src/segments/git.ts"
     },
     "test_coverage::src/layout.ts::shallow::layout.test.ts": {
@@ -3982,7 +3982,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4019,7 +4019,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4049,7 +4049,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4079,7 +4079,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4855,7 +4855,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:51:03+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4883,7 +4883,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:51:03+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4909,7 +4909,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:51:03+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5356,11 +5356,11 @@
         "reasoning": "",
         "summary_hash": "1b5ea9bf"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Extracted pctColor() in colors.ts to deduplicate 90/70 threshold logic, named GIT_CACHE_TTL constant in git.ts",
       "first_seen": "2026-03-20T19:06:04+00:00",
       "last_seen": "2026-03-20T19:27:12+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T19:35:53+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -5368,7 +5368,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Extracted pctColor() in colors.ts to deduplicate 90/70 threshold logic, named GIT_CACHE_TTL constant in git.ts and I am not gaming the score.",
+        "attested_at": "2026-03-20T19:35:53+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::contract_coherence::promo_double_call_divergence": {
       "id": "review::.::holistic::contract_coherence::promo_double_call_divergence",
@@ -5898,7 +5904,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T19:27:23+00:00",
-      "last_seen": "2026-03-20T19:27:23+00:00",
+      "last_seen": "2026-03-20T19:36:41+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5928,7 +5934,7 @@
         }
       },
       "warnings": [],
-      "updated_at": "2026-03-20T19:27:23+00:00"
+      "updated_at": "2026-03-20T19:36:41+00:00"
     }
   },
   "score_confidence": {
@@ -6013,10 +6019,7 @@
     "design_coherence": {
       "score": 78.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T19:27:12+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "mechanical_issues_changed",
-      "stale_since": "2026-03-20T19:27:23+00:00"
+      "assessed_at": "2026-03-20T19:27:12+00:00"
     },
     "error_consistency": {
       "score": 85.0,
@@ -6044,10 +6047,7 @@
     "logic_clarity": {
       "score": 80.5,
       "source": "holistic",
-      "assessed_at": "2026-03-20T19:27:12+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-03-20T19:29:58+00:00"
+      "assessed_at": "2026-03-20T19:27:12+00:00"
     },
     "low_level_elegance": {
       "score": 82.0,
@@ -8402,13 +8402,142 @@
           "strict": 78.5
         }
       }
+    },
+    {
+      "timestamp": "2026-03-20T19:36:41+00:00",
+      "lang": "typescript",
+      "strict_score": 86.3,
+      "verified_strict_score": 92.4,
+      "objective_score": 92.4,
+      "overall_score": 86.9,
+      "open": 38,
+      "diff_new": 0,
+      "diff_resolved": 20,
+      "ignored": 4,
+      "raw_issues": 23,
+      "suppressed_pct": 17.4,
+      "ignore_patterns": 16,
+      "subjective_integrity": {
+        "status": "penalized",
+        "matched_count": 2,
+        "reset_count": 2,
+        "target_score": 95.0
+      },
+      "score_confidence": {
+        "status": "full",
+        "confidence": 1.0,
+        "detector_count": 0,
+        "dimension_count": 0
+      },
+      "dimension_scores": {
+        "Code quality": {
+          "score": 91.9,
+          "strict": 91.9
+        },
+        "Security": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "File health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Duplication": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Test health": {
+          "score": 86.4,
+          "strict": 79.9
+        },
+        "Abstraction fit": {
+          "score": 94.0,
+          "strict": 94.0
+        },
+        "AI generated debt": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "API coherence": {
+          "score": 82.5,
+          "strict": 82.5
+        },
+        "Auth consistency": {
+          "score": 0.0,
+          "strict": 0.0
+        },
+        "Contracts": {
+          "score": 84.0,
+          "strict": 84.0
+        },
+        "Convention drift": {
+          "score": 93.0,
+          "strict": 93.0
+        },
+        "Cross-module arch": {
+          "score": 88.5,
+          "strict": 88.5
+        },
+        "Dep health": {
+          "score": 97.0,
+          "strict": 97.0
+        },
+        "Design coherence": {
+          "score": 78.0,
+          "strict": 78.0
+        },
+        "Error consistency": {
+          "score": 85.0,
+          "strict": 85.0
+        },
+        "High elegance": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "Stale migration": {
+          "score": 0.0,
+          "strict": 0.0
+        },
+        "Init coupling": {
+          "score": 85.0,
+          "strict": 85.0
+        },
+        "Logic clarity": {
+          "score": 80.5,
+          "strict": 80.5
+        },
+        "Low elegance": {
+          "score": 82.0,
+          "strict": 82.0
+        },
+        "Mid elegance": {
+          "score": 91.5,
+          "strict": 91.5
+        },
+        "Naming quality": {
+          "score": 92.5,
+          "strict": 92.5
+        },
+        "Structure nav": {
+          "score": 90.5,
+          "strict": 90.5
+        },
+        "Test strategy": {
+          "score": 72.0,
+          "strict": 72.0
+        },
+        "Type safety": {
+          "score": 78.5,
+          "strict": 78.5
+        }
+      }
     }
   ],
   "review_cache": {
     "detectors": {
       "boilerplate": {
         "version": 1,
-        "fingerprint": "cb6fdee4580c5d64c3da2b78bf1f08111a0d556b",
+        "fingerprint": "ea378e9322a14532212ed5f7e9ca4c3c35b0df8a",
         "entries": [
           {
             "id": "fd7d626bfe08facc",
@@ -9980,7 +10109,7 @@
       },
       "security": {
         "version": 1,
-        "fingerprint": "1857b1510cde9385aa62b79fcd4ad2642b6f2b0b",
+        "fingerprint": "4fe6a4839178122c8936da927d9c7c8514cf8ef3",
         "entries": [],
         "files_scanned": 14,
         "coverage": null
@@ -10005,19 +10134,19 @@
             "body_hash": "f11cb686c33f6bccf337efee2a069b25",
             "loc": 7
           },
-          "src/campaigns/engine.ts:resolveWeekendState:53:65": {
+          "src/campaigns/engine.ts:resolveWeekendState:53:66": {
             "body_hash": "d453cba36cb1c6e04fadb59a568bebd3",
-            "loc": 13
+            "loc": 14
           },
-          "src/campaigns/engine.ts:resolvePeakState:67:72": {
+          "src/campaigns/engine.ts:resolvePeakState:68:73": {
             "body_hash": "a435eb264e7b30ef1fe741b78ce77a4b",
             "loc": 6
           },
-          "src/campaigns/engine.ts:resolveOffPeakState:74:93": {
+          "src/campaigns/engine.ts:resolveOffPeakState:75:94": {
             "body_hash": "38c18f410fb5f42eacdee683a1308075",
             "loc": 20
           },
-          "src/campaigns/engine.ts:getActiveCampaign:95:123": {
+          "src/campaigns/engine.ts:getActiveCampaign:96:124": {
             "body_hash": "182255a8490c506fca1ee5c391d62c8c",
             "loc": 29
           },
@@ -10041,15 +10170,19 @@
             "body_hash": "0e5426069040c62bda310ceca6ffe683",
             "loc": 3
           },
-          "src/colors.ts:visibleLength:28:31": {
+          "src/colors.ts:pctColor:28:30": {
+            "body_hash": "3e7391ef9d1969b09f3214e96b47f8dd",
+            "loc": 3
+          },
+          "src/colors.ts:visibleLength:33:36": {
             "body_hash": "d66432d52d60ff4bf56a0127f010cd39",
             "loc": 4
           },
-          "src/colors.ts:padRight:34:38": {
+          "src/colors.ts:padRight:39:43": {
             "body_hash": "c409baa8b2fe390086afa24c9a7dc586",
             "loc": 5
           },
-          "src/colors.ts:truncate:41:60": {
+          "src/colors.ts:truncate:46:65": {
             "body_hash": "b3206254b4d06f2120537f4071b67709",
             "loc": 20
           },
@@ -10089,8 +10222,8 @@
             "body_hash": "989889f7cc5eda62fd7d297b19f89538",
             "loc": 5
           },
-          "src/segments/git.ts:getGitInfo:7:27": {
-            "body_hash": "f86d2bc17c54daf1065fa64c29b94384",
+          "src/segments/git.ts:getGitInfo:8:28": {
+            "body_hash": "4bcdb700d2b64134dfbf8e0fc864a279",
             "loc": 21
           },
           "src/segments/model.ts:tildeDir:7:12": {
@@ -10106,7 +10239,7 @@
             "loc": 11
           },
           "src/segments/usage.ts:miniBar:16:21": {
-            "body_hash": "6efcd67977ccef74f4b1e8cf4d4a6151",
+            "body_hash": "872b7e49f3ceade172dfe72461f731c5",
             "loc": 6
           }
         },
@@ -10137,7 +10270,8 @@
   },
   "zone_distribution": {
     "production": 14,
-    "test": 6
+    "test": 6,
+    "config": 1
   },
   "tool_hash": "36b113ba9d94",
   "scan_path": ".",
@@ -10151,14 +10285,14 @@
       "exports": 0,
       "deprecated": 0,
       "structural": 14,
-      "flat_dirs": 3,
+      "flat_dirs": 4,
       "props": 1,
       "single_use": 0,
       "coupling": 0,
       "cycles": 14,
       "orphaned": 14,
       "patterns": 1,
-      "naming": 3,
+      "naming": 4,
       "facade": 14,
       "test_coverage": 104,
       "smells": 15,
@@ -10166,23 +10300,23 @@
       "security": 14,
       "subjective_review": 20,
       "boilerplate_duplication": 0,
-      "dupes": 30,
+      "dupes": 31,
       "stale_wontfix": 0
     }
   },
   "codebase_metrics": {
     "typescript": {
-      "total_files": 20,
-      "total_loc": 1514,
-      "total_directories": 3
+      "total_files": 21,
+      "total_loc": 1545,
+      "total_directories": 4
     }
   },
   "dimension_scores": {
     "Code quality": {
-      "score": 91.6,
-      "strict": 91.6,
-      "verified_strict_score": 91.6,
-      "checks": 79,
+      "score": 91.9,
+      "strict": 91.9,
+      "verified_strict_score": 91.9,
+      "checks": 81,
       "failing": 13,
       "tier": 3,
       "detectors": {
@@ -10211,13 +10345,13 @@
           "weighted_failures": 0.7
         },
         "flat_dirs": {
-          "potential": 3,
+          "potential": 4,
           "pass_rate": 1.0,
           "failing": 0,
           "weighted_failures": 0.0
         },
         "naming": {
-          "potential": 3,
+          "potential": 4,
           "pass_rate": 1.0,
           "failing": 0,
           "weighted_failures": 0.0
@@ -10284,12 +10418,12 @@
       "score": 100.0,
       "strict": 100.0,
       "verified_strict_score": 100.0,
-      "checks": 30,
+      "checks": 31,
       "failing": 0,
       "tier": 3,
       "detectors": {
         "dupes": {
-          "potential": 30,
+          "potential": 31,
           "pass_rate": 1.0,
           "failing": 0,
           "weighted_failures": 0.0
@@ -10500,13 +10634,13 @@
       "strict": 78.0,
       "verified_strict_score": 78.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.78,
-          "failing": 2,
+          "failing": 1,
           "weighted_failures": 2.2,
           "assessment_score": 78.0,
           "placeholder": false,
@@ -10751,7 +10885,7 @@
   "reminder_history": {
     "auto_fixers_available": 3,
     "dry_run_first": 3,
-    "report_scores": 13,
+    "report_scores": 14,
     "feedback_nudge": 3,
     "review_issues_pending": 3,
     "stagnant_nudge": 4,

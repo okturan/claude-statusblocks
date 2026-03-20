@@ -12,7 +12,7 @@ process.stdin.on('data', (chunk: string) => { input += chunk; });
 process.stdin.on('end', () => {
   try {
     const parsed = JSON.parse(input);
-    if (!parsed || typeof parsed !== 'object' || !parsed.model || !parsed.context_window) {
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || !parsed.model || !parsed.context_window) {
       process.stdout.write('\n');
       return;
     }
