@@ -1,0 +1,91 @@
+{
+  "version": 8,
+  "created": "2026-03-20T17:43:26+00:00",
+  "updated": "2026-03-20T17:43:26+00:00",
+  "queue_order": [
+    "workflow::communicate-score",
+    "triage::observe",
+    "triage::reflect",
+    "triage::organize",
+    "triage::enrich",
+    "triage::sense-check",
+    "triage::commit"
+  ],
+  "deferred": [],
+  "skipped": {},
+  "active_cluster": null,
+  "overrides": {},
+  "clusters": {},
+  "superseded": {},
+  "promoted_ids": [],
+  "plan_start_scores": {
+    "strict": 85.4,
+    "overall": 85.4,
+    "objective": 100.0,
+    "verified": 100.0
+  },
+  "refresh_state": {
+    "lifecycle_phase": "workflow_postflight",
+    "postflight_scan_completed_at_scan_count": 2
+  },
+  "execution_log": [
+    {
+      "timestamp": "2026-03-20T17:43:26+00:00",
+      "action": "sync_communicate_score",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "injected": true
+      }
+    },
+    {
+      "timestamp": "2026-03-20T17:43:26+00:00",
+      "action": "sync_triage",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "injected": true
+      }
+    },
+    {
+      "timestamp": "2026-03-20T17:43:26+00:00",
+      "action": "sync_lifecycle_phase",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "phase": "workflow_postflight"
+      }
+    },
+    {
+      "timestamp": "2026-03-20T17:43:26+00:00",
+      "action": "seed_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T17:43:26+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 2
+      }
+    }
+  ],
+  "epic_triage_meta": {},
+  "commit_log": [],
+  "uncommitted_issues": [],
+  "commit_tracking_branch": null,
+  "scan_count_at_plan_start": 2
+}

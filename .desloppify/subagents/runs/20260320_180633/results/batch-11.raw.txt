@@ -1,0 +1,91 @@
+{
+  "batch": "api_surface_coherence",
+  "batch_index": 11,
+  "assessments": {
+    "api_surface_coherence": 88.2
+  },
+  "dimension_notes": {
+    "api_surface_coherence": {
+      "evidence": [
+        "All 5 segments implement the same Segment interface consistently: id (string), priority (number), enabled(data) (boolean), render(data, allocWidth) (Block) — uniform API shape across siblings",
+        "All public functions are synchronous — no mixed sync/async in any module's API surface",
+        "No function in the public API exceeds 5 parameters — render(data, termWidth, config) has 3, segment render(data, allocWidth) has 2",
+        "Previously reported issue of Block.priority contradicting Segment.priority has been fixed — model.ts, campaign.ts, and usage.ts now return matching priority values",
+        "Previously reported dead export truncate() in colors.ts has been fixed — it is now module-private",
+        "colors.ts exports a coherent set: color(), c (constants), visibleLength(), padRight() — all ANSI-related, all synchronous, consistent naming",
+        "loadConfig() in config.ts has a single return type (StatusBlocksConfig) with no overloads or variant signatures",
+        "getActiveCampaign() returns CampaignStatus | null — clear nullable contract without overloads"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The Segment interface's render() method has inconsistent parameter usage — some segments use allocWidth (model.ts), others ignore it entirely (campaign.ts, git.ts, context.ts, usage.ts), creating a contract where the parameter exists but is meaningless for most implementations. Additionally, the enabled() method in campaign.ts calls the expensive getActiveCampaign() which is then called again in render(), suggesting the API boundary could better support a check-then-render pattern."
+    }
+  },
+  "dimension_judgment": {
+    "api_surface_coherence": {
+      "dimension_character": "The API surface is compact and consistent. The Segment interface provides a uniform shape across all 5 implementations, all exports are synchronous, parameter counts are low, and the two previously reported coherence issues (priority mismatch, dead export) have been fixed. The remaining friction is minor: the allocWidth parameter in render() is only meaningful to one of five segments, creating slight contract dishonesty at the interface level, though this does not cause practical confusion because unused parameters are simply ignored.",
+      "score_rationale": "The codebase scores well because a developer can predict API shape and behavior from seeing one segment example — the Segment interface, colors.ts utilities, and config/campaign APIs all follow consistent patterns. The fixed priority and export issues demonstrate active improvement. The allocWidth underuse is minor enough (a single unused parameter) that it warrants a note but not a significant score reduction. This places the score around 88 — strong with minor rough edges."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "api_surface_coherence",
+      "identifier": "allocwidth_ignored_by_most_segments",
+      "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
+      "related_files": [
+        "src/types.ts",
+        "src/segments/model.ts",
+        "src/segments/context.ts",
+        "src/segments/campaign.ts",
+        "src/segments/git.ts",
+        "src/segments/usage.ts"
+      ],
+      "evidence": [
+        "Segment interface declares render(data: StatusLineData, availWidth: number): Block",
+        "model.ts uses allocWidth to compute dirBudget for directory name truncation (line 34)",
+        "context.ts, campaign.ts, git.ts, and usage.ts all ignore the allocWidth parameter entirely — their widths are determined by content",
+        "layout.ts computes allocWidth = Math.max(20, maxRowWidth - BOX_CHROME) and passes it to all segments uniformly"
+      ],
+      "suggestion": "This is a pragmatic interface design for a 5-segment codebase — making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed, but if more segments are added, consider whether allocWidth should be part of the interface or passed only to segments that need it via a different mechanism.",
+      "confidence": "low",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": ["allocwidth_ignored_by_most_segments — may be over-reporting for a 5-segment codebase where this is pragmatic"]
+  },
+  "context_updates": {
+    "api_surface_coherence": {
+      "add": [
+        {
+          "header": "Uniform Segment interface across all implementations",
+          "description": "All 5 segments implement the identical Segment interface (id, priority, enabled, render) with consistent return types. A developer seeing one segment can predict the shape of all others.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "All-synchronous public API surface",
+          "description": "Every exported function across the codebase is synchronous — no mixed sync/async patterns exist. This eliminates a common source of API surface inconsistency.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Previously reported priority and export issues fixed",
+          "description": "Block.priority values now match Segment.priority declarations in all segments, and truncate() is no longer exported from colors.ts. Both fixes improve API surface consistency.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Low parameter counts across all public functions",
+          "description": "No public function exceeds 3 parameters. render() takes (data, termWidth, config), segment render takes (data, allocWidth), loadConfig() takes none. This keeps the API surface easy to predict.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

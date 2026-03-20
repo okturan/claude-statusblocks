@@ -1,0 +1,96 @@
+{
+  "batch": "naming_quality",
+  "batch_index": 5,
+  "assessments": {"naming_quality": 82.5},
+  "dimension_notes": {
+    "naming_quality": {
+      "evidence": [
+        "campaignSegment export in campaign.ts uses id 'promo', creating a vocabulary split: file name says 'campaign', id says 'promo', DEFAULT_ORDER references 'promo' — developers must know both terms",
+        "resetCountdown in usage.ts reads as an imperative action (reset the countdown) but is actually a pure formatter converting epoch seconds to human-readable countdown strings — inconsistent with formatTokens and formatCountdown naming convention elsewhere",
+        "Most names are precise and domain-aligned: formatTokens, formatCountdown, visibleLength, padRight, getTimeInTz, tildeDir, getGitInfo, miniBar all clearly communicate their purpose",
+        "Segment interface names (contextSegment, modelSegment, gitSegment, usageSegment) follow a consistent {domain}Segment pattern that is immediately recognizable",
+        "Helper function names in engine.ts (isWeekend, getDowNum, formatCountdown) are concise and accurate",
+        "Type names (StatusLineData, Block, Segment, Campaign, CampaignStatus, StatusBlocksConfig) are domain-aligned and descriptive",
+        "Variable names like barColor, peakStartSecs, peakEndSecs, secsUntilPeak are precise and units-annotated"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The campaign/promo vocabulary split requires developers to mentally map between two terms for the same concept. resetCountdown's imperative-sounding name breaks the format* convention established elsewhere."
+    }
+  },
+  "dimension_judgment": {
+    "naming_quality": {
+      "dimension_character": "The codebase demonstrates strong naming discipline overall, with domain-specific terms used precisely and consistently across most modules. Function names like formatTokens, visibleLength, and getTimeInTz reveal intent immediately. The two open issues — the campaign/promo identity split and the resetCountdown misnomer — are real but localized, affecting navigation and readability in specific spots rather than systemically undermining the naming quality.",
+      "score_rationale": "Names are mostly precise enough that a developer can predict behavior without reading implementations, placing this near the 90 anchor. However, the campaign/promo vocabulary divergence crosses multiple files (campaign.ts, layout.ts DEFAULT_ORDER) and would confuse a new developer searching for the promo segment by filename, pulling the score toward 80. The resetCountdown misnomer is a smaller local issue. Together these create enough friction to land at 82.5."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "naming_quality",
+      "identifier": "campaign_promo_vocabulary_split",
+      "summary": "campaignSegment export uses id 'promo' creating name/identity mismatch across codebase",
+      "related_files": ["src/segments/campaign.ts", "src/layout.ts"],
+      "evidence": [
+        "campaign.ts exports campaignSegment with id: 'promo' (line 6)",
+        "layout.ts DEFAULT_ORDER references 'promo' (line 11) but imports campaignSegment from campaign.ts (line 7)",
+        "A developer searching for 'campaign' would find the file but miss the config reference; searching for 'promo' would find the config but miss the file"
+      ],
+      "suggestion": "Rename file to promo.ts and export as promoSegment to match the id, since 'promo' accurately describes the segment's purpose (promotional rate display). Update the import in layout.ts accordingly.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "campaign_promo_naming"
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "reset_countdown_misnomer",
+      "summary": "resetCountdown sounds like an action (reset the countdown) rather than a formatter",
+      "related_files": ["src/segments/usage.ts"],
+      "evidence": [
+        "resetCountdown (line 4) is a pure formatter: takes an epoch timestamp, returns a human-readable countdown string like '2h30m'",
+        "The codebase has established format* as the convention for formatters: formatTokens in context.ts (line 4), formatCountdown in engine.ts (line 41)",
+        "The 'reset' prefix suggests an imperative mutation, but the function is side-effect-free"
+      ],
+      "suggestion": "Rename to formatResetCountdown to match the codebase's format* naming convention and clarify it is a formatter, not an action.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["The campaign/promo split likely arose from renaming the concept from 'campaign' (internal data model) to 'promo' (user-facing display) without updating the file/export names to match"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "naming_quality": {
+      "add": [
+        {
+          "header": "Domain-aligned type and interface names",
+          "description": "Type names (StatusLineData, Block, Segment, Campaign, CampaignStatus) map directly to domain concepts. A developer can navigate the type system without needing to translate from generic names to domain meaning.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Consistent {domain}Segment export pattern",
+          "description": "All five segments follow the {domain}Segment naming pattern (contextSegment, modelSegment, gitSegment, usageSegment, campaignSegment), making the segment registry immediately scannable.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Units-annotated time variable names",
+          "description": "Time-related variables consistently include units in their names (peakStartSecs, currentSecs, secsUntilPeak, total_duration_ms), preventing unit confusion in arithmetic.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "format* convention for pure formatters",
+          "description": "Functions that convert raw values to display strings use the format prefix (formatTokens, formatCountdown), establishing a recognizable convention for side-effect-free transformations.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

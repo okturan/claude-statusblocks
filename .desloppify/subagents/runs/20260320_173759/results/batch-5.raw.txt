@@ -1,0 +1,97 @@
+{
+  "batch": "naming_quality",
+  "batch_index": 5,
+  "assessments": {"naming_quality": 87.5},
+  "dimension_notes": {
+    "naming_quality": {
+      "evidence": [
+        "Segment names (contextSegment, modelSegment, gitSegment, campaignSegment, usageSegment) clearly identify their rendering domain",
+        "Color utility names (visibleLength, padRight, truncate, color) are precise and self-documenting",
+        "Campaign engine functions (getTimeInTz, isWeekend, getDowNum, formatCountdown, getActiveCampaign) communicate intent accurately",
+        "Block/Segment/Campaign interfaces use domain-appropriate vocabulary",
+        "formatTokens in context.ts clearly describes its purpose",
+        "tildeDir in model.ts accurately describes what it does (convert absolute path to tilde-prefixed)",
+        "resetCountdown in usage.ts is slightly ambiguous -- it formats a countdown to reset, not a 'reset countdown' action",
+        "Variables s5/s7, pct5/pct7, rst5/rst7 in usage.ts use terse abbreviations but are locally scoped and contextually clear",
+        "The campaign segment file exports campaignSegment but its id is 'promo', creating a name/identity mismatch",
+        "miniBar in usage.ts is clear and descriptive for its purpose"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "campaignSegment has id 'promo' creating a name/identity mismatch; resetCountdown name suggests an action rather than a formatter; DEFAULT_ORDER references 'promo' which is the segment id but the file/export uses 'campaign' vocabulary"
+    }
+  },
+  "dimension_judgment": {
+    "naming_quality": {
+      "dimension_character": "Names across the codebase are predominantly intention-revealing and domain-aligned. Functions like getActiveCampaign, formatCountdown, visibleLength, and tildeDir tell a developer exactly what to expect. The main friction point is a vocabulary split around the campaign/promo segment: the file is named campaign.ts, the export is campaignSegment, but the segment id is 'promo' and DEFAULT_ORDER references 'promo' -- a developer must know that 'promo' and 'campaign' refer to the same thing.",
+      "score_rationale": "The codebase sits in the strong range -- a developer reading nearly any function name can predict its behavior without checking the implementation. The campaign/promo vocabulary divergence and the slightly misleading resetCountdown name are the only substantive friction points, keeping the score below 90. No generic verbs like 'process' or 'handle' appear anywhere."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "naming_quality",
+      "identifier": "campaign_promo_vocabulary_split",
+      "summary": "campaignSegment export uses id 'promo' creating name/identity mismatch across codebase",
+      "related_files": ["src/segments/campaign.ts", "src/layout.ts"],
+      "evidence": [
+        "src/segments/campaign.ts exports campaignSegment but sets id: 'promo'",
+        "src/layout.ts DEFAULT_ORDER references 'promo' while importing from campaign.ts",
+        "A developer searching for 'promo' functionality finds campaign.ts only by grep, not by file name"
+      ],
+      "suggestion": "Pick one term and use it consistently. Since the segment renders promotional campaign status, either rename the file to promo.ts and export promoSegment, or change the id to 'campaign' and update DEFAULT_ORDER to match. The former is more concise.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "reset_countdown_misleading_verb",
+      "summary": "resetCountdown sounds like an action (reset the countdown) rather than a formatter",
+      "related_files": ["src/segments/usage.ts"],
+      "evidence": [
+        "resetCountdown(epochSec: number): string formats seconds-until-reset into a human-readable countdown string like '2h30m'",
+        "The 'reset' prefix suggests mutation, but the function is a pure formatter"
+      ],
+      "suggestion": "Rename to formatResetCountdown to match the codebase's format* naming convention (formatTokens, formatCountdown in engine.ts) and clarify it is a formatter, not an action.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "naming_quality": {
+      "add": [
+        {
+          "header": "Domain-aligned segment naming convention",
+          "description": "All five segments use the pattern <domain>Segment (contextSegment, modelSegment, gitSegment, etc.), making the rendering domain immediately clear from the export name.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Precise utility function names in colors.ts",
+          "description": "visibleLength, padRight, truncate, and color are self-documenting names that communicate both input and output. No generic verbs or abbreviations.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Consistent format* prefix for formatters",
+          "description": "formatTokens in context.ts and formatCountdown in engine.ts use the format* prefix convention for pure string-formatting functions, establishing a clear naming pattern.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Campaign vs promo vocabulary divergence",
+          "description": "The campaign segment file and export use 'campaign' vocabulary while the segment id and DEFAULT_ORDER use 'promo', requiring developers to mentally map between two terms for the same concept.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

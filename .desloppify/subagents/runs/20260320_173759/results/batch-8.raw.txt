@@ -1,0 +1,114 @@
+{
+  "batch": "low_level_elegance",
+  "batch_index": 8,
+  "assessments": {"low_level_elegance": 76.8},
+  "dimension_notes": {
+    "low_level_elegance": {
+      "evidence": [
+        "layout.ts render() is 120 lines mixing brute-force assignment enumeration, row materialization, and rendering -- three distinct concerns in one function body",
+        "The brute-force layout optimizer (lines 91-153 in layout.ts) uses numRows^n enumeration with reusable buffers, manually tracking row widths and min indices -- the optimization is clever but the inline implementation makes the function hard to follow",
+        "campaign.ts render builds bar and lines variables (lines 37-45) that are immediately discarded in favor of finalLines (lines 49-52), with three stale comments explaining abandoned approaches",
+        "model.ts render has a 4-branch conditional (lines 58-89) for laying out 1/2/3 parts on line2 with manual gap calculation -- the 3-part branch alone has 9 local variables (dot, dotLen, eLen, dLen, vLen, contentWidth, spareWithDots, clamped, g/g1/g2/g3/g4)",
+        "effort.ts resolveEffort has clean two-source cascade with early cache return -- direct and well-structured",
+        "colors.ts functions (visibleLength, padRight, truncate) are concise, single-purpose, and proportionate to their task",
+        "git.ts getGitInfo has a clean cache-check -> exec chain with appropriate error handling",
+        "context.ts render is 12 lines of direct, linear computation -- exemplary brevity for its task",
+        "usage.ts render builds two symmetric lines (5h and 7d) with consistent structure -- clear and repetitive in a productive way",
+        "engine.ts getActiveCampaign has high cyclomatic complexity (>15 branches) but each branch handles a genuinely distinct campaign state -- the complexity is inherent to the domain"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "low_level_elegance": {
+      "dimension_character": "The codebase splits between two quality bands. Utility functions (colors.ts, effort.ts), simple segments (context.ts, git.ts, usage.ts), and the campaign engine are clean, proportionate, and directly express intent. However, layout.ts render() and model.ts render() contain significant local complexity -- deep variable proliferation, manual buffer management, and multi-branch gap calculation that obscure intent. The dead-code in campaign.ts render shows iteration residue that was not cleaned up.",
+      "score_rationale": "The smaller modules demonstrate strong craft -- concise functions, clean cache patterns, and direct control flow. But layout.ts render() is a 120-line function mixing brute-force combinatorial search with row materialization and rendering, and model.ts line2 layout has a 9-variable gap calculation. These are not merely long functions -- they contain nested loops, manual buffer management, and branching that makes them hard to modify safely. The unevenness between clean utilities and complex renderers places this in the 'mixed' range around 77, below the 80 threshold where a developer would mostly be well-served."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "layout_render_monolith",
+      "summary": "layout.ts render() mixes brute-force layout search, row materialization, and rendering in 120 lines",
+      "related_files": ["src/layout.ts"],
+      "evidence": [
+        "Lines 66-90: setup and block rendering (allocWidth, order, active, blocks, widths)",
+        "Lines 91-153: brute-force assignment enumeration with reusable buffers (rowOf, seen, rowRW, minIdx), nested loops up to numRows^n iterations",
+        "Lines 155-178: materializing bestAssign into RowGroups with sorting and mapping",
+        "Lines 180-186: rendering each row group and joining",
+        "The function uses 15+ local variables and 4 levels of nesting in the enumeration loop"
+      ],
+      "suggestion": "Extract the brute-force layout optimizer (lines 91-153) into a separate function like findOptimalAssignment(n, widths, row1MaxWidth, maxRowWidth) returning the best assignment array. This isolates the combinatorial search from the rendering pipeline and makes both pieces independently understandable.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "model_line2_gap_sprawl",
+      "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution",
+      "related_files": ["src/segments/model.ts"],
+      "evidence": [
+        "Lines 58-81: the 3-part branch computes dot, dotLen, eLen, dLen, vLen, contentWidth, spareWithDots, clamped, g, g1, g2, g3, g4, extra, leftGap, rightGap",
+        "The inner if/else (lines 67-81) switches between dot-separated and space-separated layouts based on a width threshold of 12",
+        "The gap distribution formula (g1..g4 with floor/min/extra arithmetic) is the hardest code to follow in the entire codebase"
+      ],
+      "suggestion": "Extract the 3-part gap distribution into a helper function like distributeGaps(parts: string[], targetWidth: number): string that encapsulates the dot-vs-space decision and gap arithmetic. This reduces the render method's cognitive load from 4 branches to 3 simpler ones.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "campaign_dead_intermediates",
+      "summary": "campaign.ts render builds bar and lines array then discards them, with stale iteration comments",
+      "related_files": ["src/segments/campaign.ts"],
+      "evidence": [
+        "Line 38-42: builds bar and lines 43-45: builds lines = [line1, bar] with optional line2 push",
+        "Lines 46-48: three stale comments showing abandoned design iterations ('Ensure exactly 2 lines', 'Actually keep 2 lines', 'Simpler: line1 = status + bar, line2 = countdown')",
+        "Lines 49-52: builds finalLines ignoring both bar and lines variables entirely"
+      ],
+      "suggestion": "Remove the bar computation (lines 37-42), the lines array (lines 43-45), and the three stale comments (lines 46-48). Build finalLines directly from line1 and line2.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Layout optimization was implemented inline during iterative development without subsequent extraction", "Model segment's line2 layout accumulated complexity as spacing requirements evolved"],
+    "likely_symptoms": ["campaign_dead_intermediates is a symptom of iterative development without cleanup"],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "low_level_elegance": {
+      "add": [
+        {
+          "header": "Clean utility functions under 20 lines",
+          "description": "colors.ts (visibleLength, padRight, truncate), effort.ts (resolveEffort with cache), and context.ts render are concise, single-purpose functions that demonstrate proportionate extraction -- each does one thing directly.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Consistent cache pattern in hot paths",
+          "description": "Both effort.ts and git.ts use the same cache pattern: check timestamp -> return cached -> compute fresh -> update cache. This consistency makes the pattern predictable across the codebase.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Layout render mixes search and rendering",
+          "description": "The brute-force combinatorial layout optimizer is inlined in render() alongside block rendering and row composition, creating a 120-line function with 15+ locals and 4 nesting levels. The optimization logic is correct but hard to modify independently of the rendering pipeline.",
+          "settled": true,
+          "positive": false
+        },
+        {
+          "header": "Engine complexity is domain-inherent",
+          "description": "getActiveCampaign in engine.ts has high cyclomatic complexity (>15 branches) but each branch handles a genuinely distinct state: upcoming, ended, weekend, peak, off-peak-before-peak, off-peak-after-peak. This complexity reflects the domain, not poor extraction.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

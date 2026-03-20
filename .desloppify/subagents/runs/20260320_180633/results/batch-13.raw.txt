@@ -1,0 +1,82 @@
+{
+  "batch": "ai_generated_debt",
+  "batch_index": 13,
+  "assessments": {
+    "ai_generated_debt": 90.5
+  },
+  "dimension_notes": {
+    "ai_generated_debt": {
+      "evidence": [
+        "Code is purpose-driven with minimal ceremony across all 14 files",
+        "Comments are sparse (5.7% comment ratio) and mostly explain WHY, not WHAT — e.g., '// Claude Code's outer paddingX: 2 on each side' in layout.ts, '// Strip \"(1M context)\" etc. from display name' in model.ts",
+        "No restating comments echoing code found across segments or core modules",
+        "No debug/trace logging in production code paths — console.log/error usage is confined to cli.ts for intentional user-facing CLI output (init, preview, help)",
+        "No pass-through wrapper functions — all functions add logic or transformation",
+        "No docstring bloat — the few JSDoc comments are concise and on non-trivial functions (e.g., engine.ts getActiveCampaign, layout.ts findOptimalAssignment)",
+        "No generic names like handleData/processItem in domain code; names are domain-specific (formatTokens, tildeDir, getGitInfo, miniBar, resetCountdown)",
+        "Previously reported issue (stale thinking-out-loud comments and dead code in campaign.ts) has been fixed — campaign.ts render() now cleanly builds lines without dead intermediate computation"
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "cli.ts has elevated log density (4.0 per function) with raw ANSI escape sequences inlined in console.log calls rather than using the project's own color() utility; this creates a minor style inconsistency that echoes a 'copied template' pattern rather than idiomatic project code."
+    }
+  },
+  "dimension_judgment": {
+    "ai_generated_debt": {
+      "dimension_character": "The codebase shows very little AI-generated debt. Code is concise and purpose-driven with a low comment ratio (5.7%), no restating comments, no debug logging in production paths, and no pass-through wrappers. The previously flagged dead code in campaign.ts has been cleaned up. The only mild signal is cli.ts using raw ANSI escape sequences for output formatting instead of the project's own color() utility, which gives it a slightly template-like quality.",
+      "score_rationale": "A developer's attention would be spent on logic, not noise — placing this near the 90 anchor for 'mostly clean with small pockets of boilerplate.' The cli.ts inline ANSI pattern is a minor departure from idiomatic project conventions but does not meaningfully impede understanding. The stale-code fix in campaign.ts eliminates the previously most significant AI-debt signal."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "cli_raw_ansi_escapes",
+      "summary": "cli.ts uses raw ANSI escape strings instead of the project's own color() utility",
+      "related_files": ["src/cli.ts"],
+      "evidence": [
+        "cli.ts lines 30, 33-34, 42, 49-51, 61 use raw '\\x1b[' escape sequences for coloring, while every other file in the project uses the color()/c.* API from colors.ts",
+        "This pattern is consistent with template-pasted code rather than code written with project context"
+      ],
+      "suggestion": "Import { color, c } from './colors.js' and replace raw ANSI sequences with color() calls. For example, change console.log('\\x1b[1mclaude-statusblocks\\x1b[0m preview') to console.log(color('claude-statusblocks', c.bold) + ' preview'). This aligns cli.ts with the project's established color infrastructure.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "ai_generated_debt": {
+      "add": [
+        {
+          "header": "Purpose-driven code with minimal ceremony",
+          "description": "All 14 production files maintain a low 5.7% comment ratio with comments that explain WHY (business rules, external constraints) rather than restating code. No restating comments, no debug logging in production paths, no docstring bloat on trivial functions.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Domain-specific naming throughout",
+          "description": "Functions use domain terms (formatTokens, tildeDir, getGitInfo, miniBar, resetCountdown) rather than generic AI-hallmark names (handleData, processItem). This indicates code written with project context rather than from a generic template.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No pass-through wrappers",
+          "description": "Every function adds logic or transformation — no functions exist that simply forward arguments to another function without added behavior. The wrapper_rate in scan evidence confirms 0.0%.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "cli.ts uses raw ANSI instead of color API",
+          "description": "The CLI module inlines raw escape sequences for terminal coloring rather than importing the project's own color()/c.* infrastructure from colors.ts. This is a mild template-paste pattern but confined to one non-production-path file.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

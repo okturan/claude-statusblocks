@@ -1,0 +1,97 @@
+{
+  "batch": "test_strategy",
+  "batch_index": 10,
+  "assessments": {"test_strategy": 12.0},
+  "dimension_notes": {
+    "test_strategy": {
+      "evidence": [
+        "Zero test files exist in the entire repository: no *.test.ts, no *.spec.ts, no test/ directory, no __tests__ directory.",
+        "No test framework is configured: package.json has no test script, no jest/vitest/mocha/tap in devDependencies.",
+        "CLAUDE.md explicitly states 'There are no tests or linters configured.'",
+        "All 14 production files are untested, including critical modules: layout.ts (187 LOC, 2 importers, high cyclomatic complexity), campaigns/engine.ts (137 LOC, complex timezone/date logic), colors.ts (60 LOC, 6 importers — the most widely imported utility after types.ts).",
+        "The campaign engine contains intricate timezone-aware date arithmetic (peak/off-peak detection, weekend transitions, countdown calculations) that is the classic high-value target for unit tests.",
+        "The effort resolver parses JSONL transcript files with regex matching — brittle format-dependent logic with no test coverage.",
+        "The layout algorithm includes a combinatorial block-to-row assignment (numRows^n iterations) with scoring — complex logic with no verification.",
+        "colors.ts truncate() handles ANSI escape sequences with character-by-character parsing — edge-case-heavy logic with no tests."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "architectural_change",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "test_strategy": {
+      "dimension_character": "The codebase has zero test coverage — no test files, no test framework, no test scripts. This is a complete absence of testing strategy rather than a gap in an existing strategy. Complex logic in the campaign engine (timezone-aware date arithmetic), layout algorithm (combinatorial row assignment), colors module (ANSI-aware string truncation), and effort resolver (JSONL parsing) all go unverified.",
+      "score_rationale": "A score of 12 reflects near-total absence. The codebase is a published npm package with complex date/timezone logic, terminal rendering, and subprocess interaction — exactly the kind of code where tests prevent regressions. The only thing preventing a lower score is the relatively small codebase size (989 LOC, 14 files) which makes manual verification somewhat feasible during development, and the CLAUDE.md acknowledgment that this is a known state."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "test_strategy",
+      "identifier": "no_test_framework",
+      "summary": "No test framework or test files exist anywhere in the codebase",
+      "related_files": ["package.json"],
+      "evidence": ["package.json has no test script and no test runner dependency. Zero test files found across the entire repository. CLAUDE.md states 'There are no tests or linters configured.'"],
+      "suggestion": "Add vitest as a devDependency (lightweight, ESM-native, TypeScript out-of-box) and a 'test' script in package.json. Start with unit tests for the highest-value pure-logic modules: colors.ts (visibleLength, padRight, truncate), campaigns/engine.ts (getActiveCampaign with mocked dates), and effort.ts (resolveEffort with fixture JSONL).",
+      "confidence": "high",
+      "impact_scope": "codebase",
+      "fix_scope": "architectural_change"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "untested_campaign_engine",
+      "summary": "Campaign engine's timezone-aware date arithmetic has zero test coverage",
+      "related_files": ["src/campaigns/engine.ts"],
+      "evidence": ["getActiveCampaign() contains complex branching: weekend detection, peak/off-peak transitions, countdown calculations, progress computation — all using Intl.DateTimeFormat with timezone-aware formatToParts. High cyclomatic complexity (>15 branches) flagged by mechanical scan. This is classic high-value test territory where manual verification is unreliable."],
+      "suggestion": "Write unit tests for getActiveCampaign() using vi.useFakeTimers() to pin Date.now() and verify each state transition: upcoming, active-boosted (pre-peak), active-normal (peak), active-boosted (post-peak), weekend. Test countdown string accuracy at boundary conditions.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "untested_colors_utility",
+      "summary": "Most-imported utility (colors.ts, 6 importers) has no tests for ANSI-aware string operations",
+      "related_files": ["src/colors.ts"],
+      "evidence": ["visibleLength(), padRight(), and truncate() handle ANSI escape sequences with character-by-character parsing. truncate() has edge cases around escape sequence boundaries (what happens when maxWidth falls inside an ANSI sequence?). These functions are used by every segment and by layout.ts — a bug here cascades everywhere."],
+      "suggestion": "Add unit tests for visibleLength (plain text, styled text, nested styles), padRight (shorter/exact/longer inputs with ANSI), and truncate (cut point inside ANSI sequence, zero width, multi-style strings). These are pure functions — straightforward to test.",
+      "confidence": "high",
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "untested_layout_algorithm",
+      "summary": "Combinatorial layout row-assignment algorithm has no test coverage",
+      "related_files": ["src/layout.ts"],
+      "evidence": ["render() in layout.ts contains a brute-force combinatorial optimizer (numRows^n iterations) that assigns blocks to rows by scoring configurations. This includes edge cases: single block, all blocks on one row, blocks exceeding maxRowWidth forcing multi-row, fallback path when no valid assignment exists. High cyclomatic complexity flagged."],
+      "suggestion": "Test render() with mock Block inputs at various terminal widths: all blocks fit on one row, forced multi-row, single block, zero-enabled segments. Verify row assignments and output line counts. Mock segment renders to isolate layout logic.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Testing was never prioritized during initial development — the project grew organically as a personal tool without a test framework being set up."],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "test_strategy": {
+      "add": [
+        {
+          "header": "Zero test coverage across entire codebase",
+          "description": "No test files, no test framework, no test scripts exist. CLAUDE.md explicitly acknowledges this as a known state. This is a deliberate omission rather than test rot — the project was built without testing infrastructure from the start.",
+          "settled": true,
+          "positive": false
+        },
+        {
+          "header": "High-value pure functions amenable to unit testing",
+          "description": "colors.ts exports pure functions (visibleLength, padRight, truncate) and campaigns/engine.ts has deterministic logic given a fixed time — both are ideal candidates for initial test coverage with minimal setup cost.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

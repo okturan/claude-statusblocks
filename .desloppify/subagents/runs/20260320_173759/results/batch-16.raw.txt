@@ -1,0 +1,91 @@
+{
+  "batch": "initialization_coupling",
+  "batch_index": 16,
+  "assessments": {
+    "initialization_coupling": 82.0
+  },
+  "dimension_notes": {
+    "initialization_coupling": {
+      "evidence": [
+        "Module-level constants are safe: CONFIG_PATH (config.ts:6), SETTINGS_PATH (cli.ts:10), MOCK_DATA (cli.ts:12-24) are all pure derivations from stable values (homedir(), process.cwd()) with no cross-module ordering dependency",
+        "Module-level arrays ALL_SEGMENTS (layout.ts:10) and DEFAULT_ORDER (layout.ts:11) are static and immutable — no init-order concern",
+        "campaigns array (data.ts:7) is a static const with no side effects",
+        "No circular import dependencies: segments → src (types, colors), campaigns → src (types), src/layout → segments — all acyclic",
+        "config.ts reads environment variables (CLAUDE_STATUSBLOCKS_SEGMENTS, CLAUDE_STATUSBLOCKS_THEME) inside loadConfig() function, NOT at module scope — this is the correct pattern for testability",
+        "effort.ts reads CLAUDE_CONFIG_DIR environment variable inside resolveEffort() function body, NOT at module scope — correct",
+        "HOWEVER: config.ts:6 computes CONFIG_PATH = join(homedir(), '.claude-statusblocks.json') at module scope, which bakes in the home directory at import time. This is fragile if tests need to override the config path or if homedir() changes",
+        "cli.ts:10 similarly computes SETTINGS_PATH at module scope from homedir()",
+        "effort.ts:9-10 declares a module-level mutable cache singleton (let cache) and CACHE_TTL constant — the mutable state is appropriately scoped to a single module and accessed only through resolveEffort()",
+        "git.ts:5 declares a module-level mutable cache singleton (let gitCache) — same pattern as effort.ts, appropriately scoped",
+        "No import-time side effects: no DB connections, no file I/O, no network calls at module scope. The only side effect is the dynamic import('./index.js') in cli.ts:86 which is deliberately deferred to runtime"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "initialization_coupling": {
+      "dimension_character": "The codebase has generally clean initialization patterns — no import-time side effects, no circular dependencies, no boot-order fragility between modules, and environment variable reads are correctly deferred to function bodies. The two module-level mutable caches (gitCache, effort cache) are well-scoped singletons within their respective modules. The main concern is two module-level constants (CONFIG_PATH, SETTINGS_PATH) that bake in homedir() at import time, creating a stale snapshot that cannot be overridden for testing.",
+      "score_rationale": "A developer can import any module without worrying about boot-order dependencies or side effects — the acyclic import graph and absence of import-time I/O is a genuine strength. The module-level homedir() baking in config.ts and cli.ts is a real but contained coupling issue: it means these paths cannot be overridden by test harnesses or alternative configurations without mocking. This is 82 territory — mostly stable initialization with limited fragility in specific areas."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "initialization_coupling",
+      "identifier": "import_time_homedir_baking",
+      "summary": "CONFIG_PATH and SETTINGS_PATH bake homedir() at import time, creating untestable stale snapshots",
+      "related_files": ["src/config.ts", "src/cli.ts"],
+      "evidence": [
+        "config.ts:6 — const CONFIG_PATH = join(homedir(), '.claude-statusblocks.json') computed at module scope",
+        "cli.ts:10 — const SETTINGS_PATH = join(homedir(), '.claude', 'settings.json') computed at module scope",
+        "contrast with effort.ts:46 which correctly reads homedir() inside the function body: const configDir = process.env.CLAUDE_CONFIG_DIR || join(homedir(), '.claude')"
+      ],
+      "suggestion": "Move CONFIG_PATH computation inside loadConfig() and SETTINGS_PATH computation inside init(). This follows the pattern already established in effort.ts:46 where homedir() is resolved at call time and allows env var override via CLAUDE_CONFIG_DIR.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Module-level path constants using homedir() were likely written for convenience before testability was a concern"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "initialization_coupling": {
+      "add": [
+        {
+          "header": "No import-time side effects across codebase",
+          "description": "All modules avoid file I/O, network calls, and subprocess execution at module scope. The dynamic import('./index.js') in cli.ts is intentionally deferred to runtime as a CLI dispatch mechanism.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Acyclic import graph with no boot-order dependencies",
+          "description": "The dependency graph (segments → core, campaigns → core, layout → segments) is strictly acyclic. No module depends on another having been imported first. No conditional or lazy imports needed to break cycles.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Environment variable reads deferred to function bodies",
+          "description": "CLAUDE_STATUSBLOCKS_SEGMENTS, CLAUDE_STATUSBLOCKS_THEME (config.ts), and CLAUDE_CONFIG_DIR (effort.ts) are all read inside function bodies at call time, not at import time. This supports testability.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Well-scoped module-level mutable caches",
+          "description": "gitCache (git.ts:5) and effort cache (effort.ts:9) are mutable singletons with TTL-based expiration, accessed only through their module's exported function. No cross-module mutable state sharing.",
+          "settled": true,
+          "positive": false
+        },
+        {
+          "header": "Module-scope homedir() path constants in config and cli",
+          "description": "CONFIG_PATH and SETTINGS_PATH are computed from homedir() at import time, creating stale snapshots. This pattern diverges from effort.ts which correctly resolves paths at call time with env var override support.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

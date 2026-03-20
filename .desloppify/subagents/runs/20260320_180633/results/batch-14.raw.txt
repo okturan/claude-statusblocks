@@ -1,0 +1,61 @@
+{
+  "batch": "incomplete_migration",
+  "batch_index": 14,
+  "assessments": {
+    "incomplete_migration": 93.0
+  },
+  "dimension_notes": {
+    "incomplete_migration": {
+      "evidence": [
+        "All 14 source files are TypeScript — no mixed JS/TS modules",
+        "Consistent ESM throughout: 'type: module' in package.json, all imports use .js extensions, no require() calls anywhere",
+        "No deprecated symbols or @deprecated markers found in the codebase",
+        "No compatibility shims or legacy wrappers present",
+        "No stale migration TODOs referencing 'migrate', 'legacy', 'old api', or 'remove after'",
+        "No coexisting API patterns (single HTTP approach, single state management pattern, single component style)",
+        "Migration signal detected: 1 var vs 13 let/const — but this is negligible residue rather than an incomplete migration pattern",
+        "Rate limits data was migrated from external API fetch to native StatusLineData.rate_limits field (commit e4e7ddf), and the migration is complete with no residual code paths"
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "One residual var usage exists alongside 13 let/const declarations, though this is trivially minor and may be in a specific context where var is intentional."
+    }
+  },
+  "dimension_judgment": {
+    "incomplete_migration": {
+      "dimension_character": "The codebase shows no meaningful migration debt. It is uniformly TypeScript with ESM imports, has no deprecated symbols or compatibility shims, and no stale migration TODOs. The rate_limits migration from external API to native JSON field has been completed cleanly with no residual dual-path code. The only detectable signal is one var declaration among 13 let/const usages, which is trivially minor.",
+      "score_rationale": "A developer would never encounter old-vs-new pattern confusion or need to decide which approach to follow — placing this above the 90 anchor for 'mostly complete with minor legacy residue.' The single var-vs-let/const signal is the only detectable residue and carries negligible cognitive cost. The completed rate_limits migration demonstrates that migrations are finished cleanly rather than left partial."
+    }
+  },
+  "issues": [],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "incomplete_migration": {
+      "add": [
+        {
+          "header": "Uniform TypeScript ESM with no JS residue",
+          "description": "All 14 source files are .ts with ESM imports using .js extensions and no require() calls. The 'type: module' package.json setting is consistently honored. No mixed JS/TS modules exist.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Clean rate_limits migration completed",
+          "description": "The migration from external API fetch to native rate_limits field in statusline JSON (commit e4e7ddf) was completed without leaving compatibility shims or dual-path code. Usage segment reads directly from data.rate_limits with no fallback to an old approach.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No deprecated symbols or stale migration TODOs",
+          "description": "No @deprecated markers, DEPRECATED comments, or TODOs referencing migration/legacy/remove-after exist in the codebase. Active code does not call any deprecated symbols.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

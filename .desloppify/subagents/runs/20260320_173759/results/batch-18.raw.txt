@@ -1,0 +1,77 @@
+{
+  "batch": "contract_coherence",
+  "batch_index": 18,
+  "assessments": {
+    "contract_coherence": 82.3
+  },
+  "dimension_notes": {
+    "contract_coherence": {
+      "evidence": [
+        "Segment interface contract is consistently honored: all 5 segments implement id, priority, enabled(), render() correctly and return Block objects with the required fields",
+        "modelSegment.render() returns priority: 2 (line 93) despite the segment declaring priority: 30 (line 23) — the Block's priority field contradicts the Segment's priority field",
+        "usageSegment.render() returns priority: 2 (line 52) despite the segment declaring priority: 15 (line 25) — same mismatch pattern",
+        "campaignSegment.render() returns priority: 4 (line 55) despite the segment declaring priority: 20 (line 8) — same mismatch pattern",
+        "getActiveCampaign() return type CampaignStatus | null accurately reflects all code paths: returns null at line 136, returns CampaignStatus objects in all other paths",
+        "loadConfig() return type StatusBlocksConfig is honored — both the try and catch branches return conforming objects",
+        "resolveEffort() correctly declares return type EffortLevel | null and all paths return matching values"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Three segments have Block.priority values that contradict their Segment.priority declarations, creating confusion about which priority is authoritative"
+    }
+  },
+  "dimension_judgment": {
+    "contract_coherence": {
+      "dimension_character": "Function return types consistently match their actual return paths, and the Segment interface contract is structurally honored across all five implementations. However, three segments declare one priority on the Segment object and return a different priority in their Block output, creating an internal contradiction in the data contract. The rest of the API surface — loadConfig, resolveEffort, getActiveCampaign, color utilities — is honest and predictable.",
+      "score_rationale": "The codebase generally honors its contracts well — return types are accurate, the Segment interface is consistently implemented, and exported functions do what their names promise. The priority mismatch across three segments is a genuine contract violation that could mislead a developer trying to understand rendering order, pulling the score below 85. The issue is isolated and formulaic (same mistake copied three times), not systemic."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "contract_coherence",
+      "identifier": "block_priority_mismatch",
+      "summary": "Three segments return Block.priority values that contradict their Segment.priority declarations",
+      "related_files": ["src/segments/model.ts", "src/segments/usage.ts", "src/segments/campaign.ts"],
+      "evidence": [
+        "model.ts: Segment.priority = 30 (line 23) but render() returns Block priority: 2 (line 93)",
+        "usage.ts: Segment.priority = 15 (line 25) but render() returns Block priority: 2 (line 52)",
+        "campaign.ts: Segment.priority = 20 (line 8) but render() returns Block priority: 4 (line 55)",
+        "context.ts and git.ts correctly match: both declare and return priority 10 and 40 respectively"
+      ],
+      "suggestion": "In each segment's render() return, use the segment's own priority value (30 for model, 15 for usage, 20 for campaign) to match the Segment declaration. Alternatively, if Block.priority is intentionally different from Segment.priority, document why in the Block interface.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Block.priority values appear to be remnants from an earlier numbering scheme that was not updated when Segment.priority values were revised"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "contract_coherence": {
+      "add": [
+        {
+          "header": "Return types match all code paths",
+          "description": "Functions like getActiveCampaign() -> CampaignStatus | null, resolveEffort() -> EffortLevel | null, and loadConfig() -> StatusBlocksConfig all have return type annotations that accurately cover every return path, including error/fallback branches.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Segment interface consistently implemented",
+          "description": "All five segments (context, model, git, campaign, usage) implement the Segment interface with id, priority, enabled(), and render() — the structural contract is uniformly honored across the segment subsystem.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No getter-mutator naming violations",
+          "description": "Functions prefixed with 'get' (getActiveCampaign, getGitInfo, getSegmentOrder, getTimeInTz, getDowNum) are all pure or read-only — none mutate state behind a getter name.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

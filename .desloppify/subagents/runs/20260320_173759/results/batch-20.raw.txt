@@ -1,0 +1,97 @@
+{
+  "batch": "type_safety",
+  "batch_index": 20,
+  "assessments": {
+    "type_safety": 85.4
+  },
+  "dimension_notes": {
+    "type_safety": {
+      "evidence": [
+        "StatusLineData interface provides precise typed shapes for all data fields including nested objects, optional fields marked with ?, and union types like 'number | null' for used_percentage",
+        "Segment, Block, Campaign, and StatusBlocksConfig interfaces are all precisely typed with no 'any' usage in their definitions",
+        "src/config.ts line 17: 'config.theme = envTheme as StatusBlocksConfig[\"theme\"]' uses type assertion without validation — envTheme could be any string, not just 'default' | 'minimal' | 'full'",
+        "src/effort.ts line 49: 'effort = settings.effortLevel as EffortLevel' uses type assertion but IS preceded by an includes() guard (line 48), making this assertion safe",
+        "src/index.ts line 14: 'JSON.parse(input) as StatusLineData' — unchecked type assertion on external JSON input from stdin",
+        "src/cli.ts line 45: 'JSON.parse(raw)' returns any, used without type annotation or assertion on the 'settings' variable",
+        "No 'as any' or '// @ts-ignore' comments found in the codebase",
+        "All public exported functions have complete type annotations on parameters and return types"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Unchecked type assertion on external stdin JSON input; unsafe 'as' cast on env var theme value without validation"
+    }
+  },
+  "dimension_judgment": {
+    "type_safety": {
+      "dimension_character": "The codebase has strong type foundations — interfaces are precise with no 'any' in definitions, optional fields are correctly marked, and public function signatures are fully annotated. The type system is weakened at I/O boundaries: stdin JSON is cast via 'as StatusLineData' without runtime validation, and the theme env var is cast without checking it matches the union type. These are common TypeScript patterns for small tools, but they mean a malformed input could cause runtime errors that types appear to prevent.",
+      "score_rationale": "Type definitions are precise and interfaces are well-designed, placing the foundation near exemplary. The unchecked assertions at I/O boundaries (stdin JSON parse, env var theme cast) are the primary weaknesses — they create a gap between what the type system promises and what runtime guarantees. For a 990 LOC CLI tool that processes trusted input from Claude Code, these are moderate risks rather than critical ones, justifying a score slightly above the 'solid but uneven' anchor."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "type_safety",
+      "identifier": "unchecked_stdin_json_cast",
+      "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
+      "related_files": ["src/index.ts"],
+      "evidence": [
+        "Line 14: const data = JSON.parse(input) as StatusLineData — stdin input from Claude Code is cast directly to StatusLineData",
+        "If Claude Code's JSON shape changes (e.g., missing context_window or rate_limits fields), the code would crash at property access sites rather than at the parse boundary",
+        "The outer try/catch (line 13) does catch and silently writes a newline (line 39), so crashes are handled — but the type assertion makes the type system's promise of structure unreliable"
+      ],
+      "suggestion": "Since the top-level try/catch already handles malformed input gracefully, this is low severity. For a more defensive approach, add minimal runtime checks for required fields (e.g., if (!data?.model || !data?.context_window) return) after parsing, rather than adding a full validation library.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "type_safety",
+      "identifier": "unsafe_theme_env_cast",
+      "summary": "Environment variable cast to theme union type without validation",
+      "related_files": ["src/config.ts"],
+      "evidence": [
+        "Line 17: config.theme = envTheme as StatusBlocksConfig['theme'] — envTheme is string | undefined, cast to 'default' | 'minimal' | 'full' without checking the value",
+        "Contrast with src/effort.ts line 48-49 which correctly validates with includes() before casting: if (['low', 'medium', 'high', 'max'].includes(settings.effortLevel))"
+      ],
+      "suggestion": "Add a validation check before the cast, following the pattern already used in effort.ts: const validThemes = ['default', 'minimal', 'full']; if (envTheme && validThemes.includes(envTheme)) config.theme = envTheme as StatusBlocksConfig['theme'];",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["I/O boundary validation is inconsistent — effort.ts validates before casting while config.ts does not"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "type_safety": {
+      "add": [
+        {
+          "header": "Precise interfaces with no 'any' in definitions",
+          "description": "StatusLineData, Block, Segment, Campaign, and StatusBlocksConfig interfaces all use concrete types. Optional fields use '?' and nullable fields use '| null' — no 'any' or 'unknown' in interface definitions.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "All public functions fully annotated",
+          "description": "Every exported function (render, loadConfig, resolveEffort, getActiveCampaign, color, visibleLength, padRight, truncate) has explicit parameter types and return type annotations.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No ts-ignore or as-any usage",
+          "description": "The codebase contains no @ts-ignore, @ts-expect-error, or 'as any' casts. Type assertions exist only at I/O boundaries (JSON.parse, env vars), not as escape hatches for type system limitations.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Inconsistent I/O boundary validation",
+          "description": "effort.ts validates runtime values with includes() before type assertions, but config.ts casts env var theme without validation. This inconsistency means some I/O boundaries are type-safe and others are not.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

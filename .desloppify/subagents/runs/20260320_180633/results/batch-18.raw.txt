@@ -1,0 +1,74 @@
+{
+  "batch": "contract_coherence",
+  "batch_index": 18,
+  "assessments": {
+    "contract_coherence": 88.2
+  },
+  "dimension_notes": {
+    "contract_coherence": {
+      "evidence": [
+        "All five segments correctly return Block objects matching their declared Segment.priority values (previously fixed: model=30, campaign=20, usage=15, context=10, git=40)",
+        "Segment.enabled() and Segment.render() contracts are honored consistently — enabled() checks are pure predicates, render() always returns a valid Block even when data is missing (e.g., campaign.ts line 11, git.ts line 38, usage.ts line 29)",
+        "getActiveCampaign() return type CampaignStatus | null accurately reflects all code paths — returns null when no campaign matches (line 136), CampaignStatus for all other branches",
+        "loadConfig() always returns StatusBlocksConfig even when the file is missing (catch branch constructs a default), matching its declared return type",
+        "campaignSegment.enabled() calls getActiveCampaign() and render() calls it again — the enabled/render double-call is consistent with the Segment interface contract but means campaign state could change between calls"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The campaign segment double-invocation of getActiveCampaign() means enabled() and render() could see different campaign states if called at a state boundary. The env var theme cast in config.ts bypasses the type contract silently."
+    }
+  },
+  "dimension_judgment": {
+    "contract_coherence": {
+      "dimension_character": "The codebase demonstrates strong contract discipline. Return types match all code paths, the Segment interface is honored uniformly across all five implementations, and fallback behaviors are explicit (null returns, default configs). The previously reported priority mismatch has been fixed. The remaining contract gaps are minor: a potential TOCTOU between enabled() and render() in the campaign segment, and the env var theme cast that bypasses type validation.",
+      "score_rationale": "A developer can trust that functions do what their signatures promise — return types are accurate, the Segment interface is consistently implemented, and error paths return valid fallback values rather than undefined. The strong contract discipline across the codebase pushes toward 90. The campaign enabled/render TOCTOU and unvalidated theme cast are real but low-severity gaps that prevent a higher score."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "contract_coherence",
+      "identifier": "campaign_enabled_render_toctou",
+      "summary": "campaignSegment.enabled() and render() both call getActiveCampaign() independently, risking state divergence",
+      "related_files": ["src/segments/campaign.ts"],
+      "evidence": [
+        "Line 8: enabled() calls getActiveCampaign() to check !== null",
+        "Line 10: render() calls getActiveCampaign() again independently",
+        "If the campaign ends between the enabled() call and the render() call (e.g., at midnight boundary), enabled() returns true but render() gets null and returns a zero-width block"
+      ],
+      "suggestion": "This is low-severity because the render() null guard (line 11) handles the case safely. However, the contract would be tighter if campaign state were resolved once. One approach: cache the result in a module-level variable during enabled() and reuse it in render(), similar to gitSegment's cache pattern.",
+      "confidence": "low",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "contract_coherence": {
+      "add": [
+        {
+          "header": "Segment return types match all code paths",
+          "description": "Every segment's render() returns a valid Block on all paths including error/missing-data fallbacks (e.g., campaign returns {width:0, lines:['']}, git returns {width:0, lines:['']}). No undefined or missing returns.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Priority values now consistent across interfaces",
+          "description": "Previously, three segments returned Block.priority values differing from their Segment.priority declarations. This has been fixed — all segments now use matching priority values in both places.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "loadConfig always returns valid config",
+          "description": "loadConfig() constructs a default StatusBlocksConfig in its catch branch, ensuring the return type contract is honored even when the config file is missing or malformed.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

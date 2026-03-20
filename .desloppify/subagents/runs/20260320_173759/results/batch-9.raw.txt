@@ -1,0 +1,76 @@
+{
+  "batch": "mid_level_elegance",
+  "batch_index": 9,
+  "assessments": {"mid_level_elegance": 88.5},
+  "dimension_notes": {
+    "mid_level_elegance": {
+      "evidence": [
+        "Segment interface defines a clean, uniform contract: id, priority, enabled(data), render(data, width) -> Block. All 5 segments implement this identically, making the handoff from layout.ts to segments completely predictable.",
+        "Data flow is strictly one-directional: index.ts parses stdin JSON -> passes StatusLineData to layout.ts render() -> layout.ts calls each segment's render() -> segments return Block objects -> layout boxes and composes rows. No callbacks, no back-references.",
+        "layout.ts imports all segments directly and composes them via the Segment interface. The orchestration reads as a clear pipeline: filter enabled segments, render blocks, assign to rows, boxify, join.",
+        "config.ts provides a single loadConfig() function that returns StatusBlocksConfig — consumed by index.ts and cli.ts. No intermediate adapters or mappers needed.",
+        "Campaign segment crosses the campaign boundary cleanly: campaign.ts imports getActiveCampaign() from engine.ts, which returns a self-contained CampaignStatus object with all rendering data pre-computed (state, countdown, progress).",
+        "effort.ts is imported only by model segment and returns a simple EffortLevel | null — minimal boundary surface.",
+        "colors.ts utility functions (color, visibleLength, padRight, truncate) are consumed uniformly across all segments and layout — no per-module ANSI handling variations."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The campaign segment builds a progress bar and intermediate variables (bar, lines, finalLines) that partially overlap, suggesting a minor seam friction between data computation and rendering. The layout.ts optimal assignment loop is tightly coupled with rendering concerns (row1MaxWidth hardcoded offset of 5), mixing layout policy with box rendering."
+    }
+  },
+  "dimension_judgment": {
+    "mid_level_elegance": {
+      "dimension_character": "Module handoffs in this codebase are clean and predictable. The Segment interface creates a uniform boundary between layout orchestration and rendering units, and data flows one-directionally from stdin through parsing, configuration, segment rendering, and layout composition. The few rough edges are minor: a hardcoded row1 width adjustment in layout.ts and some intermediate variable overlap in the campaign segment's render path.",
+      "score_rationale": "The codebase demonstrates strong mid-level elegance: boundaries are explicit and minimal (Segment interface, CampaignStatus return type, loadConfig), orchestration reads as clear composition, and there is no glue-code entropy or ad-hoc boundary mapping. The score is pulled slightly below 90 by the hardcoded row1MaxWidth offset in layout.ts which embeds a rendering policy constant at the orchestration level rather than parameterizing it, but this is a minor isolated concern."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "hardcoded_row1_offset",
+      "summary": "Layout embeds hardcoded row1 width reduction (maxRowWidth - 5) mixing policy with orchestration",
+      "related_files": ["src/layout.ts"],
+      "evidence": ["Line 85: const row1MaxWidth = maxRowWidth - 5; is a magic offset for Claude Code's notification panel applied only to the first row, but INK_PADDING (line 12) already accounts for outer padding. The additional 5-char reduction is undocumented and couples layout logic to a specific UI assumption."],
+      "suggestion": "Extract the row1 extra margin as a named constant (e.g., NOTIFICATION_PANEL_MARGIN = 5) next to INK_PADDING with a comment explaining why row 1 needs additional reduction beyond the general INK_PADDING.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "mid_level_elegance": {
+      "add": [
+        {
+          "header": "Uniform Segment interface drives clean handoffs",
+          "description": "All 5 segments implement the same Segment interface (id, priority, enabled, render). Layout.ts consumes them identically via map/filter, making the orchestration-to-segment boundary completely uniform and unsurprising.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Unidirectional data flow through pipeline stages",
+          "description": "Data flows strictly one-way: stdin JSON -> StatusLineData -> segments produce Blocks -> layout composes rows -> stdout. No callbacks, no circular references, no back-channel communication between stages.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "CampaignStatus encapsulates cross-boundary data",
+          "description": "The campaign engine returns a self-contained CampaignStatus with pre-computed state, countdown, and progress. The campaign segment consumes this without needing to understand campaign rules, dates, or timezone logic.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Single translation point for config at load boundary",
+          "description": "Configuration is loaded once via loadConfig() and passed as a plain object to render(). Env var overrides are resolved at load time, not scattered across consumers.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

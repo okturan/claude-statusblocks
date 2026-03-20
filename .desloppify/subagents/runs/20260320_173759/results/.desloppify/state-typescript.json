@@ -1,0 +1,1947 @@
+{
+  "version": 3,
+  "created": "2026-03-20T17:43:23+00:00",
+  "last_scan": "2026-03-20T17:43:26+00:00",
+  "scan_count": 2,
+  "overall_score": 85.4,
+  "objective_score": 100.0,
+  "strict_score": 85.4,
+  "verified_strict_score": 100.0,
+  "stats": {
+    "total": 27,
+    "auto_resolved": 0,
+    "deferred": 0,
+    "false_positive": 0,
+    "fixed": 0,
+    "open": 27,
+    "triaged_out": 0,
+    "wontfix": 0,
+    "by_tier": {
+      "1": {
+        "auto_resolved": 0,
+        "deferred": 0,
+        "false_positive": 0,
+        "fixed": 0,
+        "open": 15,
+        "triaged_out": 0,
+        "wontfix": 0
+      },
+      "2": {
+        "auto_resolved": 0,
+        "deferred": 0,
+        "false_positive": 0,
+        "fixed": 0,
+        "open": 11,
+        "triaged_out": 0,
+        "wontfix": 0
+      },
+      "3": {
+        "auto_resolved": 0,
+        "deferred": 0,
+        "false_positive": 0,
+        "fixed": 0,
+        "open": 1,
+        "triaged_out": 0,
+        "wontfix": 0
+      }
+    }
+  },
+  "work_items": {
+    "review::.::holistic::cross_module_architecture::hardcoded_segment_registry": {
+      "id": "review::.::holistic::cross_module_architecture::hardcoded_segment_registry",
+      "detector": "review",
+      "file": ".",
+      "tier": 3,
+      "confidence": "low",
+      "summary": "layout.ts hardcodes all segment imports \u2014 adding a segment requires editing layout.ts",
+      "detail": {
+        "holistic": true,
+        "dimension": "cross_module_architecture",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "Lines 4-8 of layout.ts import all 5 segments individually; line 10 assembles them into ALL_SEGMENTS array. Adding a new segment requires both a new file and editing layout.ts imports + array."
+        ],
+        "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern in the segments directory. Do not over-engineer a dynamic plugin system.",
+        "reasoning": "",
+        "summary_hash": "352fb481"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::high_level_elegance::campaign_segment_vestigial_code": {
+      "id": "review::.::holistic::high_level_elegance::campaign_segment_vestigial_code",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "campaign.ts has dead progress bar logic and contradictory inline comments from iterative development",
+      "detail": {
+        "holistic": true,
+        "dimension": "high_level_elegance",
+        "related_files": [
+          "src/segments/campaign.ts"
+        ],
+        "evidence": [
+          "Lines 37-48: builds a progress bar (const bar = ...) and assembles a 3-line array (const lines = [line1, bar]; if (line2) lines.push(line2)), but these variables are never used.",
+          "Lines 46-48: comments '// Ensure exactly 2 lines: combine bar into line2 area', '// Actually keep 2 lines: line1 + line2 with bar info', '// Simpler: line1 = status + bar, line2 = countdown' show unresolved design iteration.",
+          "Lines 49-52: finalLines is built fresh, discarding the progress bar entirely."
+        ],
+        "suggestion": "Remove the dead `bar` computation (lines 37-42), the unused `lines` array (lines 44-45), and the contradictory comments (lines 46-48). Keep only the `finalLines` construction.",
+        "reasoning": "",
+        "summary_hash": "d146f200"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::convention_outlier::priority_mismatch_in_block_returns": {
+      "id": "review::.::holistic::convention_outlier::priority_mismatch_in_block_returns",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "3 of 5 segments return Block.priority values that differ from their Segment.priority definitions",
+      "detail": {
+        "holistic": true,
+        "dimension": "convention_outlier",
+        "related_files": [
+          "src/segments/model.ts",
+          "src/segments/campaign.ts",
+          "src/segments/usage.ts"
+        ],
+        "evidence": [
+          "modelSegment: Segment.priority=30, but render() returns {priority: 2} on line 93",
+          "campaignSegment: Segment.priority=20, but render() returns {priority: 4} on lines 11 and 55",
+          "usageSegment: Segment.priority=15, but render() returns {priority: 2} on lines 29 and 52",
+          "contextSegment (priority:10) and gitSegment (priority:40) are consistent between Segment and Block",
+          "The Block.priority values (2, 4) appear to be from an earlier design and were not updated when Segment priorities were established"
+        ],
+        "suggestion": "Use the Segment's priority value in the Block return: e.g. in model.ts line 93, change priority:2 to priority:30. Similarly for campaign.ts and usage.ts. This makes the Block returns consistent with their parent Segment definitions.",
+        "reasoning": "",
+        "summary_hash": "59654ce9"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::convention_outlier::campaign_promo_naming_split": {
+      "id": "review::.::holistic::convention_outlier::campaign_promo_naming_split",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "Campaign segment uses id 'promo' while file is campaign.ts and export is campaignSegment",
+      "detail": {
+        "holistic": true,
+        "dimension": "convention_outlier",
+        "related_files": [
+          "src/segments/campaign.ts",
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "src/segments/campaign.ts: file named 'campaign', export named 'campaignSegment', but id is 'promo'",
+          "src/layout.ts line 11: DEFAULT_ORDER uses 'promo' to reference this segment",
+          "Other segments have consistent naming: context.ts/contextSegment/id:'context', model.ts/modelSegment/id:'model', git.ts/gitSegment/id:'git', usage.ts/usageSegment/id:'usage'"
+        ],
+        "suggestion": "Either rename the file and export to promo.ts/promoSegment to match the id, or change the id to 'campaign' and update DEFAULT_ORDER. Given the segment renders promotional rate status, 'promo' is more descriptive of its purpose than 'campaign', so renaming the file to promo.ts and the export to promoSegment would align with the id.",
+        "reasoning": "",
+        "summary_hash": "7c8f2125"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::error_consistency::index_toplevel_catch_swallows_all": {
+      "id": "review::.::holistic::error_consistency::index_toplevel_catch_swallows_all",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "Top-level catch in index.ts silently swallows all errors, outputting blank line with no diagnostics",
+      "detail": {
+        "holistic": true,
+        "dimension": "error_consistency",
+        "related_files": [
+          "src/index.ts"
+        ],
+        "evidence": [
+          "Line 38: catch {} outputs process.stdout.write('\\n') for ANY error \u2014 JSON parse failure, render TypeError, or unexpected runtime error all produce identical blank output.",
+          "There is no stderr logging, no debug mode, no way for a user to understand why their status line is blank.",
+          "This makes debugging impossible: a malformed JSON input from Claude Code, a segment throwing an error, and a missing dependency all look the same."
+        ],
+        "suggestion": "Write a minimal diagnostic to stderr in the catch block: process.stderr.write(`[claude-statusblocks] ${err instanceof Error ? err.message : err}\\n`). This preserves the blank-output-on-failure behavior (stdout) while giving developers a diagnostic channel (stderr). Alternatively, write to a log file only when a CLAUDE_STATUSBLOCKS_DEBUG env var is set.",
+        "reasoning": "",
+        "summary_hash": "9eebd441"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::error_consistency::mixed_catch_documentation": {
+      "id": "review::.::holistic::error_consistency::mixed_catch_documentation",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "Catch blocks inconsistently document their rationale \u2014 some have comments, others are bare",
+      "detail": {
+        "holistic": true,
+        "dimension": "error_consistency",
+        "related_files": [
+          "src/index.ts",
+          "src/effort.ts",
+          "src/config.ts",
+          "src/segments/git.ts"
+        ],
+        "evidence": [
+          "effort.ts catches have explanatory comments: '/* skip malformed lines */', '/* file not readable */', '/* no settings */'",
+          "index.ts inner catches have minimal comments: '/* */' (lines 28, 33)",
+          "index.ts outer catch (line 38) has no comment explaining the silent-failure design intent",
+          "config.ts catch (line 19) has no comment",
+          "git.ts catch (line 26) has no comment"
+        ],
+        "suggestion": "Add brief rationale comments to the undocumented catches: index.ts outer catch should explain that blank output is intentional to avoid breaking Claude Code's UI; config.ts should note that missing config means use defaults; git.ts should note that git failures mean the git segment is disabled. Follow effort.ts's example of brief, explanatory catch comments.",
+        "reasoning": "",
+        "summary_hash": "ffb4608b"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::naming_quality::campaign_promo_vocabulary_split": {
+      "id": "review::.::holistic::naming_quality::campaign_promo_vocabulary_split",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "campaignSegment export uses id 'promo' creating name/identity mismatch across codebase",
+      "detail": {
+        "holistic": true,
+        "dimension": "naming_quality",
+        "related_files": [
+          "src/segments/campaign.ts",
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "src/segments/campaign.ts exports campaignSegment but sets id: 'promo'",
+          "src/layout.ts DEFAULT_ORDER references 'promo' while importing from campaign.ts",
+          "A developer searching for 'promo' functionality finds campaign.ts only by grep, not by file name"
+        ],
+        "suggestion": "Pick one term and use it consistently. Since the segment renders promotional campaign status, either rename the file to promo.ts and export promoSegment, or change the id to 'campaign' and update DEFAULT_ORDER to match. The former is more concise.",
+        "reasoning": "",
+        "summary_hash": "a6f57022"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::naming_quality::reset_countdown_misleading_verb": {
+      "id": "review::.::holistic::naming_quality::reset_countdown_misleading_verb",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "resetCountdown sounds like an action (reset the countdown) rather than a formatter",
+      "detail": {
+        "holistic": true,
+        "dimension": "naming_quality",
+        "related_files": [
+          "src/segments/usage.ts"
+        ],
+        "evidence": [
+          "resetCountdown(epochSec: number): string formats seconds-until-reset into a human-readable countdown string like '2h30m'",
+          "The 'reset' prefix suggests mutation, but the function is a pure formatter"
+        ],
+        "suggestion": "Rename to formatResetCountdown to match the codebase's format* naming convention (formatTokens, formatCountdown in engine.ts) and clarify it is a formatter, not an action.",
+        "reasoning": "",
+        "summary_hash": "9360646d"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::low_level_elegance::layout_render_monolith": {
+      "id": "review::.::holistic::low_level_elegance::layout_render_monolith",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "layout.ts render() mixes brute-force layout search, row materialization, and rendering in 120 lines",
+      "detail": {
+        "holistic": true,
+        "dimension": "low_level_elegance",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "Lines 66-90: setup and block rendering (allocWidth, order, active, blocks, widths)",
+          "Lines 91-153: brute-force assignment enumeration with reusable buffers (rowOf, seen, rowRW, minIdx), nested loops up to numRows^n iterations",
+          "Lines 155-178: materializing bestAssign into RowGroups with sorting and mapping",
+          "Lines 180-186: rendering each row group and joining",
+          "The function uses 15+ local variables and 4 levels of nesting in the enumeration loop"
+        ],
+        "suggestion": "Extract the brute-force layout optimizer (lines 91-153) into a separate function like findOptimalAssignment(n, widths, row1MaxWidth, maxRowWidth) returning the best assignment array. This isolates the combinatorial search from the rendering pipeline and makes both pieces independently understandable.",
+        "reasoning": "",
+        "summary_hash": "0da6799a"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::low_level_elegance::model_line2_gap_sprawl": {
+      "id": "review::.::holistic::low_level_elegance::model_line2_gap_sprawl",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution",
+      "detail": {
+        "holistic": true,
+        "dimension": "low_level_elegance",
+        "related_files": [
+          "src/segments/model.ts"
+        ],
+        "evidence": [
+          "Lines 58-81: the 3-part branch computes dot, dotLen, eLen, dLen, vLen, contentWidth, spareWithDots, clamped, g, g1, g2, g3, g4, extra, leftGap, rightGap",
+          "The inner if/else (lines 67-81) switches between dot-separated and space-separated layouts based on a width threshold of 12",
+          "The gap distribution formula (g1..g4 with floor/min/extra arithmetic) is the hardest code to follow in the entire codebase"
+        ],
+        "suggestion": "Extract the 3-part gap distribution into a helper function like distributeGaps(parts: string[], targetWidth: number): string that encapsulates the dot-vs-space decision and gap arithmetic. This reduces the render method's cognitive load from 4 branches to 3 simpler ones.",
+        "reasoning": "",
+        "summary_hash": "1ad20a5c"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::low_level_elegance::campaign_dead_intermediates": {
+      "id": "review::.::holistic::low_level_elegance::campaign_dead_intermediates",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "campaign.ts render builds bar and lines array then discards them, with stale iteration comments",
+      "detail": {
+        "holistic": true,
+        "dimension": "low_level_elegance",
+        "related_files": [
+          "src/segments/campaign.ts"
+        ],
+        "evidence": [
+          "Line 38-42: builds bar and lines 43-45: builds lines = [line1, bar] with optional line2 push",
+          "Lines 46-48: three stale comments showing abandoned design iterations ('Ensure exactly 2 lines', 'Actually keep 2 lines', 'Simpler: line1 = status + bar, line2 = countdown')",
+          "Lines 49-52: builds finalLines ignoring both bar and lines variables entirely"
+        ],
+        "suggestion": "Remove the bar computation (lines 37-42), the lines array (lines 43-45), and the three stale comments (lines 46-48). Build finalLines directly from line1 and line2.",
+        "reasoning": "",
+        "summary_hash": "4bd5c1d2"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::mid_level_elegance::hardcoded_row1_offset": {
+      "id": "review::.::holistic::mid_level_elegance::hardcoded_row1_offset",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "Layout embeds hardcoded row1 width reduction (maxRowWidth - 5) mixing policy with orchestration",
+      "detail": {
+        "holistic": true,
+        "dimension": "mid_level_elegance",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "Line 85: const row1MaxWidth = maxRowWidth - 5; is a magic offset for Claude Code's notification panel applied only to the first row, but INK_PADDING (line 12) already accounts for outer padding. The additional 5-char reduction is undocumented and couples layout logic to a specific UI assumption."
+        ],
+        "suggestion": "Extract the row1 extra margin as a named constant (e.g., NOTIFICATION_PANEL_MARGIN = 5) next to INK_PADDING with a comment explaining why row 1 needs additional reduction beyond the general INK_PADDING.",
+        "reasoning": "",
+        "summary_hash": "7b81892b"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::test_strategy::no_test_framework": {
+      "id": "review::.::holistic::test_strategy::no_test_framework",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "No test framework or test files exist anywhere in the codebase",
+      "detail": {
+        "holistic": true,
+        "dimension": "test_strategy",
+        "related_files": [
+          "package.json"
+        ],
+        "evidence": [
+          "package.json has no test script and no test runner dependency. Zero test files found across the entire repository. CLAUDE.md states 'There are no tests or linters configured.'"
+        ],
+        "suggestion": "Add vitest as a devDependency (lightweight, ESM-native, TypeScript out-of-box) and a 'test' script in package.json. Start with unit tests for the highest-value pure-logic modules: colors.ts (visibleLength, padRight, truncate), campaigns/engine.ts (getActiveCampaign with mocked dates), and effort.ts (resolveEffort with fixture JSONL).",
+        "reasoning": "",
+        "summary_hash": "b24af2e0"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::test_strategy::untested_campaign_engine": {
+      "id": "review::.::holistic::test_strategy::untested_campaign_engine",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "Campaign engine's timezone-aware date arithmetic has zero test coverage",
+      "detail": {
+        "holistic": true,
+        "dimension": "test_strategy",
+        "related_files": [
+          "src/campaigns/engine.ts"
+        ],
+        "evidence": [
+          "getActiveCampaign() contains complex branching: weekend detection, peak/off-peak transitions, countdown calculations, progress computation \u2014 all using Intl.DateTimeFormat with timezone-aware formatToParts. High cyclomatic complexity (>15 branches) flagged by mechanical scan. This is classic high-value test territory where manual verification is unreliable."
+        ],
+        "suggestion": "Write unit tests for getActiveCampaign() using vi.useFakeTimers() to pin Date.now() and verify each state transition: upcoming, active-boosted (pre-peak), active-normal (peak), active-boosted (post-peak), weekend. Test countdown string accuracy at boundary conditions.",
+        "reasoning": "",
+        "summary_hash": "1545537c"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::test_strategy::untested_colors_utility": {
+      "id": "review::.::holistic::test_strategy::untested_colors_utility",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "Most-imported utility (colors.ts, 6 importers) has no tests for ANSI-aware string operations",
+      "detail": {
+        "holistic": true,
+        "dimension": "test_strategy",
+        "related_files": [
+          "src/colors.ts"
+        ],
+        "evidence": [
+          "visibleLength(), padRight(), and truncate() handle ANSI escape sequences with character-by-character parsing. truncate() has edge cases around escape sequence boundaries (what happens when maxWidth falls inside an ANSI sequence?). These functions are used by every segment and by layout.ts \u2014 a bug here cascades everywhere."
+        ],
+        "suggestion": "Add unit tests for visibleLength (plain text, styled text, nested styles), padRight (shorter/exact/longer inputs with ANSI), and truncate (cut point inside ANSI sequence, zero width, multi-style strings). These are pure functions \u2014 straightforward to test.",
+        "reasoning": "",
+        "summary_hash": "02daa9c0"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::test_strategy::untested_layout_algorithm": {
+      "id": "review::.::holistic::test_strategy::untested_layout_algorithm",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "Combinatorial layout row-assignment algorithm has no test coverage",
+      "detail": {
+        "holistic": true,
+        "dimension": "test_strategy",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "render() in layout.ts contains a brute-force combinatorial optimizer (numRows^n iterations) that assigns blocks to rows by scoring configurations. This includes edge cases: single block, all blocks on one row, blocks exceeding maxRowWidth forcing multi-row, fallback path when no valid assignment exists. High cyclomatic complexity flagged."
+        ],
+        "suggestion": "Test render() with mock Block inputs at various terminal widths: all blocks fit on one row, forced multi-row, single block, zero-enabled segments. Verify row assignments and output line counts. Mock segment renders to isolate layout logic.",
+        "reasoning": "",
+        "summary_hash": "76f2f1c4"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::api_surface_coherence::block_priority_mismatch": {
+      "id": "review::.::holistic::api_surface_coherence::block_priority_mismatch",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "Segment render() returns Block with priority values contradicting segment's declared priority",
+      "detail": {
+        "holistic": true,
+        "dimension": "api_surface_coherence",
+        "related_files": [
+          "src/segments/model.ts",
+          "src/segments/campaign.ts",
+          "src/segments/usage.ts"
+        ],
+        "evidence": [
+          "modelSegment has priority: 30 on the Segment object but returns { priority: 2 } in the Block (model.ts line 93)",
+          "campaignSegment has priority: 20 on the Segment object but returns { priority: 4 } in the Block (campaign.ts line 55)",
+          "usageSegment has priority: 15 on the Segment object but returns { priority: 2 } in the Block (usage.ts line 52)",
+          "contextSegment and gitSegment are consistent \u2014 both use the same priority in the Segment and the returned Block"
+        ],
+        "suggestion": "Make each segment's render() return the same priority value as its declared Segment priority. In model.ts change priority: 2 to priority: 30, in campaign.ts change priority: 4 to priority: 20, in usage.ts change priority: 2 to priority: 15. Alternatively, since layout.ts never actually reads Block.priority (it uses the Segment.priority for ordering), consider removing priority from the Block interface entirely to eliminate the inconsistency.",
+        "reasoning": "",
+        "summary_hash": "52d7c8a3"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::api_surface_coherence::dead_truncate_export": {
+      "id": "review::.::holistic::api_surface_coherence::dead_truncate_export",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "truncate() is exported from colors.ts but has no external consumers",
+      "detail": {
+        "holistic": true,
+        "dimension": "api_surface_coherence",
+        "related_files": [
+          "src/colors.ts"
+        ],
+        "evidence": [
+          "truncate is called by padRight within colors.ts but no other file imports truncate directly. The export makes it appear as part of the public API surface when it is effectively internal."
+        ],
+        "suggestion": "Remove the export keyword from truncate() to make it a module-private function, reducing the public API surface. If it might be needed externally in the future, keep the export but this is a minor concern.",
+        "reasoning": "",
+        "summary_hash": "2b1a23b2"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::ai_generated_debt::stale_iteration_comments_campaign": {
+      "id": "review::.::holistic::ai_generated_debt::stale_iteration_comments_campaign",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "Stale thinking-out-loud comments and dead code in campaign.ts from iterative generation",
+      "detail": {
+        "holistic": true,
+        "dimension": "ai_generated_debt",
+        "related_files": [
+          "src/segments/campaign.ts"
+        ],
+        "evidence": [
+          "Lines 46-48 contain three sequential comments showing design iteration: '// Ensure exactly 2 lines: combine bar into line2 area', '// Actually keep 2 lines: line1 + line2 with bar info', '// Simpler: line1 = status + bar, line2 = countdown' \u2014 these are working notes, not documentation",
+          "The 'bar' variable (line 42-43) and 'lines' array (line 44-45) are computed but never used \u2014 the function builds a progress bar then discards it in favor of finalLines, leaving dead intermediate code"
+        ],
+        "suggestion": "Remove the three stale comments on lines 46-48. Remove the unused 'bar' variable (lines 42-43) and the unused 'lines' array (lines 44-45). The finalLines array on lines 49-52 is the actual output.",
+        "reasoning": "",
+        "summary_hash": "18c9f5f3"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::initialization_coupling::import_time_homedir_baking": {
+      "id": "review::.::holistic::initialization_coupling::import_time_homedir_baking",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "CONFIG_PATH and SETTINGS_PATH bake homedir() at import time, creating untestable stale snapshots",
+      "detail": {
+        "holistic": true,
+        "dimension": "initialization_coupling",
+        "related_files": [
+          "src/config.ts",
+          "src/cli.ts"
+        ],
+        "evidence": [
+          "config.ts:6 \u2014 const CONFIG_PATH = join(homedir(), '.claude-statusblocks.json') computed at module scope",
+          "cli.ts:10 \u2014 const SETTINGS_PATH = join(homedir(), '.claude', 'settings.json') computed at module scope",
+          "contrast with effort.ts:46 which correctly reads homedir() inside the function body: const configDir = process.env.CLAUDE_CONFIG_DIR || join(homedir(), '.claude')"
+        ],
+        "suggestion": "Move CONFIG_PATH computation inside loadConfig() and SETTINGS_PATH computation inside init(). This follows the pattern already established in effort.ts:46 where homedir() is resolved at call time and allows env var override via CLAUDE_CONFIG_DIR.",
+        "reasoning": "",
+        "summary_hash": "295d3e2c"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::design_coherence::campaign_engine_mixed_concerns": {
+      "id": "review::.::holistic::design_coherence::campaign_engine_mixed_concerns",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "getActiveCampaign() mixes time arithmetic, state classification, and progress calculation in one 88-line body",
+      "detail": {
+        "holistic": true,
+        "dimension": "design_coherence",
+        "related_files": [
+          "src/campaigns/engine.ts"
+        ],
+        "evidence": [
+          "Lines 49-134: getActiveCampaign() handles 5 distinct states (upcoming, weekend, peak, off-peak weekday, no-peak-hours) each with its own time arithmetic, progress calculation, and countdown formatting \u2014 these are three distinct responsibilities interleaved",
+          "The weekend branch (lines 70-88) computes daysUntilMon, secsUntilPeak, totalWeekendSecs, daysSinceFri, and secsSinceFriPeak inline, mixing temporal calculation with state result construction"
+        ],
+        "suggestion": "Extract the time-to-next-state and progress calculations into a helper (e.g., computePeakTiming) that returns {secsUntilChange, progress, isPeak, isWeekend}, then have getActiveCampaign() focus on mapping those results to CampaignStatus objects. This separates the temporal arithmetic from the state classification.",
+        "reasoning": "",
+        "summary_hash": "73ea12e7"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::design_coherence::campaign_segment_dead_intermediates": {
+      "id": "review::.::holistic::design_coherence::campaign_segment_dead_intermediates",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "campaign.ts render() builds bar and lines array then immediately discards them for finalLines",
+      "detail": {
+        "holistic": true,
+        "dimension": "design_coherence",
+        "related_files": [
+          "src/segments/campaign.ts"
+        ],
+        "evidence": [
+          "Lines 37-43: builds 'bar' variable with progress bar and 'lines' array [line1, bar], then lines 44-48 contain comments about 'ensure exactly 2 lines' and 'simpler: line1 = status + bar', ultimately replacing everything with 'finalLines' that ignores 'bar' entirely",
+          "The 'bar' variable computed on line 42 is never used in the final output \u2014 it is dead code from an earlier design iteration"
+        ],
+        "suggestion": "Remove the unused 'bar' variable and the 'lines' array (lines 37-48). Build finalLines directly from line1 and line2, eliminating the dead intermediate computation and the confusing commented-out alternative approaches.",
+        "reasoning": "",
+        "summary_hash": "7e6e5847"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::contract_coherence::block_priority_mismatch": {
+      "id": "review::.::holistic::contract_coherence::block_priority_mismatch",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "Three segments return Block.priority values that contradict their Segment.priority declarations",
+      "detail": {
+        "holistic": true,
+        "dimension": "contract_coherence",
+        "related_files": [
+          "src/segments/model.ts",
+          "src/segments/usage.ts",
+          "src/segments/campaign.ts"
+        ],
+        "evidence": [
+          "model.ts: Segment.priority = 30 (line 23) but render() returns Block priority: 2 (line 93)",
+          "usage.ts: Segment.priority = 15 (line 25) but render() returns Block priority: 2 (line 52)",
+          "campaign.ts: Segment.priority = 20 (line 8) but render() returns Block priority: 4 (line 55)",
+          "context.ts and git.ts correctly match: both declare and return priority 10 and 40 respectively"
+        ],
+        "suggestion": "In each segment's render() return, use the segment's own priority value (30 for model, 15 for usage, 20 for campaign) to match the Segment declaration. Alternatively, if Block.priority is intentionally different from Segment.priority, document why in the Block interface.",
+        "reasoning": "",
+        "summary_hash": "78d9e09a"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::logic_clarity::campaign_dead_bar_variable": {
+      "id": "review::.::holistic::logic_clarity::campaign_dead_bar_variable",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "campaign.ts render() computes 'bar' progress bar variable that is never included in the output",
+      "detail": {
+        "holistic": true,
+        "dimension": "logic_clarity",
+        "related_files": [
+          "src/segments/campaign.ts"
+        ],
+        "evidence": [
+          "Line 42: const bar = color('\\u2593'.repeat(filled), barColor) + color('\\u2591'.repeat(empty), c.gray) \u2014 this progress bar is computed",
+          "Line 44: const lines = [line1, bar] \u2014 bar is placed in a 'lines' array",
+          "Lines 49-52: const finalLines = [line1, line2 || ...] \u2014 'finalLines' completely replaces 'lines', and 'bar' is not referenced",
+          "The function returns finalLines (line 55), so 'bar' and 'lines' are dead computations"
+        ],
+        "suggestion": "Remove the bar computation (lines 37-43) and the unused 'lines' array (line 44). Also remove the three commented-out alternative approaches (lines 46-48). The function should go directly from building line1/line2 to constructing finalLines.",
+        "reasoning": "",
+        "summary_hash": "0a9798c1"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::logic_clarity::unexplained_row1_offset": {
+      "id": "review::.::holistic::logic_clarity::unexplained_row1_offset",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
+      "detail": {
+        "holistic": true,
+        "dimension": "logic_clarity",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "Line 12: const INK_PADDING = 4; // Claude Code's outer paddingX: 2 on each side",
+          "Line 68: const maxRowWidth = Math.max(40, termWidth - INK_PADDING); \u2014 subtracts 4 for Ink padding",
+          "Line 85: const row1MaxWidth = maxRowWidth - 5; \u2014 subtracts another 5 from row 1 only, with no comment explaining why row 1 needs a tighter width limit than other rows"
+        ],
+        "suggestion": "Add a comment explaining why row 1 needs the extra 5-char reduction (likely to avoid overlap with Claude Code's notification panel which only appears at the top). If this is for the notification panel, name the constant (e.g., NOTIFICATION_PANEL_RESERVE = 5).",
+        "reasoning": "",
+        "summary_hash": "80c3c385"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::type_safety::unchecked_stdin_json_cast": {
+      "id": "review::.::holistic::type_safety::unchecked_stdin_json_cast",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
+      "detail": {
+        "holistic": true,
+        "dimension": "type_safety",
+        "related_files": [
+          "src/index.ts"
+        ],
+        "evidence": [
+          "Line 14: const data = JSON.parse(input) as StatusLineData \u2014 stdin input from Claude Code is cast directly to StatusLineData",
+          "If Claude Code's JSON shape changes (e.g., missing context_window or rate_limits fields), the code would crash at property access sites rather than at the parse boundary",
+          "The outer try/catch (line 13) does catch and silently writes a newline (line 39), so crashes are handled \u2014 but the type assertion makes the type system's promise of structure unreliable"
+        ],
+        "suggestion": "Since the top-level try/catch already handles malformed input gracefully, this is low severity. For a more defensive approach, add minimal runtime checks for required fields (e.g., if (!data?.model || !data?.context_window) return) after parsing, rather than adding a full validation library.",
+        "reasoning": "",
+        "summary_hash": "48a90af0"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::type_safety::unsafe_theme_env_cast": {
+      "id": "review::.::holistic::type_safety::unsafe_theme_env_cast",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "Environment variable cast to theme union type without validation",
+      "detail": {
+        "holistic": true,
+        "dimension": "type_safety",
+        "related_files": [
+          "src/config.ts"
+        ],
+        "evidence": [
+          "Line 17: config.theme = envTheme as StatusBlocksConfig['theme'] \u2014 envTheme is string | undefined, cast to 'default' | 'minimal' | 'full' without checking the value",
+          "Contrast with src/effort.ts line 48-49 which correctly validates with includes() before casting: if (['low', 'medium', 'high', 'max'].includes(settings.effortLevel))"
+        ],
+        "suggestion": "Add a validation check before the cast, following the pattern already used in effort.ts: const validThemes = ['default', 'minimal', 'full']; if (envTheme && validThemes.includes(envTheme)) config.theme = envTheme as StatusBlocksConfig['theme'];",
+        "reasoning": "",
+        "summary_hash": "f3870732"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T17:43:23+00:00",
+      "last_seen": "2026-03-20T17:43:23+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    }
+  },
+  "scan_coverage": {
+    "typescript": {
+      "status": "full",
+      "confidence": 1.0,
+      "detectors": {
+        "security": {
+          "detector": "security",
+          "status": "full",
+          "confidence": 1.0,
+          "summary": "Security coverage complete for enabled detectors.",
+          "impact": "",
+          "remediation": "",
+          "tool": "",
+          "reason": ""
+        }
+      },
+      "warnings": [],
+      "updated_at": "2026-03-20T17:43:26+00:00"
+    }
+  },
+  "score_confidence": {
+    "status": "full",
+    "confidence": 1.0,
+    "detectors": [],
+    "dimensions": []
+  },
+  "scan_metadata": {
+    "source": "scan"
+  },
+  "subjective_integrity": {
+    "status": "warn",
+    "target_score": 95.0,
+    "matched_count": 1,
+    "matched_dimensions": [
+      "incomplete_migration"
+    ],
+    "reset_dimensions": []
+  },
+  "subjective_assessments": {
+    "abstraction_fitness": {
+      "score": 92.3,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00",
+      "components": [
+        "Abstraction Leverage",
+        "Indirection Cost",
+        "Interface Honesty",
+        "Delegation Density",
+        "Definition Directness",
+        "Type Discipline"
+      ],
+      "component_scores": {
+        "Abstraction Leverage": 95.0,
+        "Indirection Cost": 95.0,
+        "Interface Honesty": 93.0,
+        "Delegation Density": 100.0,
+        "Definition Directness": 90.0,
+        "Type Discipline": 95.0
+      }
+    },
+    "ai_generated_debt": {
+      "score": 87.5,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "api_surface_coherence": {
+      "score": 86.2,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "authorization_consistency": {
+      "score": 100,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "contract_coherence": {
+      "score": 82.3,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "convention_outlier": {
+      "score": 82.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "cross_module_architecture": {
+      "score": 88.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "dependency_health": {
+      "score": 96.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "design_coherence": {
+      "score": 79.5,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "error_consistency": {
+      "score": 79.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "high_level_elegance": {
+      "score": 90.5,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "incomplete_migration": {
+      "score": 95.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "initialization_coupling": {
+      "score": 82.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "logic_clarity": {
+      "score": 83.2,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "low_level_elegance": {
+      "score": 76.8,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "mid_level_elegance": {
+      "score": 88.5,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "naming_quality": {
+      "score": 87.5,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "package_organization": {
+      "score": 91.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "test_strategy": {
+      "score": 12.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    },
+    "type_safety": {
+      "score": 85.4,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T17:43:23+00:00"
+    }
+  },
+  "concern_dismissals": {
+    "6dd8d52fb6d185d2": {
+      "dismissed_at": "2026-03-20T17:43:23+00:00",
+      "reasoning": "Single-use is the intended pattern for segments \u2014 each is imported once by layout.ts which assembles them. This is clean architecture, not a concern.",
+      "concern_type": "",
+      "concern_file": "",
+      "source_issue_ids": []
+    },
+    "056b316a9695d1c4": {
+      "dismissed_at": "2026-03-20T17:43:23+00:00",
+      "reasoning": "src/cli.ts is referenced in package.json bin field as the CLI entry point. It is not orphaned \u2014 it is used via a non-import mechanism (npm bin command).",
+      "concern_type": "",
+      "concern_file": "",
+      "source_issue_ids": []
+    }
+  },
+  "potentials": {
+    "typescript": {
+      "logs": 0,
+      "unused": 0,
+      "exports": 0,
+      "deprecated": 0,
+      "structural": 0,
+      "flat_dirs": 0,
+      "props": 0,
+      "single_use": 0,
+      "coupling": 0,
+      "cycles": 0,
+      "orphaned": 0,
+      "patterns": 0,
+      "naming": 0,
+      "facade": 0,
+      "test_coverage": 0,
+      "smells": 0,
+      "react": 0,
+      "security": 0,
+      "subjective_review": 20,
+      "dupes": 0,
+      "stale_wontfix": 0
+    }
+  },
+  "scan_history": [
+    {
+      "timestamp": "2026-03-20T17:43:23+00:00",
+      "lang": "typescript",
+      "strict_score": 85.4,
+      "verified_strict_score": 100.0,
+      "objective_score": 100.0,
+      "overall_score": 85.4,
+      "open": 27,
+      "diff_new": 27,
+      "diff_resolved": 0,
+      "ignored": 0,
+      "raw_issues": 27,
+      "suppressed_pct": 0.0,
+      "ignore_patterns": 0,
+      "subjective_integrity": {
+        "status": "disabled",
+        "matched_count": 0,
+        "reset_count": 0,
+        "target_score": null
+      },
+      "score_confidence": {
+        "status": "full",
+        "confidence": 1.0,
+        "detector_count": 0,
+        "dimension_count": 0
+      },
+      "dimension_scores": {
+        "Abstraction fit": {
+          "score": 92.3,
+          "strict": 92.3
+        },
+        "AI generated debt": {
+          "score": 87.5,
+          "strict": 87.5
+        },
+        "API coherence": {
+          "score": 86.2,
+          "strict": 86.2
+        },
+        "Auth consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Contracts": {
+          "score": 82.3,
+          "strict": 82.3
+        },
+        "Convention drift": {
+          "score": 82.0,
+          "strict": 82.0
+        },
+        "Cross-module arch": {
+          "score": 88.0,
+          "strict": 88.0
+        },
+        "Dep health": {
+          "score": 96.0,
+          "strict": 96.0
+        },
+        "Design coherence": {
+          "score": 79.5,
+          "strict": 79.5
+        },
+        "Error consistency": {
+          "score": 79.0,
+          "strict": 79.0
+        },
+        "High elegance": {
+          "score": 90.5,
+          "strict": 90.5
+        },
+        "Stale migration": {
+          "score": 95.0,
+          "strict": 95.0
+        },
+        "Init coupling": {
+          "score": 82.0,
+          "strict": 82.0
+        },
+        "Logic clarity": {
+          "score": 83.2,
+          "strict": 83.2
+        },
+        "Low elegance": {
+          "score": 76.8,
+          "strict": 76.8
+        },
+        "Mid elegance": {
+          "score": 88.5,
+          "strict": 88.5
+        },
+        "Naming quality": {
+          "score": 87.5,
+          "strict": 87.5
+        },
+        "Structure nav": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "Test strategy": {
+          "score": 12.0,
+          "strict": 12.0
+        },
+        "Type safety": {
+          "score": 85.4,
+          "strict": 85.4
+        }
+      }
+    },
+    {
+      "timestamp": "2026-03-20T17:43:26+00:00",
+      "lang": "typescript",
+      "strict_score": 85.4,
+      "verified_strict_score": 100.0,
+      "objective_score": 100.0,
+      "overall_score": 85.4,
+      "open": 27,
+      "diff_new": 0,
+      "diff_resolved": 0,
+      "ignored": 0,
+      "raw_issues": 0,
+      "suppressed_pct": 0.0,
+      "ignore_patterns": 0,
+      "subjective_integrity": {
+        "status": "warn",
+        "matched_count": 1,
+        "reset_count": 0,
+        "target_score": 95.0
+      },
+      "score_confidence": {
+        "status": "full",
+        "confidence": 1.0,
+        "detector_count": 0,
+        "dimension_count": 0
+      },
+      "dimension_scores": {
+        "Abstraction fit": {
+          "score": 92.3,
+          "strict": 92.3
+        },
+        "AI generated debt": {
+          "score": 87.5,
+          "strict": 87.5
+        },
+        "API coherence": {
+          "score": 86.2,
+          "strict": 86.2
+        },
+        "Auth consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Contracts": {
+          "score": 82.3,
+          "strict": 82.3
+        },
+        "Convention drift": {
+          "score": 82.0,
+          "strict": 82.0
+        },
+        "Cross-module arch": {
+          "score": 88.0,
+          "strict": 88.0
+        },
+        "Dep health": {
+          "score": 96.0,
+          "strict": 96.0
+        },
+        "Design coherence": {
+          "score": 79.5,
+          "strict": 79.5
+        },
+        "Error consistency": {
+          "score": 79.0,
+          "strict": 79.0
+        },
+        "High elegance": {
+          "score": 90.5,
+          "strict": 90.5
+        },
+        "Stale migration": {
+          "score": 95.0,
+          "strict": 95.0
+        },
+        "Init coupling": {
+          "score": 82.0,
+          "strict": 82.0
+        },
+        "Logic clarity": {
+          "score": 83.2,
+          "strict": 83.2
+        },
+        "Low elegance": {
+          "score": 76.8,
+          "strict": 76.8
+        },
+        "Mid elegance": {
+          "score": 88.5,
+          "strict": 88.5
+        },
+        "Naming quality": {
+          "score": 87.5,
+          "strict": 87.5
+        },
+        "Structure nav": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "Test strategy": {
+          "score": 12.0,
+          "strict": 12.0
+        },
+        "Type safety": {
+          "score": 85.4,
+          "strict": 85.4
+        }
+      }
+    }
+  ],
+  "tool_hash": "36b113ba9d94",
+  "scan_path": "src",
+  "scan_completeness": {
+    "typescript": "full"
+  },
+  "dimension_scores": {
+    "Abstraction fit": {
+      "score": 92.3,
+      "strict": 92.3,
+      "verified_strict_score": 92.3,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.923,
+          "failing": 0,
+          "weighted_failures": 0.77,
+          "assessment_score": 92.3,
+          "placeholder": false,
+          "dimension_key": "abstraction_fitness",
+          "configured_weight": 8.0,
+          "components": [
+            "Abstraction Leverage",
+            "Indirection Cost",
+            "Interface Honesty",
+            "Delegation Density",
+            "Definition Directness",
+            "Type Discipline"
+          ],
+          "component_scores": {
+            "Abstraction Leverage": 95.0,
+            "Indirection Cost": 95.0,
+            "Interface Honesty": 93.0,
+            "Delegation Density": 100.0,
+            "Definition Directness": 90.0,
+            "Type Discipline": 95.0
+          }
+        }
+      }
+    },
+    "AI generated debt": {
+      "score": 87.5,
+      "strict": 87.5,
+      "verified_strict_score": 87.5,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.875,
+          "failing": 1,
+          "weighted_failures": 1.25,
+          "assessment_score": 87.5,
+          "placeholder": false,
+          "dimension_key": "ai_generated_debt",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "API coherence": {
+      "score": 86.2,
+      "strict": 86.2,
+      "verified_strict_score": 86.2,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.862,
+          "failing": 2,
+          "weighted_failures": 1.38,
+          "assessment_score": 86.2,
+          "placeholder": false,
+          "dimension_key": "api_surface_coherence",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Auth consistency": {
+      "score": 100.0,
+      "strict": 100.0,
+      "verified_strict_score": 100.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 1.0,
+          "failing": 0,
+          "weighted_failures": 0.0,
+          "assessment_score": 100.0,
+          "placeholder": false,
+          "dimension_key": "authorization_consistency",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Contracts": {
+      "score": 82.3,
+      "strict": 82.3,
+      "verified_strict_score": 82.3,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.823,
+          "failing": 1,
+          "weighted_failures": 1.77,
+          "assessment_score": 82.3,
+          "placeholder": false,
+          "dimension_key": "contract_coherence",
+          "configured_weight": 12.0,
+          "components": []
+        }
+      }
+    },
+    "Convention drift": {
+      "score": 82.0,
+      "strict": 82.0,
+      "verified_strict_score": 82.0,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.82,
+          "failing": 2,
+          "weighted_failures": 1.8,
+          "assessment_score": 82.0,
+          "placeholder": false,
+          "dimension_key": "convention_outlier",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Cross-module arch": {
+      "score": 88.0,
+      "strict": 88.0,
+      "verified_strict_score": 88.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.88,
+          "failing": 1,
+          "weighted_failures": 1.2,
+          "assessment_score": 88.0,
+          "placeholder": false,
+          "dimension_key": "cross_module_architecture",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Dep health": {
+      "score": 96.0,
+      "strict": 96.0,
+      "verified_strict_score": 96.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.96,
+          "failing": 0,
+          "weighted_failures": 0.4,
+          "assessment_score": 96.0,
+          "placeholder": false,
+          "dimension_key": "dependency_health",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Design coherence": {
+      "score": 79.5,
+      "strict": 79.5,
+      "verified_strict_score": 79.5,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.795,
+          "failing": 2,
+          "weighted_failures": 2.05,
+          "assessment_score": 79.5,
+          "placeholder": false,
+          "dimension_key": "design_coherence",
+          "configured_weight": 10.0,
+          "components": []
+        }
+      }
+    },
+    "Error consistency": {
+      "score": 79.0,
+      "strict": 79.0,
+      "verified_strict_score": 79.0,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.79,
+          "failing": 2,
+          "weighted_failures": 2.1,
+          "assessment_score": 79.0,
+          "placeholder": false,
+          "dimension_key": "error_consistency",
+          "configured_weight": 3.0,
+          "components": []
+        }
+      }
+    },
+    "High elegance": {
+      "score": 90.5,
+      "strict": 90.5,
+      "verified_strict_score": 90.5,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.905,
+          "failing": 1,
+          "weighted_failures": 0.95,
+          "assessment_score": 90.5,
+          "placeholder": false,
+          "dimension_key": "high_level_elegance",
+          "configured_weight": 22.0,
+          "components": []
+        }
+      }
+    },
+    "Stale migration": {
+      "score": 95.0,
+      "strict": 95.0,
+      "verified_strict_score": 95.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.95,
+          "failing": 0,
+          "weighted_failures": 0.5,
+          "assessment_score": 95.0,
+          "placeholder": false,
+          "dimension_key": "incomplete_migration",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Init coupling": {
+      "score": 82.0,
+      "strict": 82.0,
+      "verified_strict_score": 82.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.82,
+          "failing": 1,
+          "weighted_failures": 1.8,
+          "assessment_score": 82.0,
+          "placeholder": false,
+          "dimension_key": "initialization_coupling",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Logic clarity": {
+      "score": 83.2,
+      "strict": 83.2,
+      "verified_strict_score": 83.2,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.832,
+          "failing": 2,
+          "weighted_failures": 1.68,
+          "assessment_score": 83.2,
+          "placeholder": false,
+          "dimension_key": "logic_clarity",
+          "configured_weight": 6.0,
+          "components": []
+        }
+      }
+    },
+    "Low elegance": {
+      "score": 76.8,
+      "strict": 76.8,
+      "verified_strict_score": 76.8,
+      "checks": 10,
+      "failing": 3,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.768,
+          "failing": 3,
+          "weighted_failures": 2.32,
+          "assessment_score": 76.8,
+          "placeholder": false,
+          "dimension_key": "low_level_elegance",
+          "configured_weight": 12.0,
+          "components": []
+        }
+      }
+    },
+    "Mid elegance": {
+      "score": 88.5,
+      "strict": 88.5,
+      "verified_strict_score": 88.5,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.885,
+          "failing": 1,
+          "weighted_failures": 1.15,
+          "assessment_score": 88.5,
+          "placeholder": false,
+          "dimension_key": "mid_level_elegance",
+          "configured_weight": 22.0,
+          "components": []
+        }
+      }
+    },
+    "Naming quality": {
+      "score": 87.5,
+      "strict": 87.5,
+      "verified_strict_score": 87.5,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.875,
+          "failing": 2,
+          "weighted_failures": 1.25,
+          "assessment_score": 87.5,
+          "placeholder": false,
+          "dimension_key": "naming_quality",
+          "configured_weight": 2.0,
+          "components": []
+        }
+      }
+    },
+    "Structure nav": {
+      "score": 91.0,
+      "strict": 91.0,
+      "verified_strict_score": 91.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.91,
+          "failing": 0,
+          "weighted_failures": 0.9,
+          "assessment_score": 91.0,
+          "placeholder": false,
+          "dimension_key": "package_organization",
+          "configured_weight": 5.0,
+          "components": []
+        }
+      }
+    },
+    "Test strategy": {
+      "score": 12.0,
+      "strict": 12.0,
+      "verified_strict_score": 12.0,
+      "checks": 10,
+      "failing": 4,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.12,
+          "failing": 4,
+          "weighted_failures": 8.8,
+          "assessment_score": 12.0,
+          "placeholder": false,
+          "dimension_key": "test_strategy",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Type safety": {
+      "score": 85.4,
+      "strict": 85.4,
+      "verified_strict_score": 85.4,
+      "checks": 10,
+      "failing": 2,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.854,
+          "failing": 2,
+          "weighted_failures": 1.46,
+          "assessment_score": 85.4,
+          "placeholder": false,
+          "dimension_key": "type_safety",
+          "configured_weight": 12.0,
+          "components": []
+        }
+      }
+    }
+  },
+  "review_cache": {
+    "files": {},
+    "holistic": {
+      "reviewed_at": "2026-03-20T17:43:23+00:00",
+      "file_count_at_review": 14,
+      "issue_count": 27,
+      "reviewed_files_count": 0,
+      "full_sweep_included": false
+    },
+    "detectors": {
+      "boilerplate": {},
+      "security": {
+        "version": 1,
+        "fingerprint": "9bb3934067b6ce5b25f0ac0f009378c584b776ae",
+        "entries": [],
+        "files_scanned": 0,
+        "coverage": null
+      },
+      "dupes": {}
+    }
+  },
+  "assessment_import_audit": [
+    {
+      "timestamp": "2026-03-20T17:43:23+00:00",
+      "mode": "trusted_internal",
+      "trusted": true,
+      "reason": "trusted import-run replay from 20260320_173759",
+      "override_used": false,
+      "attested_external": false,
+      "provisional": false,
+      "provisional_count": 0,
+      "attest": "",
+      "import_file": "/Users/okan/code/claude-tools/claude-statusblocks/.desloppify/subagents/runs/20260320_173759/holistic_issues_merged.json",
+      "packet_sha256": "27ae7b637b664cb792aa6b12c371accac14d587b59437044155cca9234553503"
+    }
+  ],
+  "lang_capabilities": {
+    "typescript": {
+      "fixers": [
+        "dead-useeffect",
+        "debug-logs",
+        "empty-if-chain",
+        "unused-imports",
+        "unused-params",
+        "unused-vars"
+      ],
+      "typecheck_cmd": "npx tsc --noEmit"
+    }
+  },
+  "zone_distribution": {},
+  "codebase_metrics": {
+    "typescript": {
+      "total_files": 0,
+      "total_loc": 0,
+      "total_directories": 0
+    }
+  },
+  "reminder_history": {
+    "review_issues_pending": 1,
+    "feedback_nudge": 1,
+    "report_scores": 1,
+    "review_not_run": 1
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "batch": "cross_module_architecture",
+  "batch_index": 1,
+  "assessments": {
+    "cross_module_architecture": 88.0
+  },
+  "dimension_notes": {
+    "cross_module_architecture": {
+      "evidence": [
+        "Clean 3-layer dependency direction: src/segments/ -> src/ -> src/campaigns/. Segments import from core (types, colors, config, effort), campaigns import from core (types), and core (layout.ts) imports segments. No cycles.",
+        "src/types.ts is imported by 11/14 files but is a pure type-definition module with no logic or side effects — a healthy 'god module' pattern for a 14-file codebase.",
+        "src/colors.ts imported by 6 files serves as a focused utility boundary for ANSI operations — well-scoped shared module.",
+        "Coupling matrix shows bidirectional edges between src/ and src/segments/ (11 edges segments->src, 5 edges src->segments), but this is structural: segments import types/colors, layout.ts imports segment instances. The direction is clear and intentional.",
+        "No shared mutable state across module boundaries — git cache is local to git.ts, effort cache is local to effort.ts.",
+        "No import-time side effects in library modules; side effects only in entry points (index.ts stdin handling, cli.ts argv dispatch).",
+        "cli.ts uses dynamic import('./index.js') for the piped-stdin path, creating a clean deferred-loading boundary between CLI and runtime modes."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The bidirectional coupling between src/ and src/segments/ (layout.ts imports all 5 segment modules directly, each segment imports back from src/) is functionally a cycle at the directory level. While each individual import direction is clear, any new segment requires editing layout.ts. A segment registry or dynamic discovery pattern could decouple this, though at 5 segments the current approach is pragmatic and simple."
+    }
+  },
+  "dimension_judgment": {
+    "cross_module_architecture": {
+      "dimension_character": "The codebase has clean, well-understood dependency boundaries for a project of its size. Three directories (src/, src/segments/, src/campaigns/) form a natural layered architecture where segments consume core utilities and the layout module composes segments. There are no cycles, no shared mutable state across boundaries, and no import-time side effects in library modules. The only structural tension is the bidirectional directory-level coupling between src/ and src/segments/, which is inherent to the segment plugin pattern and well-managed.",
+      "score_rationale": "A developer working here would find dependency direction predictable and boundaries coherent. The types.ts hub is a pure type file with no blast radius concern. The bidirectional src/<->segments/ coupling is the only architectural tension, but it is well-understood and does not create unexpected ripple effects. This places the codebase firmly in the 'strong with minor friction' range around 88, above the 80 threshold for 'solid but uneven' since the friction is isolated and intentional."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "hardcoded_segment_registry",
+      "summary": "layout.ts hardcodes all segment imports — adding a segment requires editing layout.ts",
+      "related_files": ["src/layout.ts"],
+      "evidence": ["Lines 4-8 of layout.ts import all 5 segments individually; line 10 assembles them into ALL_SEGMENTS array. Adding a new segment requires both a new file and editing layout.ts imports + array."],
+      "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern in the segments directory. Do not over-engineer a dynamic plugin system.",
+      "confidence": "low",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["The only architectural tension (bidirectional directory coupling) is inherent to the segment-plugin pattern and well-managed at current scale."],
+    "likely_symptoms": [],
+    "possible_false_positives": ["The hardcoded_segment_registry issue is borderline — at 5 segments the current direct approach is simpler than any alternative."]
+  },
+  "context_updates": {
+    "cross_module_architecture": {
+      "add": [
+        {
+          "header": "Clean 3-layer dependency direction",
+          "description": "Dependencies flow segments -> core -> campaigns with no cycles. Each layer has a clear role: types/colors/config are shared infrastructure, segments are rendering units, campaigns are domain logic. The bidirectional directory coupling (layout imports segments, segments import types) is structurally necessary and well-understood.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Pure type hub with no blast radius",
+          "description": "src/types.ts is imported by 11/14 files but contains only interface/type definitions with zero runtime logic or side effects. Changes to types propagate at compile time only, making this a healthy hub pattern rather than a god module concern.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No shared mutable state across boundaries",
+          "description": "Caches (git 5s TTL, effort 5s TTL) are module-private. No global singletons or cross-module coordination through mutable state. Each module manages its own state lifecycle.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Dynamic import boundary in CLI",
+          "description": "cli.ts uses dynamic import('./index.js') to defer loading the stdin-processing pipeline until needed, creating a clean separation between CLI subcommands and the piped runtime path.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "batch": "initialization_coupling",
+  "batch_index": 16,
+  "assessments": {
+    "initialization_coupling": 79.5
+  },
+  "dimension_notes": {
+    "initialization_coupling": {
+      "evidence": [
+        "CONFIG_PATH in config.ts (line 6) computes join(homedir(), '.claude-statusblocks.json') at import time — this bakes the home directory into a module-level constant, creating a stale snapshot that cannot be overridden in tests",
+        "SETTINGS_PATH in cli.ts (line 10) computes join(homedir(), '.claude', 'settings.json') at import time — same stale snapshot pattern",
+        "effort.ts correctly resolves homedir() at call time inside resolveEffort() (line 46: const configDir = process.env.CLAUDE_CONFIG_DIR || join(homedir(), '.claude')), establishing a pattern the other files do not follow",
+        "gitCache in git.ts (line 5) is a module-level mutable singleton, but its TTL-based invalidation (5s) and single-consumer usage make this pragmatic rather than problematic",
+        "effort.ts cache (line 9) is another module-level mutable singleton with TTL-based invalidation — same pragmatic pattern as gitCache",
+        "No import-time side effects for DB connections, file I/O, or network calls at module scope",
+        "No circular init dependencies — import graph is acyclic (segments → src, campaigns → src types)",
+        "No environment variable reads at import time except implicitly through homedir() calls in CONFIG_PATH and SETTINGS_PATH",
+        "MOCK_DATA in cli.ts uses process.cwd() and Date.now() at import time (lines 14, 19-20), but cli.ts is an entry point script, not an imported module, so this has no init-ordering impact"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "initialization_coupling": {
+      "dimension_character": "The codebase is mostly clean on initialization coupling — no import-time side effects, no circular dependencies, and no boot-order sensitivity. Two module-level path constants (CONFIG_PATH, SETTINGS_PATH) bake homedir() at import time, creating stale snapshots that cannot be overridden for testing. This stands in contrast to effort.ts which correctly resolves homedir() at call time. Module-level caches (gitCache, effort cache) use TTL invalidation and are pragmatic for this use case.",
+      "score_rationale": "The import-time homedir() baking in config.ts and cli.ts creates real testability friction — a developer cannot mock or override the home directory path after module import, which would matter for unit testing loadConfig() or init(). This pulls the score toward the 80 anchor where 'a developer encounters import-time side effects or environment reads at module scope that create fragility.' The existence of the correct pattern in effort.ts makes this an inconsistency rather than a systemic problem, keeping it near 80 rather than below."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "initialization_coupling",
+      "identifier": "import_time_homedir_config",
+      "summary": "CONFIG_PATH and SETTINGS_PATH bake homedir() at import time, creating untestable stale snapshots",
+      "related_files": ["src/config.ts", "src/cli.ts"],
+      "evidence": [
+        "config.ts line 6: const CONFIG_PATH = join(homedir(), '.claude-statusblocks.json') runs at import time",
+        "cli.ts line 10: const SETTINGS_PATH = join(homedir(), '.claude', 'settings.json') runs at import time",
+        "In contrast, effort.ts line 46 correctly resolves homedir() inside the function body: const configDir = process.env.CLAUDE_CONFIG_DIR || join(homedir(), '.claude')"
+      ],
+      "suggestion": "Move CONFIG_PATH computation inside loadConfig() in config.ts: replace the module-level const with a local const inside the function body. Similarly, move SETTINGS_PATH computation inside init() in cli.ts. This follows the pattern already established in effort.ts where homedir() is resolved at call time, enabling tests to mock os.homedir() or set environment variables that affect path resolution.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "import_time_path_computation"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Module-level path constants computed from homedir() at import time rather than at call time, inconsistent with the pattern established in effort.ts"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "initialization_coupling": {
+      "add": [
+        {
+          "header": "No import-time side effects in production paths",
+          "description": "No module-scope code performs file I/O, network calls, or database connections at import time. Module initialization is limited to constant declarations and object literals, keeping imports side-effect-free.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Acyclic import graph with no boot-order fragility",
+          "description": "The import graph flows cleanly: segments depend on src/ (types, colors), campaigns depend on src/ types, and src/ layout imports segments for registration. No circular dependencies or conditional/lazy imports exist.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Pragmatic module-level caches with TTL invalidation",
+          "description": "gitCache (git.ts) and effort cache (effort.ts) are module-level mutable singletons, but their 5-second TTL invalidation and single-consumer usage patterns make them pragmatic choices for a CLI status line rather than problematic global state.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Inconsistent homedir() resolution timing across modules",
+          "description": "config.ts and cli.ts compute path constants from homedir() at import time (creating stale snapshots), while effort.ts correctly resolves homedir() inside its function body at call time. This inconsistency means the project has two patterns for the same concern.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

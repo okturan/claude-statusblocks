@@ -1,0 +1,415 @@
+{
+  "command": "show",
+  "query": "review",
+  "status_filter": "open",
+  "total": 10,
+  "summary": {
+    "by_tier": {
+      "T1": 10
+    },
+    "by_detector": {
+      "review": 10
+    },
+    "files": 1
+  },
+  "by_file": {
+    ".": [
+      {
+        "id": "review::.::holistic::ai_generated_debt::stale_iteration_comments_campaign",
+        "tier": 1,
+        "confidence": "high",
+        "summary": "Stale thinking-out-loud comments and dead code in campaign.ts from iterative generation",
+        "detail": {
+          "holistic": true,
+          "dimension": "ai_generated_debt",
+          "related_files": [
+            "src/segments/campaign.ts"
+          ],
+          "evidence": [
+            "Lines 46-48 contain three sequential comments showing design iteration: '// Ensure exactly 2 lines: combine bar into line2 area', '// Actually keep 2 lines: line1 + line2 with bar info', '// Simpler: line1 = status + bar, line2 = countdown' \u2014 these are working notes, not documentation",
+            "The 'bar' variable (line 42-43) and 'lines' array (line 44-45) are computed but never used \u2014 the function builds a progress bar then discards it in favor of finalLines, leaving dead intermediate code"
+          ],
+          "suggestion": "Remove the three stale comments on lines 46-48. Remove the unused 'bar' variable (lines 42-43) and the unused 'lines' array (lines 44-45). The finalLines array on lines 49-52 is the actual output.",
+          "reasoning": "",
+          "summary_hash": "18c9f5f3"
+        }
+      },
+      {
+        "id": "review::.::holistic::api_surface_coherence::block_priority_mismatch",
+        "tier": 1,
+        "confidence": "high",
+        "summary": "Segment render() returns Block with priority values contradicting segment's declared priority",
+        "detail": {
+          "holistic": true,
+          "dimension": "api_surface_coherence",
+          "related_files": [
+            "src/segments/model.ts",
+            "src/segments/campaign.ts",
+            "src/segments/usage.ts"
+          ],
+          "evidence": [
+            "modelSegment has priority: 30 on the Segment object but returns { priority: 2 } in the Block (model.ts line 93)",
+            "campaignSegment has priority: 20 on the Segment object but returns { priority: 4 } in the Block (campaign.ts line 55)",
+            "usageSegment has priority: 15 on the Segment object but returns { priority: 2 } in the Block (usage.ts line 52)",
+            "contextSegment and gitSegment are consistent \u2014 both use the same priority in the Segment and the returned Block"
+          ],
+          "suggestion": "Make each segment's render() return the same priority value as its declared Segment priority. In model.ts change priority: 2 to priority: 30, in campaign.ts change priority: 4 to priority: 20, in usage.ts change priority: 2 to priority: 15. Alternatively, since layout.ts never actually reads Block.priority (it uses the Segment.priority for ordering), consider removing priority from the Block interface entirely to eliminate the inconsistency.",
+          "reasoning": "",
+          "summary_hash": "52d7c8a3"
+        }
+      },
+      {
+        "id": "review::.::holistic::contract_coherence::block_priority_mismatch",
+        "tier": 1,
+        "confidence": "high",
+        "summary": "Three segments return Block.priority values that contradict their Segment.priority declarations",
+        "detail": {
+          "holistic": true,
+          "dimension": "contract_coherence",
+          "related_files": [
+            "src/segments/model.ts",
+            "src/segments/usage.ts",
+            "src/segments/campaign.ts"
+          ],
+          "evidence": [
+            "model.ts: Segment.priority = 30 (line 23) but render() returns Block priority: 2 (line 93)",
+            "usage.ts: Segment.priority = 15 (line 25) but render() returns Block priority: 2 (line 52)",
+            "campaign.ts: Segment.priority = 20 (line 8) but render() returns Block priority: 4 (line 55)",
+            "context.ts and git.ts correctly match: both declare and return priority 10 and 40 respectively"
+          ],
+          "suggestion": "In each segment's render() return, use the segment's own priority value (30 for model, 15 for usage, 20 for campaign) to match the Segment declaration. Alternatively, if Block.priority is intentionally different from Segment.priority, document why in the Block interface.",
+          "reasoning": "",
+          "summary_hash": "78d9e09a"
+        }
+      },
+      {
+        "id": "review::.::holistic::convention_outlier::priority_mismatch_in_block_returns",
+        "tier": 1,
+        "confidence": "high",
+        "summary": "3 of 5 segments return Block.priority values that differ from their Segment.priority definitions",
+        "detail": {
+          "holistic": true,
+          "dimension": "convention_outlier",
+          "related_files": [
+            "src/segments/model.ts",
+            "src/segments/campaign.ts",
+            "src/segments/usage.ts"
+          ],
+          "evidence": [
+            "modelSegment: Segment.priority=30, but render() returns {priority: 2} on line 93",
+            "campaignSegment: Segment.priority=20, but render() returns {priority: 4} on lines 11 and 55",
+            "usageSegment: Segment.priority=15, but render() returns {priority: 2} on lines 29 and 52",
+            "contextSegment (priority:10) and gitSegment (priority:40) are consistent between Segment and Block",
+            "The Block.priority values (2, 4) appear to be from an earlier design and were not updated when Segment priorities were established"
+          ],
+          "suggestion": "Use the Segment's priority value in the Block return: e.g. in model.ts line 93, change priority:2 to priority:30. Similarly for campaign.ts and usage.ts. This makes the Block returns consistent with their parent Segment definitions.",
+          "reasoning": "",
+          "summary_hash": "59654ce9"
+        }
+      },
+      {
+        "id": "review::.::holistic::design_coherence::campaign_segment_dead_intermediates",
+        "tier": 1,
+        "confidence": "high",
+        "summary": "campaign.ts render() builds bar and lines array then immediately discards them for finalLines",
+        "detail": {
+          "holistic": true,
+          "dimension": "design_coherence",
+          "related_files": [
+            "src/segments/campaign.ts"
+          ],
+          "evidence": [
+            "Lines 37-43: builds 'bar' variable with progress bar and 'lines' array [line1, bar], then lines 44-48 contain comments about 'ensure exactly 2 lines' and 'simpler: line1 = status + bar', ultimately replacing everything with 'finalLines' that ignores 'bar' entirely",
+            "The 'bar' variable computed on line 42 is never used in the final output \u2014 it is dead code from an earlier design iteration"
+          ],
+          "suggestion": "Remove the unused 'bar' variable and the 'lines' array (lines 37-48). Build finalLines directly from line1 and line2, eliminating the dead intermediate computation and the confusing commented-out alternative approaches.",
+          "reasoning": "",
+          "summary_hash": "7e6e5847"
+        }
+      },
+      {
+        "id": "review::.::holistic::error_consistency::index_toplevel_catch_swallows_all",
+        "tier": 1,
+        "confidence": "high",
+        "summary": "Top-level catch in index.ts silently swallows all errors, outputting blank line with no diagnostics",
+        "detail": {
+          "holistic": true,
+          "dimension": "error_consistency",
+          "related_files": [
+            "src/index.ts"
+          ],
+          "evidence": [
+            "Line 38: catch {} outputs process.stdout.write('\\n') for ANY error \u2014 JSON parse failure, render TypeError, or unexpected runtime error all produce identical blank output.",
+            "There is no stderr logging, no debug mode, no way for a user to understand why their status line is blank.",
+            "This makes debugging impossible: a malformed JSON input from Claude Code, a segment throwing an error, and a missing dependency all look the same."
+          ],
+          "suggestion": "Write a minimal diagnostic to stderr in the catch block: process.stderr.write(`[claude-statusblocks] ${err instanceof Error ? err.message : err}\\n`). This preserves the blank-output-on-failure behavior (stdout) while giving developers a diagnostic channel (stderr). Alternatively, write to a log file only when a CLAUDE_STATUSBLOCKS_DEBUG env var is set.",
+          "reasoning": "",
+          "summary_hash": "9eebd441"
+        }
+      },
+      {
+        "id": "review::.::holistic::high_level_elegance::campaign_segment_vestigial_code",
+        "tier": 1,
+        "confidence": "high",
+        "summary": "campaign.ts has dead progress bar logic and contradictory inline comments from iterative development",
+        "detail": {
+          "holistic": true,
+          "dimension": "high_level_elegance",
+          "related_files": [
+            "src/segments/campaign.ts"
+          ],
+          "evidence": [
+            "Lines 37-48: builds a progress bar (const bar = ...) and assembles a 3-line array (const lines = [line1, bar]; if (line2) lines.push(line2)), but these variables are never used.",
+            "Lines 46-48: comments '// Ensure exactly 2 lines: combine bar into line2 area', '// Actually keep 2 lines: line1 + line2 with bar info', '// Simpler: line1 = status + bar, line2 = countdown' show unresolved design iteration.",
+            "Lines 49-52: finalLines is built fresh, discarding the progress bar entirely."
+          ],
+          "suggestion": "Remove the dead `bar` computation (lines 37-42), the unused `lines` array (lines 44-45), and the contradictory comments (lines 46-48). Keep only the `finalLines` construction.",
+          "reasoning": "",
+          "summary_hash": "d146f200"
+        }
+      },
+      {
+        "id": "review::.::holistic::logic_clarity::campaign_dead_bar_variable",
+        "tier": 1,
+        "confidence": "high",
+        "summary": "campaign.ts render() computes 'bar' progress bar variable that is never included in the output",
+        "detail": {
+          "holistic": true,
+          "dimension": "logic_clarity",
+          "related_files": [
+            "src/segments/campaign.ts"
+          ],
+          "evidence": [
+            "Line 42: const bar = color('\\u2593'.repeat(filled), barColor) + color('\\u2591'.repeat(empty), c.gray) \u2014 this progress bar is computed",
+            "Line 44: const lines = [line1, bar] \u2014 bar is placed in a 'lines' array",
+            "Lines 49-52: const finalLines = [line1, line2 || ...] \u2014 'finalLines' completely replaces 'lines', and 'bar' is not referenced",
+            "The function returns finalLines (line 55), so 'bar' and 'lines' are dead computations"
+          ],
+          "suggestion": "Remove the bar computation (lines 37-43) and the unused 'lines' array (line 44). Also remove the three commented-out alternative approaches (lines 46-48). The function should go directly from building line1/line2 to constructing finalLines.",
+          "reasoning": "",
+          "summary_hash": "0a9798c1"
+        }
+      },
+      {
+        "id": "review::.::holistic::low_level_elegance::campaign_dead_intermediates",
+        "tier": 1,
+        "confidence": "high",
+        "summary": "campaign.ts render builds bar and lines array then discards them, with stale iteration comments",
+        "detail": {
+          "holistic": true,
+          "dimension": "low_level_elegance",
+          "related_files": [
+            "src/segments/campaign.ts"
+          ],
+          "evidence": [
+            "Line 38-42: builds bar and lines 43-45: builds lines = [line1, bar] with optional line2 push",
+            "Lines 46-48: three stale comments showing abandoned design iterations ('Ensure exactly 2 lines', 'Actually keep 2 lines', 'Simpler: line1 = status + bar, line2 = countdown')",
+            "Lines 49-52: builds finalLines ignoring both bar and lines variables entirely"
+          ],
+          "suggestion": "Remove the bar computation (lines 37-42), the lines array (lines 43-45), and the three stale comments (lines 46-48). Build finalLines directly from line1 and line2.",
+          "reasoning": "",
+          "summary_hash": "4bd5c1d2"
+        }
+      },
+      {
+        "id": "review::.::holistic::low_level_elegance::layout_render_monolith",
+        "tier": 1,
+        "confidence": "high",
+        "summary": "layout.ts render() mixes brute-force layout search, row materialization, and rendering in 120 lines",
+        "detail": {
+          "holistic": true,
+          "dimension": "low_level_elegance",
+          "related_files": [
+            "src/layout.ts"
+          ],
+          "evidence": [
+            "Lines 66-90: setup and block rendering (allocWidth, order, active, blocks, widths)",
+            "Lines 91-153: brute-force assignment enumeration with reusable buffers (rowOf, seen, rowRW, minIdx), nested loops up to numRows^n iterations",
+            "Lines 155-178: materializing bestAssign into RowGroups with sorting and mapping",
+            "Lines 180-186: rendering each row group and joining",
+            "The function uses 15+ local variables and 4 levels of nesting in the enumeration loop"
+          ],
+          "suggestion": "Extract the brute-force layout optimizer (lines 91-153) into a separate function like findOptimalAssignment(n, widths, row1MaxWidth, maxRowWidth) returning the best assignment array. This isolates the combinatorial search from the rendering pipeline and makes both pieces independently understandable.",
+          "reasoning": "",
+          "summary_hash": "0da6799a"
+        }
+      }
+    ]
+  },
+  "total_matching": 27,
+  "hidden": {
+    "by_detector": {
+      "review": 17
+    },
+    "total": 17
+  },
+  "noise_budget": 10,
+  "noise_global_budget": 0,
+  "narrative": {
+    "phase": "refinement",
+    "headline": " (27 review work items \u2014 run `desloppify show review --status open`)",
+    "dimensions": {
+      "lowest_dimensions": [
+        {
+          "name": "Test strategy",
+          "strict": 12.0,
+          "failing": 4,
+          "impact": 0.0,
+          "subjective": true,
+          "impact_description": "re-review to improve"
+        },
+        {
+          "name": "Low elegance",
+          "strict": 76.8,
+          "failing": 3,
+          "impact": 0.0,
+          "subjective": true,
+          "impact_description": "re-review to improve"
+        },
+        {
+          "name": "Error consistency",
+          "strict": 79.0,
+          "failing": 2,
+          "impact": 0.0,
+          "subjective": true,
+          "impact_description": "re-review to improve"
+        }
+      ],
+      "biggest_gap_dimensions": [],
+      "stagnant_dimensions": []
+    },
+    "actions": [
+      {
+        "type": "refactor",
+        "detector": "review",
+        "count": 27,
+        "description": "27 review work items need investigation \u2014 run `desloppify show review --status open` to see them",
+        "command": "desloppify show review --status open",
+        "impact": 0.0,
+        "dimension": "Unknown",
+        "priority": 1,
+        "lane": "refactor"
+      }
+    ],
+    "strategy": {
+      "fixer_leverage": {
+        "auto_fixable_count": 0,
+        "total_count": 81,
+        "coverage": 0.0,
+        "impact_ratio": 0.0,
+        "recommendation": "none"
+      },
+      "lanes": {
+        "refactor": {
+          "actions": [
+            1
+          ],
+          "file_count": 1,
+          "total_impact": 0.0,
+          "automation": "manual",
+          "run_first": false
+        }
+      },
+      "can_parallelize": false,
+      "hint": "Work through actions in priority order. Rescan after each fix to track progress. Review: 27 issue(s) \u2014 `desloppify show review --status open`."
+    },
+    "tools": {
+      "fixers": [],
+      "move": {
+        "available": true,
+        "relevant": false,
+        "reason": null,
+        "usage": "desloppify move <source> <dest> [--dry-run]"
+      },
+      "plan": {
+        "command": "desloppify plan",
+        "description": "Generate prioritized markdown cleanup plan"
+      },
+      "badge": {
+        "generated": true,
+        "in_readme": false,
+        "path": "scorecard.png",
+        "recommendation": "Add to README: <img src=\"scorecard.png\" width=\"100%\">"
+      }
+    },
+    "debt": {
+      "overall_gap": 0.0,
+      "wontfix_count": 0,
+      "worst_dimension": null,
+      "worst_gap": 0.0,
+      "trend": "stable"
+    },
+    "milestone": null,
+    "primary_action": {
+      "command": "desloppify show review --status open",
+      "description": "27 review work items need investigation \u2014 run `desloppify show review --status open` to see them"
+    },
+    "why_now": "Work through actions in priority order. Rescan after each fix to track progress. Review: 27 issue(s) \u2014 `desloppify show review --status open`.",
+    "verification_step": {
+      "command": "desloppify scan",
+      "reason": "revalidate after changes"
+    },
+    "risk_flags": [],
+    "strict_target": {
+      "target": 95.0,
+      "current": 85.4,
+      "gap": 9.6,
+      "state": "below",
+      "warning": null
+    },
+    "reminders": [
+      {
+        "type": "review_issues_pending",
+        "message": "27 review work item(s) need investigation. Run `desloppify show review --status open` to see the work queue.",
+        "command": "desloppify show review --status open",
+        "priority": 1,
+        "severity": "high"
+      },
+      {
+        "type": "review_not_run",
+        "message": "Mechanical checks look good! Run a subjective design review to catch issues linters miss: desloppify review --prepare",
+        "command": "desloppify review --prepare",
+        "priority": 3,
+        "severity": "low"
+      }
+    ],
+    "reminder_history": {
+      "review_issues_pending": 2,
+      "feedback_nudge": 1,
+      "report_scores": 1,
+      "review_not_run": 2
+    }
+  },
+  "config": {
+    "target_strict_score": 95,
+    "review_max_age_days": 30,
+    "review_batch_max_files": 80,
+    "holistic_max_age_days": 30,
+    "generate_scorecard": true,
+    "badge_path": "scorecard.png",
+    "exclude": [],
+    "ignore": [],
+    "ignore_metadata": {},
+    "zone_overrides": {},
+    "review_dimensions": [],
+    "large_files_threshold": 0,
+    "props_threshold": 0,
+    "issue_noise_budget": 10,
+    "issue_noise_global_budget": 0,
+    "execution_log_max_entries": 10000,
+    "needs_rescan": false,
+    "languages": {},
+    "commit_tracking_enabled": true,
+    "commit_pr": 0,
+    "commit_default_branch": "",
+    "commit_message_template": "desloppify: {status} {count} issue(s) \u2014 {summary}",
+    "trust_plugins": false,
+    "transition_messages": {},
+    "hermes_enabled": false,
+    "hermes_models": {
+      "execute": "openrouter:x-ai/grok-4.20-beta",
+      "review": "openrouter:google/gemini-3.1-pro-preview"
+    }
+  }
+}

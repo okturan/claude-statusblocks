@@ -1,0 +1,99 @@
+{
+  "batch": "convention_outlier",
+  "batch_index": 3,
+  "assessments": {
+    "convention_outlier": 82.0
+  },
+  "dimension_notes": {
+    "convention_outlier": {
+      "evidence": [
+        "All functions use camelCase consistently across all 3 directories (campaigns/, src/, segments/). No naming convention drift.",
+        "All modules use named exports exclusively — no default exports anywhere. Consistent export pattern.",
+        "All 5 segments follow the same structural protocol: export a const Segment object with id, priority, enabled(), render() — consistent plugin organization.",
+        "Priority values in Block returns are inconsistent with Segment definitions: modelSegment.priority=30 but render returns priority:2; campaignSegment.priority=20 but render returns priority:4; usageSegment.priority=15 but render returns priority:2. contextSegment (10) and gitSegment (40) are consistent between Segment and Block returns.",
+        "Segments differ in whether they use the allocWidth parameter: model.ts uses it to compute directory budget, all others ignore it.",
+        "The id field is inconsistent between campaignSegment (id: 'promo' in the Segment) and the DEFAULT_ORDER array (also 'promo'), but the file is named campaign.ts and the exported const is campaignSegment — the file/export name says 'campaign' but the id says 'promo'."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": null
+    }
+  },
+  "dimension_judgment": {
+    "convention_outlier": {
+      "dimension_character": "The codebase maintains strong naming conventions (camelCase throughout, named exports only) and consistent segment structure (all 5 segments implement the same interface pattern). However, there is a notable convention outlier: the priority values returned in Block objects from render() are inconsistent with the priority values defined on the Segment objects themselves, with 3 of 5 segments returning different (apparently arbitrary) priority values. The campaign segment's naming is also inconsistent — its id is 'promo' but the file is campaign.ts and the export is campaignSegment.",
+      "score_rationale": "Naming conventions and export patterns are consistently applied, which is the strongest signal for this dimension. The priority inconsistency is a concrete behavioral protocol violation across sibling modules — a developer seeing priority:2 in the Block returned by modelSegment.render() when the Segment declares priority:30 would be confused. The promo/campaign naming split adds friction. These issues prevent the score from reaching 90, placing it at 82 — solid but with recurring moments of 'why is this different?'"
+    }
+  },
+  "issues": [
+    {
+      "dimension": "convention_outlier",
+      "identifier": "priority_mismatch_in_block_returns",
+      "summary": "3 of 5 segments return Block.priority values that differ from their Segment.priority definitions",
+      "related_files": ["src/segments/model.ts", "src/segments/campaign.ts", "src/segments/usage.ts"],
+      "evidence": [
+        "modelSegment: Segment.priority=30, but render() returns {priority: 2} on line 93",
+        "campaignSegment: Segment.priority=20, but render() returns {priority: 4} on lines 11 and 55",
+        "usageSegment: Segment.priority=15, but render() returns {priority: 2} on lines 29 and 52",
+        "contextSegment (priority:10) and gitSegment (priority:40) are consistent between Segment and Block",
+        "The Block.priority values (2, 4) appear to be from an earlier design and were not updated when Segment priorities were established"
+      ],
+      "suggestion": "Use the Segment's priority value in the Block return: e.g. in model.ts line 93, change priority:2 to priority:30. Similarly for campaign.ts and usage.ts. This makes the Block returns consistent with their parent Segment definitions.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "stale_priority_values"
+    },
+    {
+      "dimension": "convention_outlier",
+      "identifier": "campaign_promo_naming_split",
+      "summary": "Campaign segment uses id 'promo' while file is campaign.ts and export is campaignSegment",
+      "related_files": ["src/segments/campaign.ts", "src/layout.ts"],
+      "evidence": [
+        "src/segments/campaign.ts: file named 'campaign', export named 'campaignSegment', but id is 'promo'",
+        "src/layout.ts line 11: DEFAULT_ORDER uses 'promo' to reference this segment",
+        "Other segments have consistent naming: context.ts/contextSegment/id:'context', model.ts/modelSegment/id:'model', git.ts/gitSegment/id:'git', usage.ts/usageSegment/id:'usage'"
+      ],
+      "suggestion": "Either rename the file and export to promo.ts/promoSegment to match the id, or change the id to 'campaign' and update DEFAULT_ORDER. Given the segment renders promotional rate status, 'promo' is more descriptive of its purpose than 'campaign', so renaming the file to promo.ts and the export to promoSegment would align with the id.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["The priority mismatches suggest an early design where Block priority values were different from Segment priority values, and 3 segments were not updated when the Segment-level priorities were standardized.", "The campaign/promo naming split likely reflects a rename from 'promo' to 'campaign' at the file level that did not propagate to the id field."],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "convention_outlier": {
+      "add": [
+        {
+          "header": "Consistent camelCase naming throughout",
+          "description": "All functions across all 3 directories use camelCase consistently. No naming convention drift between src/, segments/, or campaigns/.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Named exports only, no defaults",
+          "description": "All modules use named exports exclusively. No mixing of default and named export patterns across sibling modules.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Uniform segment structural protocol",
+          "description": "All 5 segments follow the same structural pattern: export a const typed as Segment with id, priority, enabled(), and render(). This makes the plugin convention immediately learnable.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Priority values diverge between Segment and Block",
+          "description": "3 of 5 segments return different priority values in their Block returns than what is defined on the Segment object. This is a behavioral protocol inconsistency across sibling modules that would confuse a developer reading the code.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

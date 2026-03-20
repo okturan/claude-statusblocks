@@ -1,0 +1,79 @@
+{
+  "batch": "mid_level_elegance",
+  "batch_index": 9,
+  "assessments": {
+    "mid_level_elegance": 78.5
+  },
+  "dimension_notes": {
+    "mid_level_elegance": {
+      "evidence": [
+        "Segment interface provides a clean contract: each segment implements id, priority, enabled(), render() and returns a Block — layout.ts consumes these uniformly without per-segment conditionals",
+        "Data flows linearly: index.ts parses stdin JSON, passes StatusLineData to render(), which orchestrates segments and materializes rows — no tangled back-and-forth callbacks",
+        "layout.ts row1MaxWidth = maxRowWidth - 5 embeds an unexplained policy constant directly in orchestration logic, mixing concern of 'notification panel sizing' with 'block placement'",
+        "Campaign engine boundary is clean: campaign.ts calls getActiveCampaign() from engine.ts and receives a typed CampaignStatus — translation happens in one place",
+        "Config loading is a single call from index.ts with env var override logic contained entirely within config.ts — no scattered config reads across modules",
+        "effort.ts is called from model.ts render() and encapsulates its own caching and multi-source resolution — the boundary is explicit (transcriptPath in, EffortLevel out)"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "mid_level_elegance": {
+      "dimension_character": "Module handoffs are generally clean and compositional. The Segment interface creates an effective plugin-style boundary where layout.ts orchestrates segments without knowledge of their internals, and data translation happens at well-defined points (config.ts for config, engine.ts for campaign state, effort.ts for effort resolution). The one recurring friction point is layout.ts embedding display-policy constants (row1 width reduction, INK_PADDING) directly in orchestration logic rather than isolating them as named configuration, creating a seam where policy and mechanics are tangled.",
+      "score_rationale": "The compositional segment architecture and linear data flow push this toward 85+, but the hardcoded row1 width reduction (maxRowWidth - 5) mixes display policy into orchestration without explanation or naming, and the overall seam count is small enough that this single issue represents a meaningful fraction of boundary design. This places the codebase around 78 — mostly good seams with notable friction at the layout policy boundary."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "layout_row1_policy_in_orchestration",
+      "summary": "Layout embeds hardcoded row1 width reduction (maxRowWidth - 5) mixing policy with orchestration",
+      "related_files": ["src/layout.ts"],
+      "evidence": [
+        "Line 171: const row1MaxWidth = maxRowWidth - 5 — the magic number 5 represents a notification panel margin but is unnamed and undocumented alongside INK_PADDING which is properly named and commented on line 12",
+        "This constant is passed into findOptimalAssignment as a parameter but its rationale is only recoverable by reading Claude Code's UI behavior externally"
+      ],
+      "suggestion": "Extract the row1 extra margin as a named constant (e.g., NOTIFICATION_MARGIN = 5) next to INK_PADDING on line 12 with a comment explaining why row 1 needs additional reduction beyond the general INK_PADDING. This keeps the policy declaration together with its sibling constant.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Display-policy constants for Claude Code's Ink renderer are partially extracted (INK_PADDING is named) but one sibling constant remains inline"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "mid_level_elegance": {
+      "add": [
+        {
+          "header": "Segment interface enables compositional orchestration",
+          "description": "The Segment interface (id, priority, enabled, render) creates a uniform contract that lets layout.ts orchestrate all segments identically. No per-segment conditionals or special-case handoffs exist in the orchestrator — each segment is a black box returning a Block.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Linear data flow from stdin to stdout",
+          "description": "Data flows in one direction: index.ts parses JSON, calls render() with (data, termWidth, config), layout.ts maps segments to blocks and rows, then outputs lines. No bidirectional callbacks or tangled coordination between modules.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Single-point config translation in config.ts",
+          "description": "All config loading, env var override, and JSON parsing is contained in config.ts:loadConfig(). Consumers receive a typed StatusBlocksConfig with no need to handle raw env vars or file I/O at their boundaries.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Effort resolution encapsulated behind clean boundary",
+          "description": "effort.ts:resolveEffort() accepts a transcript path and returns an EffortLevel, encapsulating its own caching, multi-source fallback, and JSONL parsing. The model segment consumes the result without knowledge of resolution mechanics.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

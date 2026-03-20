@@ -1,0 +1,121 @@
+{
+  "batch": "design_coherence",
+  "batch_index": 17,
+  "assessments": {
+    "design_coherence": 79.5
+  },
+  "dimension_notes": {
+    "design_coherence": {
+      "evidence": [
+        "src/campaigns/engine.ts getActiveCampaign() is 88 lines with nested conditionals for weekend/peak/off-peak/upcoming states, mixing time arithmetic, progress calculation, and state classification in a single function body",
+        "src/layout.ts render() is 120+ lines combining segment ordering, brute-force combinatorial layout search, row materialization, and final rendering — these are distinct responsibilities",
+        "src/segments/campaign.ts render() builds bar and lines then discards them: lines 43-48 build 'bar' and 'lines' array that are immediately replaced by 'finalLines', indicating iterative development residue",
+        "src/cli.ts is correctly identified as the CLI entry point via package.json bin field — not orphaned",
+        "src/segments/context.ts is a clean, focused single-responsibility segment — single_use is appropriate for segment architecture"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "getActiveCampaign() mixes time arithmetic with state classification; layout.ts render() combines combinatorial search with rendering; campaign.ts has dead intermediate variables from iterative development"
+    }
+  },
+  "dimension_judgment": {
+    "design_coherence": {
+      "dimension_character": "The codebase is well-decomposed at the top level — segments, campaigns, layout, and config each have clear ownership. Within modules, most functions serve a single coherent purpose (formatCountdown, getTimeInTz, tildeDir, boxify). However, the two most complex functions — getActiveCampaign() and render() in layout.ts — each combine multiple distinct responsibilities that could benefit from extraction, and campaign.ts shows dead intermediate code from iterative development.",
+      "score_rationale": "The overall design is intentional and focused for a ~990 LOC codebase, with segments cleanly implementing a shared interface and most functions having single responsibilities. The score is pulled down by two functions that genuinely mix concerns (campaign state engine combines time math with state classification; layout render combines combinatorial search with rendering), and dead code in campaign.ts. These are isolated to specific files rather than systemic, placing this solidly in the 'mostly good with recurring friction' range."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "design_coherence",
+      "identifier": "campaign_engine_mixed_concerns",
+      "summary": "getActiveCampaign() mixes time arithmetic, state classification, and progress calculation in one 88-line body",
+      "related_files": ["src/campaigns/engine.ts"],
+      "evidence": [
+        "Lines 49-134: getActiveCampaign() handles 5 distinct states (upcoming, weekend, peak, off-peak weekday, no-peak-hours) each with its own time arithmetic, progress calculation, and countdown formatting — these are three distinct responsibilities interleaved",
+        "The weekend branch (lines 70-88) computes daysUntilMon, secsUntilPeak, totalWeekendSecs, daysSinceFri, and secsSinceFriPeak inline, mixing temporal calculation with state result construction"
+      ],
+      "suggestion": "Extract the time-to-next-state and progress calculations into a helper (e.g., computePeakTiming) that returns {secsUntilChange, progress, isPeak, isWeekend}, then have getActiveCampaign() focus on mapping those results to CampaignStatus objects. This separates the temporal arithmetic from the state classification.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "concern_verdict": "confirmed",
+      "concern_fingerprint": "6058484bc35b2eed"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "campaign_segment_dead_intermediates",
+      "summary": "campaign.ts render() builds bar and lines array then immediately discards them for finalLines",
+      "related_files": ["src/segments/campaign.ts"],
+      "evidence": [
+        "Lines 37-43: builds 'bar' variable with progress bar and 'lines' array [line1, bar], then lines 44-48 contain comments about 'ensure exactly 2 lines' and 'simpler: line1 = status + bar', ultimately replacing everything with 'finalLines' that ignores 'bar' entirely",
+        "The 'bar' variable computed on line 42 is never used in the final output — it is dead code from an earlier design iteration"
+      ],
+      "suggestion": "Remove the unused 'bar' variable and the 'lines' array (lines 37-48). Build finalLines directly from line1 and line2, eliminating the dead intermediate computation and the confusing commented-out alternative approaches.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "cli_not_orphaned",
+      "summary": "Dismiss: src/cli.ts is the CLI entry point via package.json bin field, not an orphaned file",
+      "related_files": ["src/cli.ts"],
+      "evidence": [
+        "package.json bin field maps 'claude-statusblocks' to 'dist/cli.js', making cli.ts the primary executable entry point"
+      ],
+      "suggestion": "No action needed — the orphaned detector cannot see package.json bin fields.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "056b316a9695d1c4",
+      "reasoning": "src/cli.ts is referenced in package.json bin field as the CLI entry point. It is not orphaned — it is used via a non-import mechanism (npm bin command)."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "context_segment_single_use_ok",
+      "summary": "Dismiss: src/segments/context.ts being single-use is inherent to the segment architecture",
+      "related_files": ["src/segments/context.ts"],
+      "evidence": [
+        "All segments (context, model, git, campaign, usage) are each imported exactly once by layout.ts — single-use is the architectural pattern, not a smell"
+      ],
+      "suggestion": "No action needed.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "6dd8d52fb6d185d2",
+      "reasoning": "Single-use is the intended pattern for segments — each is imported once by layout.ts which assembles them. This is clean architecture, not a concern."
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Two key functions accumulated complexity through iterative development without periodic extraction of sub-responsibilities"],
+    "likely_symptoms": ["campaign_segment_dead_intermediates is a symptom of iterative development without cleanup"],
+    "possible_false_positives": ["cli_not_orphaned — the orphaned detector cannot see package.json bin references", "context_segment_single_use_ok — single-use is the architectural norm for segments"]
+  },
+  "context_updates": {
+    "design_coherence": {
+      "add": [
+        {
+          "header": "Segment interface enforces focused design",
+          "description": "The Segment interface (id, priority, enabled, render) constrains each segment to a single focused rendering responsibility. All five segments follow this contract cleanly, producing self-contained Block results.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Clean helper function extraction pattern",
+          "description": "Small helper functions like formatCountdown, getTimeInTz, tildeDir, formatTokens, and resetCountdown are consistently extracted as module-private functions with single responsibilities, keeping the main logic readable.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Layout combinatorial search is a single coherent algorithm",
+          "description": "The brute-force assignment loop in layout.ts render() (lines 91-153) is a single algorithm solving bin-packing for <=5 blocks. While long, it is one coherent responsibility — the concern is that render() also handles segment ordering and row materialization around it.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

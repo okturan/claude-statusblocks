@@ -1,0 +1,121 @@
+{
+  "batch": "test_strategy",
+  "batch_index": 10,
+  "assessments": {
+    "test_strategy": 5.0
+  },
+  "dimension_notes": {
+    "test_strategy": {
+      "evidence": [
+        "Zero test files exist: no *.test.ts, *.spec.ts, or __tests__/ directories anywhere in the repository",
+        "No test framework configured: package.json has no test runner (vitest, jest, mocha) in devDependencies",
+        "No test script: package.json scripts has build, dev, preview but no 'test' entry",
+        "14 production files totaling 971 LOC have zero automated test coverage",
+        "colors.ts (6 importers, most-imported utility) has no tests for ANSI-aware visibleLength, padRight, or truncate — these are pure functions ideal for unit testing",
+        "campaigns/engine.ts (137 LOC) performs timezone-aware date arithmetic with Intl.DateTimeFormat, weekend detection, and peak/off-peak state transitions — all untested",
+        "layout.ts (179 LOC) contains a combinatorial bin-packing optimizer (findOptimalAssignment) with complex row assignment logic — untested",
+        "effort.ts parses JSONL transcript files with regex matching and multi-source fallback — untested",
+        "The 'preview' command in cli.ts provides visual spot-checking but is not an automated test"
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "test_strategy": {
+      "dimension_character": "The codebase has zero automated test coverage — no test framework, no test files, no test script. Every critical path is unvalidated: the ANSI string utilities relied upon by all 5 segments, the timezone-aware campaign engine with weekend/peak/off-peak state machine, the combinatorial layout optimizer, and the effort resolution with JSONL parsing. A developer making changes has no safety net and must rely entirely on manual visual verification via the preview command.",
+      "score_rationale": "A score of 5 reflects a codebase where no test infrastructure exists at all. The global anchor for 60 describes 'meaningful risk goes unvalidated' — this codebase is far below that because there is literally nothing to validate against. The pure-function utilities (colors.ts, engine.ts helpers) would be trivial to test and provide high value, making the absence more notable. The only thing preventing a score of 0 is that the code is structured in a way that would be easy to test (pure functions, typed interfaces, minimal side effects in core logic)."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "test_strategy",
+      "identifier": "no_test_framework",
+      "summary": "No test framework or test files exist anywhere in the codebase",
+      "related_files": ["package.json"],
+      "evidence": [
+        "package.json devDependencies has only typescript and @types/node — no test runner",
+        "No test script defined in package.json scripts",
+        "No *.test.ts, *.spec.ts, or __tests__/ directories found in repository"
+      ],
+      "suggestion": "Add vitest as a devDependency (lightweight, ESM-native, TypeScript out-of-box) and a 'test' script in package.json. Start with unit tests for the highest-value pure-logic modules: colors.ts (visibleLength, padRight, truncate), campaigns/engine.ts (getActiveCampaign with vi.useFakeTimers), and layout.ts (findOptimalAssignment with known block widths).",
+      "confidence": "high",
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "zero_test_coverage"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "untested_campaign_engine",
+      "summary": "Campaign engine's timezone-aware date arithmetic has zero test coverage",
+      "related_files": ["src/campaigns/engine.ts"],
+      "evidence": [
+        "getActiveCampaign() contains 88 lines of date arithmetic with timezone conversion via Intl.DateTimeFormat, weekend detection, peak/off-peak classification, countdown calculation, and progress computation",
+        "getTimeInTz() uses formatToParts which has edge cases (hour=24 normalization on line 27)",
+        "Weekend countdown calculates days-until-Monday with manual arithmetic (line 73: daysUntilMon = 8 - dowNum)",
+        "Off-peak progress calculation after peak hours involves cross-day arithmetic (line 120: 86400 - peakEndSecs + currentSecs)"
+      ],
+      "suggestion": "Write unit tests for getActiveCampaign() using vi.useFakeTimers() to pin Date.now() and verify each state transition: upcoming (before campaign start), active-boosted (off-peak weekday), active-normal (peak hours), weekend, and ended (after campaign end). Test countdown formatting and progress values at boundary times.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "zero_test_coverage"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "untested_colors_utility",
+      "summary": "Most-imported utility (colors.ts, 6 importers) has no tests for ANSI-aware string operations",
+      "related_files": ["src/colors.ts"],
+      "evidence": [
+        "visibleLength() strips ANSI codes via regex — incorrect stripping would cascade errors to all 5 segments and layout.ts",
+        "padRight() delegates to truncate() for over-length strings — ANSI-aware truncation has edge cases (cut point inside escape sequence)",
+        "truncate() manually walks the string tracking visible characters and skipping ANSI sequences — off-by-one errors would be invisible without tests"
+      ],
+      "suggestion": "Add unit tests for visibleLength (plain text, styled text, nested styles, empty string), padRight (shorter/exact/longer inputs with ANSI), and truncate (cut point inside ANSI sequence, zero width, multi-style strings, string with trailing reset codes).",
+      "confidence": "high",
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "zero_test_coverage"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "untested_layout_optimizer",
+      "summary": "Combinatorial layout row-assignment algorithm has no test coverage",
+      "related_files": ["src/layout.ts"],
+      "evidence": [
+        "findOptimalAssignment() uses brute-force enumeration (numRows^n assignments) with pyramid validation and scoring — complex combinatorial logic with no tests",
+        "The algorithm has subtle constraints: row1 gets a different max width, rows are sorted by width ascending, all row indices must be used",
+        "materializeAssignment() sorts groups by width — ordering affects visual output"
+      ],
+      "suggestion": "Test findOptimalAssignment() with known block widths and verify: single block returns [0], two blocks fitting one row return single-row assignment, blocks forcing two rows produce correct assignment, row1 width constraint causes narrower blocks to land on row 1. Test materializeAssignment() for correct sorting.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "zero_test_coverage"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["The project has been developed without any test infrastructure from inception, likely due to its origin as a personal CLI tool with visual-only verification via the preview command"],
+    "likely_symptoms": ["All four issues share the root cause 'zero_test_coverage' — the individual untested module issues are symptoms of the missing test framework"],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "test_strategy": {
+      "add": [
+        {
+          "header": "Preview command provides manual visual verification",
+          "description": "The 'preview' CLI command renders at 120/80/50 column widths with mock data, providing a visual smoke test. This is the only verification mechanism but is not automated and cannot catch regressions.",
+          "settled": true,
+          "positive": false
+        },
+        {
+          "header": "Code structure is test-friendly despite no tests",
+          "description": "Core logic is organized as pure functions (visibleLength, formatTokens, formatCountdown, findOptimalAssignment) with typed interfaces (Segment, Block). Side effects are isolated to index.ts and git.ts. This structure would make test introduction straightforward.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

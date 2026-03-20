@@ -1,0 +1,105 @@
+{
+  "batch": "design_coherence",
+  "batch_index": 17,
+  "assessments": {
+    "design_coherence": 74.5
+  },
+  "dimension_notes": {
+    "design_coherence": {
+      "evidence": [
+        "getActiveCampaign() in engine.ts (88 lines) mixes time-zone resolution, day-of-week classification, peak/off-peak state determination, countdown calculation, and progress computation in a single function body with 4 distinct return paths",
+        "campaign.ts render() computes barWidth and a lines array (lines 37-41) that are intermediary artifacts — barWidth is only used to size a fallback separator, and the lines array is the final output but goes through an unnecessary intermediate step",
+        "layout.ts findOptimalAssignment() is well-extracted as a focused function with a single responsibility (bin-packing), demonstrating good design discipline in the layout subsystem",
+        "Segment interface is clean — each segment has a focused render() and enabled() contract with no overloaded responsibilities",
+        "model.ts render() has a 3-part line2 layout section (lines 58-89) that handles gap distribution with 9+ local variables, mixing content assembly with visual spacing logic"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "design_coherence": {
+      "dimension_character": "The codebase generally follows good design principles — the Segment interface is clean, layout logic is well-extracted into focused helpers, and most files have a single coherent responsibility. However, two hotspots drag it down: getActiveCampaign() tangles multiple distinct responsibilities (time resolution, state classification, progress calculation) in one body, and model.ts render() mixes content generation with visual spacing arithmetic through excessive local variable proliferation.",
+      "score_rationale": "The segment architecture and layout extraction show solid design instincts, pushing toward 80+. However, the getActiveCampaign() multi-responsibility body and model.ts gap distribution complexity are genuine design issues where a developer would struggle to modify one concern without understanding the others. These pull the score into the mid-70s — a developer would mostly find focused functions but would hit two clear cases where responsibilities are tangled."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "design_coherence",
+      "identifier": "engine_mixed_responsibilities",
+      "summary": "getActiveCampaign() mixes time arithmetic, state classification, and progress calculation in one 88-line body",
+      "related_files": ["src/campaigns/engine.ts"],
+      "evidence": [
+        "Lines 49-137: function handles timezone resolution (line 64), weekend detection and countdown (lines 70-88), peak detection and countdown (lines 90-102), off-peak countdown and progress (lines 104-131), and the no-peak-hours fallback (line 133) — five distinct concerns in one body",
+        "The weekend branch (lines 70-88) contains its own progress calculation with totalWeekendSecs/secsSinceFriPeak, while the off-peak branch (lines 116-123) has a separate totalOffPeak/secsSinceLastPeak calculation — these are parallel concerns that could share a structure"
+      ],
+      "suggestion": "Extract a computeTimingState(campaign, hour, minute, second, dow) helper that returns {state, secsUntilChange, progress} by encapsulating the peak/off-peak/weekend classification and countdown math. getActiveCampaign() would then focus on campaign selection (date range check) and delegating to the timing helper for the active campaign.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "model_gap_distribution_complexity",
+      "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution across effort/duration/version",
+      "related_files": ["src/segments/model.ts"],
+      "evidence": [
+        "Lines 58-81: the 3-part branch creates dot, dotLen, eLen, dLen, vLen, contentWidth, spareWithDots, clamped, g, extra, g1, g2, g3, g4, remaining, leftGap, rightGap — 17 local variables for spacing three strings across a width",
+        "The two sub-branches (dots vs plain spacing) each construct line2 differently, mixing visual formatting decisions with arithmetic"
+      ],
+      "suggestion": "Extract a function like spreadParts(parts: string[], targetWidth: number, separator?: string): string that handles distributing N parts across a target width with optional separators. This replaces the manual variable cascade with a reusable, focused layout helper.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "engine_design_concern",
+      "summary": "High cyclomatic complexity in engine.ts driven by interleaved state classification and arithmetic",
+      "related_files": ["src/campaigns/engine.ts"],
+      "evidence": [
+        "Mechanical signal: smells detector flagged 1x High cyclomatic complexity (>15 branches)",
+        "The complexity stems from nested if/else branches for weekend, peak, off-peak-before-peak, and off-peak-after-peak — each with its own countdown and progress calculations"
+      ],
+      "suggestion": "The cyclomatic complexity is a symptom of the mixed responsibilities identified in engine_mixed_responsibilities. Extracting computeTimingState would naturally reduce the branch depth in getActiveCampaign().",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "engine_mixed_responsibilities",
+      "concern_verdict": "confirmed",
+      "concern_fingerprint": "6058484bc35b2eed"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [
+      "getActiveCampaign() grew organically as campaign rules became more complex (weekend handling, peak hours, progress bars) without extracting timing concerns into a separate helper"
+    ],
+    "likely_symptoms": ["engine_design_concern is a symptom of engine_mixed_responsibilities"],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "design_coherence": {
+      "add": [
+        {
+          "header": "Clean Segment interface with focused contracts",
+          "description": "The Segment interface (id, priority, enabled, render) keeps each segment focused on its own rendering concern. No segment mixes concerns across domain boundaries — each owns its data fetching and presentation.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Well-extracted layout optimizer function",
+          "description": "findOptimalAssignment and materializeAssignment in layout.ts are cleanly separated from rendering, giving the bin-packing algorithm a focused single responsibility with clear inputs and outputs.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Campaign engine tangles timing concerns",
+          "description": "getActiveCampaign() mixes campaign selection, timezone resolution, state classification, and progress calculation. This makes modifying any single timing concern risky because the logic is interleaved rather than composed.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

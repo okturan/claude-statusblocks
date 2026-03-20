@@ -1,0 +1,82 @@
+{
+  "batch": "ai_generated_debt",
+  "batch_index": 13,
+  "assessments": {
+    "ai_generated_debt": 87.5
+  },
+  "dimension_notes": {
+    "ai_generated_debt": {
+      "evidence": [
+        "Comment ratio is very low at 0.065 — comments are sparse and mostly purposeful",
+        "No restating comments found — comments like '// Count total added/removed lines from both staged and unstaged' (git.ts:17) and '// Detect terminal width — stty on parent's TTY, then tput, then fallback' (index.ts:16) explain WHY or document non-obvious cascading logic",
+        "No docstring bloat — only two JSDoc comments exist (effort.ts:12, colors.ts:27) and both are concise single-line descriptions on non-trivial functions",
+        "No pass-through wrapper functions — all functions add meaningful logic",
+        "No generic names — domain terms like formatTokens, tildeDir, resetCountdown, miniBar, boxify are precise",
+        "No identical boilerplate error handling — each try/catch has location-specific behavior",
+        "cli.ts has log_density of 4.0, but console.log calls are all in preview() and help() functions which are CLI output — they ARE the function's purpose, not debug logging",
+        "Three stale thinking-out-loud comments in campaign.ts lines 46-48 that represent leftover iteration notes rather than useful documentation"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Stale iteration comments in campaign.ts (lines 46-48) show leftover AI-generation artifacts where the author worked through design options in comments without cleaning up. The bar variable computed on line 42-43 is built but never used in the final output, which is a hallmark of iterative code generation leaving dead intermediate results."
+    }
+  },
+  "dimension_judgment": {
+    "ai_generated_debt": {
+      "dimension_character": "The codebase is remarkably clean of AI-generated debt patterns. Comments are sparse and purposeful, function names use precise domain terminology, error handling is location-specific rather than boilerplate, and there are no pass-through wrappers or defensive overengineering. The only blemish is a small cluster of stale thinking-out-loud comments and dead code in campaign.ts where iterative design left artifacts.",
+      "score_rationale": "A developer would find this code purpose-driven with almost no ceremony or noise to wade through. The comment ratio of 0.065 reflects genuine restraint, and the few comments that exist explain non-obvious constraints (terminal width detection, transcript scanning). The campaign.ts stale comments and unused bar variable prevent a score above 90, but these are isolated to a single file and trivially fixable. This sits comfortably at 87-88 — strong with one small pocket of residue."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "stale_iteration_comments_campaign",
+      "summary": "Stale thinking-out-loud comments and dead code in campaign.ts from iterative generation",
+      "related_files": ["src/segments/campaign.ts"],
+      "evidence": [
+        "Lines 46-48 contain three sequential comments showing design iteration: '// Ensure exactly 2 lines: combine bar into line2 area', '// Actually keep 2 lines: line1 + line2 with bar info', '// Simpler: line1 = status + bar, line2 = countdown' — these are working notes, not documentation",
+        "The 'bar' variable (line 42-43) and 'lines' array (line 44-45) are computed but never used — the function builds a progress bar then discards it in favor of finalLines, leaving dead intermediate code"
+      ],
+      "suggestion": "Remove the three stale comments on lines 46-48. Remove the unused 'bar' variable (lines 42-43) and the unused 'lines' array (lines 44-45). The finalLines array on lines 49-52 is the actual output.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "ai_generated_debt": {
+      "add": [
+        {
+          "header": "Sparse purposeful comments throughout codebase",
+          "description": "Comment ratio is 0.065 with no restating comments. All comments explain WHY (terminal width detection cascade, transcript scanning strategy, layout algorithm constraints) rather than restating code. This reflects disciplined authoring.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Domain-specific function names avoid generic patterns",
+          "description": "Functions use precise domain terms (formatTokens, tildeDir, resetCountdown, miniBar, boxify, getActiveCampaign) rather than generic AI-hallmark names like handleData or processItem.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No defensive overengineering patterns",
+          "description": "No null checks on non-nullable typed values, no try-catch around pure expressions. Defensive checks exist only at genuine I/O boundaries (file reads, subprocess calls, JSON parsing).",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "CLI console.log density is functional output",
+          "description": "cli.ts has log_density of 4.0, but all console.log/error calls serve the CLI's purpose (preview rendering, init feedback, help text). These are not debug logging artifacts.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

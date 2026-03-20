@@ -1,0 +1,61 @@
+{
+  "batch": "incomplete_migration",
+  "batch_index": 14,
+  "assessments": {
+    "incomplete_migration": 95.0
+  },
+  "dimension_notes": {
+    "incomplete_migration": {
+      "evidence": [
+        "All 14 source files are TypeScript (.ts) — no mixed JS/TS files exist",
+        "No TODO/FIXME/DEPRECATED/legacy/migrate markers found anywhere in the codebase",
+        "No old+new API coexistence: consistent use of ESM imports throughout, no require() calls, no mixed module patterns",
+        "No deprecated symbols or @deprecated markers in the codebase",
+        "No compatibility shims present — the codebase is small and purpose-built",
+        "Migration signal shows var→let/const with only 1 var occurrence, which is actually the word 'var' in a comment ('// Env var overrides' in config.ts:9), not an actual var declaration",
+        "Rate limit data was fully migrated from external API fetch to native statusline JSON field (per commit e4e7ddf) — no residual external API code remains",
+        "Package uses ESM exclusively ('type': 'module' in package.json) with .js import extensions consistently"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The single 'var' in the codebase flagged by the scanner is actually the word 'var' inside a comment, not a var declaration. No actual migration debt exists. Score is capped slightly below 100 only because the codebase is small enough that migration risks are inherently low rather than demonstrating migration discipline at scale."
+    }
+  },
+  "dimension_judgment": {
+    "incomplete_migration": {
+      "dimension_character": "The codebase shows no signs of incomplete migration. All files are TypeScript, the module system is consistently ESM, there are no deprecated symbols, no stale migration TODOs, and no old/new API coexistence patterns. A previous migration from external API fetching for rate limits to native statusline JSON was completed cleanly with no residual code.",
+      "score_rationale": "A developer would find a fully unified codebase with no dual-path confusion. The var→let/const signal is a false positive (comment text, not a declaration). The external-to-native rate limit migration (commit e4e7ddf) was completed cleanly. This is exemplary migration hygiene — approaching 95-96 range where the only caveat is the project's small size making migration inherently easier."
+    }
+  },
+  "issues": [],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": ["var→let/const migration signal is a false positive — the 'var' occurrence is inside a comment string, not an actual variable declaration"]
+  },
+  "context_updates": {
+    "incomplete_migration": {
+      "add": [
+        {
+          "header": "Fully unified TypeScript ESM codebase",
+          "description": "All 14 source files are .ts with consistent ESM imports using .js extensions. No mixed JS/TS, no require(), no CommonJS patterns. The 'type': 'module' setting in package.json is honored throughout.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Clean rate limit API migration completed",
+          "description": "The migration from external API fetching to native rate_limits field in statusline JSON was completed fully — no residual external API code, OAuth tokens, or compatibility shims remain.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No deprecated or legacy markers in source",
+          "description": "Zero TODO/FIXME/DEPRECATED/legacy/migrate markers found across all source files, indicating no deferred migration work.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

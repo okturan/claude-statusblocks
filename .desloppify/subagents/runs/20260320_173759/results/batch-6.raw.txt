@@ -1,0 +1,93 @@
+{
+  "batch": "abstraction_fitness",
+  "batch_index": 6,
+  "assessments": {"abstraction_fitness": 92.3},
+  "dimension_notes": {
+    "abstraction_fitness": {
+      "evidence": [
+        "The Segment interface has five concrete implementations (context, model, git, campaign, usage), all with meaningfully different render() and enabled() implementations -- genuine polymorphism",
+        "Block type is used by all segments and consumed by layout.ts for row composition -- earns its existence as a shared contract",
+        "Campaign interface is used in data.ts (campaign definitions) and engine.ts (evaluation), with the segment consuming the result -- clean separation",
+        "StatusLineData is imported by 11 files -- genuine god type that models the external JSON contract, not an over-abstraction",
+        "No pass-through wrapper functions, no single-implementation interfaces, no delegation-heavy classes",
+        "StatusBlocksConfig interface is simple (4 optional fields) and used in both config.ts and layout.ts -- appropriate scope",
+        "CampaignStatus interface in engine.ts is consumed by campaign.ts segment -- single consumer but defines a clear contract boundary between engine and renderer",
+        "The indirection hotspot in src/index.ts (chain depth 2, 7 chains) reflects the natural stdin -> parse -> render pipeline, not unnecessary wrapping",
+        "colors.ts exports are directly used by all segment renderers without intermediate abstractions"
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The single_use signal for context.ts (only imported by layout.ts) is architecturally consistent with all other segments being single-use by design -- they are registered in ALL_SEGMENTS and consumed via the Segment interface. The campaign.ts segment builds unused intermediate variables (bar, lines array) that are discarded in favor of finalLines, suggesting the render logic evolved without cleanup.",
+      "sub_axes": {
+        "abstraction_leverage": 95.0,
+        "indirection_cost": 95.0,
+        "interface_honesty": 93.0,
+        "delegation_density": 100.0,
+        "definition_directness": 90.0,
+        "type_discipline": 95.0
+      }
+    }
+  },
+  "dimension_judgment": {
+    "abstraction_fitness": {
+      "dimension_character": "Abstractions in this codebase are lean and well-earned. The Segment interface drives genuine polymorphism across five distinct implementations, Block provides a universal rendering unit consumed by layout, and Campaign cleanly separates data from evaluation. There is no pass-through indirection, no single-implementation interface ceremony, and no wide option bags. The only minor concern is the CampaignStatus interface serving a single consumer, but it defines a meaningful contract boundary between the campaign engine and the rendering segment.",
+      "score_rationale": "This codebase exemplifies what lean abstraction looks like in a small project -- every interface has clear polymorphic or contract value, every layer adds behavior rather than forwarding. The Segment/Block/Campaign type hierarchy is minimal and purposeful. The score sits at the strong end because there are no material abstraction fitness issues; the only thing preventing a higher score is the minor dead-code in campaign.ts render where intermediate variables (bar, lines) are built but discarded."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "abstraction_fitness",
+      "identifier": "campaign_render_dead_intermediates",
+      "summary": "campaign.ts render builds bar and lines array then discards them for finalLines",
+      "related_files": ["src/segments/campaign.ts"],
+      "evidence": [
+        "Lines 37-45 build a bar string and a lines array with [line1, bar] and optionally line2",
+        "Lines 49-52 then build finalLines = [line1, line2 || fallback] ignoring bar and lines entirely",
+        "Comments on lines 46-48 ('Ensure exactly 2 lines', 'Actually keep 2 lines', 'Simpler:') show abandoned iteration"
+      ],
+      "suggestion": "Remove the unused bar variable and lines array. Compute finalLines directly from line1 and line2, removing the dead intermediate computation and the stale comments.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "6dd8d52fb6d185d2",
+      "reasoning": "The single_use signal for context.ts is not an abstraction fitness issue -- all segments are single-use by design, registered in ALL_SEGMENTS and consumed via the polymorphic Segment interface. However, campaign.ts does have dead intermediates worth reporting."
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Iterative development left dead intermediate variables in campaign.ts render without cleanup"],
+    "likely_symptoms": [],
+    "possible_false_positives": ["single_use signal on context.ts -- all segments are structurally single-use by design"]
+  },
+  "context_updates": {
+    "abstraction_fitness": {
+      "add": [
+        {
+          "header": "Segment interface earns polymorphism",
+          "description": "Five distinct implementations (context, model, git, campaign, usage) each with meaningfully different render() and enabled() behavior. The interface drives real polymorphism in layout.ts, not ceremony.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Zero pass-through or delegation layers",
+          "description": "No wrapper functions, no forwarding classes, no delegation chains. Every function adds behavior -- the mechanical scan confirmed 0 wrappers out of 15 function signatures.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Types model external contracts directly",
+          "description": "StatusLineData mirrors Claude Code's JSON contract without intermediate mapping layers. Block and Segment types are consumed directly by layout.ts. No translation layers or adapter patterns.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Segments are single-use by architecture",
+          "description": "Each segment file is imported only by layout.ts into ALL_SEGMENTS. This is by design -- segments are registered centrally and consumed via the Segment interface, making single_use signals false positives for this codebase's architecture.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}
