@@ -2,7 +2,7 @@ import type { Segment } from '../types.js';
 import { color, c, visibleLength } from '../colors.js';
 import { getActiveCampaign } from '../campaigns/engine.js';
 
-export const campaignSegment: Segment = {
+export const promoSegment: Segment = {
   id: 'promo',
   priority: 20,
   enabled: () => getActiveCampaign() !== null,

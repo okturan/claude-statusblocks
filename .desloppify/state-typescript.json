@@ -1,18 +1,18 @@
 {
   "version": 3,
   "created": "2026-03-20T17:37:17+00:00",
-  "last_scan": "2026-03-20T18:21:58+00:00",
-  "scan_count": 9,
+  "last_scan": "2026-03-20T18:25:54+00:00",
+  "scan_count": 10,
   "overall_score": 82.5,
   "objective_score": 83.5,
   "strict_score": 82.5,
   "verified_strict_score": 83.5,
   "stats": {
-    "total": 99,
+    "total": 100,
     "auto_resolved": 4,
     "deferred": 0,
     "false_positive": 0,
-    "fixed": 42,
+    "fixed": 43,
     "open": 53,
     "triaged_out": 0,
     "wontfix": 0,
@@ -21,8 +21,8 @@
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 12,
-        "open": 9,
+        "fixed": 13,
+        "open": 8,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -40,7 +40,7 @@
         "deferred": 0,
         "false_positive": 0,
         "fixed": 1,
-        "open": 29,
+        "open": 30,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -73,7 +73,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:17+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -150,7 +150,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -544,7 +544,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -574,7 +574,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -604,7 +604,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -635,7 +635,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -672,7 +672,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -703,7 +703,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -734,7 +734,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -764,7 +764,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -795,7 +795,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -828,7 +828,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -858,7 +858,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -900,7 +900,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -934,7 +934,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -968,7 +968,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1002,7 +1002,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1036,7 +1036,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1070,7 +1070,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1104,7 +1104,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1138,7 +1138,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1172,7 +1172,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1206,7 +1206,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1240,7 +1240,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1274,7 +1274,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1308,7 +1308,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1342,7 +1342,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1376,7 +1376,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1410,7 +1410,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1444,7 +1444,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1478,7 +1478,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1512,7 +1512,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1546,7 +1546,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:21:58+00:00",
+        "scan_verified_at": "2026-03-20T18:25:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1564,7 +1564,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:46:51+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -2747,11 +2747,11 @@
         "reasoning": "",
         "summary_hash": "ae16504c"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Added all 5 segments (context, model, promo, git, usage) to CLI help text in cli.ts",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:33:31+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2759,7 +2759,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Added all 5 segments (context, model, promo, git, usage) to CLI help text in cli.ts and I am not gaming the score.",
+        "attested_at": "2026-03-20T18:33:31+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::undocumented_catch_blocks": {
       "id": "review::.::holistic::error_consistency::undocumented_catch_blocks",
@@ -3433,7 +3439,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3461,7 +3467,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3470,8 +3476,8 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T18:25:21+00:00",
-      "suppression_pattern": "test_coverage::src/index.ts::untested_module"
+      "suppressed_at": "2026-03-20T18:25:54+00:00",
+      "suppression_pattern": "test_coverage::src/index.ts"
     },
     "test_coverage::src/campaigns/engine.ts::transitive_only": {
       "id": "test_coverage::src/campaigns/engine.ts::transitive_only",
@@ -3517,7 +3523,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3526,7 +3532,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T18:24:29+00:00",
+      "suppressed_at": "2026-03-20T18:25:54+00:00",
       "suppression_pattern": "test_coverage::src/campaigns/data.ts"
     },
     "test_coverage::src/config.ts::untested_module": {
@@ -3573,7 +3579,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3582,8 +3588,8 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T18:25:20+00:00",
-      "suppression_pattern": "test_coverage::src/cli.ts::untested_module"
+      "suppressed_at": "2026-03-20T18:25:54+00:00",
+      "suppression_pattern": "test_coverage::src/cli.ts"
     },
     "test_coverage::src/segments/git.ts::transitive_only": {
       "id": "test_coverage::src/segments/git.ts::transitive_only",
@@ -3601,7 +3607,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3630,7 +3636,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3639,7 +3645,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T18:24:27+00:00",
+      "suppressed_at": "2026-03-20T18:25:54+00:00",
       "suppression_pattern": "test_coverage::src/layout.ts"
     },
     "test_coverage::src/effort.ts::transitive_only": {
@@ -3814,7 +3820,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:44+00:00",
-      "last_seen": "2026-03-20T18:21:44+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3847,7 +3853,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3884,7 +3890,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3914,7 +3920,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3944,7 +3950,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T18:21:58+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3952,6 +3958,36 @@
       "origin": "scan",
       "lang": "typescript",
       "zone": "test",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "smells::coverage/base.css::css_important_overuse": {
+      "id": "smells::coverage/base.css::css_important_overuse",
+      "detector": "smells",
+      "file": "coverage/base.css",
+      "tier": 3,
+      "confidence": "low",
+      "summary": "1x Heavy !important usage in stylesheet",
+      "detail": {
+        "smell_id": "css_important_overuse",
+        "severity": "low",
+        "count": 1,
+        "lines": [
+          49
+        ]
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:25:54+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "mechanical_defect",
+      "issue_kind": "mechanical_defect",
+      "origin": "scan",
+      "lang": "typescript",
+      "zone": "production",
       "suppressed": false,
       "suppressed_at": null,
       "suppression_pattern": null
@@ -3974,7 +4010,7 @@
         }
       },
       "warnings": [],
-      "updated_at": "2026-03-20T18:21:58+00:00"
+      "updated_at": "2026-03-20T18:25:54+00:00"
     }
   },
   "score_confidence": {
@@ -4069,7 +4105,10 @@
     "high_level_elegance": {
       "score": 88.5,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:11:31+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-03-20T18:33:31+00:00"
     },
     "incomplete_migration": {
       "score": 93.0,
@@ -5281,14 +5320,1373 @@
           "strict": 76.3
         }
       }
+    },
+    {
+      "timestamp": "2026-03-20T18:25:54+00:00",
+      "lang": "typescript",
+      "strict_score": 82.5,
+      "verified_strict_score": 83.5,
+      "objective_score": 83.5,
+      "overall_score": 82.5,
+      "open": 54,
+      "diff_new": 1,
+      "diff_resolved": 20,
+      "ignored": 4,
+      "raw_issues": 26,
+      "suppressed_pct": 15.4,
+      "ignore_patterns": 12,
+      "subjective_integrity": {
+        "status": "pass",
+        "matched_count": 0,
+        "reset_count": 0,
+        "target_score": 95.0
+      },
+      "score_confidence": {
+        "status": "full",
+        "confidence": 1.0,
+        "detector_count": 0,
+        "dimension_count": 0
+      },
+      "dimension_scores": {
+        "Code quality": {
+          "score": 91.4,
+          "strict": 91.4
+        },
+        "Security": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "File health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Duplication": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Test health": {
+          "score": 64.2,
+          "strict": 64.2
+        },
+        "Abstraction fit": {
+          "score": 91.3,
+          "strict": 91.3
+        },
+        "AI generated debt": {
+          "score": 90.5,
+          "strict": 90.5
+        },
+        "API coherence": {
+          "score": 88.2,
+          "strict": 88.2
+        },
+        "Auth consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Contracts": {
+          "score": 88.2,
+          "strict": 88.2
+        },
+        "Convention drift": {
+          "score": 84.0,
+          "strict": 84.0
+        },
+        "Cross-module arch": {
+          "score": 82.0,
+          "strict": 82.0
+        },
+        "Dep health": {
+          "score": 96.0,
+          "strict": 96.0
+        },
+        "Design coherence": {
+          "score": 74.5,
+          "strict": 74.5
+        },
+        "Error consistency": {
+          "score": 78.0,
+          "strict": 78.0
+        },
+        "High elegance": {
+          "score": 88.5,
+          "strict": 88.5
+        },
+        "Stale migration": {
+          "score": 93.0,
+          "strict": 93.0
+        },
+        "Init coupling": {
+          "score": 79.5,
+          "strict": 79.5
+        },
+        "Logic clarity": {
+          "score": 78.0,
+          "strict": 78.0
+        },
+        "Low elegance": {
+          "score": 78.5,
+          "strict": 78.5
+        },
+        "Mid elegance": {
+          "score": 78.5,
+          "strict": 78.5
+        },
+        "Naming quality": {
+          "score": 82.5,
+          "strict": 82.5
+        },
+        "Structure nav": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "Test strategy": {
+          "score": 5.0,
+          "strict": 5.0
+        },
+        "Type safety": {
+          "score": 76.3,
+          "strict": 76.3
+        }
+      }
     }
   ],
   "review_cache": {
     "detectors": {
       "boilerplate": {
         "version": 1,
-        "fingerprint": "4b9c6c8daab641a6c35ac8fc3a32991f9be8ccda",
+        "fingerprint": "e35a85017cb8ba5eee831aa9d728e71651d0fb48",
         "entries": [
+          {
+            "id": "fd7d626bfe08facc",
+            "distinct_files": 15,
+            "window_size": 73,
+            "locations": [
+              {
+                "file": "coverage/index.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/campaigns/data.ts.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/campaigns/index.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/colors.ts.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/config.ts.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/effort.ts.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/index.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/segments/campaign.ts.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/segments/index.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 49
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 49
+              }
+            ],
+            "sample": [
+              "</span>",
+              "            </div>",
+              "        ",
+              "            "
+            ]
+          },
+          {
+            "id": "48e408b248dcc758",
+            "distinct_files": 9,
+            "window_size": 17,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/data.ts.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/campaigns/index.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/segments/campaign.ts.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/segments/index.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 6
+              }
+            ],
+            "sample": [
+              "</title>",
+              "    <meta charset=\"utf-8\" />",
+              "    <link rel=\"stylesheet\" href=\"../../prettify.css\" />",
+              "    <link rel=\"stylesheet\" href=\"../../base.css\" />"
+            ]
+          },
+          {
+            "id": "894fca47d9caf761",
+            "distinct_files": 9,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/data.ts.html",
+                "line": 89
+              },
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 203
+              },
+              {
+                "file": "coverage/src/config.ts.html",
+                "line": 88
+              },
+              {
+                "file": "coverage/src/effort.ts.html",
+                "line": 122
+              },
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 245
+              },
+              {
+                "file": "coverage/src/segments/campaign.ts.html",
+                "line": 112
+              },
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 98
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 161
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 120
+              }
+            ],
+            "sample": [
+              "</a></td><td class=\"line-coverage quiet\"><span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "30c7901934f747b7",
+            "distinct_files": 7,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/data.ts.html",
+                "line": 35
+              },
+              {
+                "file": "coverage/src/campaigns/index.html",
+                "line": 35
+              },
+              {
+                "file": "coverage/src/colors.ts.html",
+                "line": 35
+              },
+              {
+                "file": "coverage/src/config.ts.html",
+                "line": 35
+              },
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 35
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 35
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 35
+              }
+            ],
+            "sample": [
+              "</span>",
+              "            </div>",
+              "        ",
+              "            "
+            ]
+          },
+          {
+            "id": "7727adef8c5e124d",
+            "distinct_files": 5,
+            "window_size": 17,
+            "locations": [
+              {
+                "file": "coverage/src/colors.ts.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/config.ts.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/effort.ts.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/index.html",
+                "line": 6
+              },
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 6
+              }
+            ],
+            "sample": [
+              "</title>",
+              "    <meta charset=\"utf-8\" />",
+              "    <link rel=\"stylesheet\" href=\"../prettify.css\" />",
+              "    <link rel=\"stylesheet\" href=\"../base.css\" />"
+            ]
+          },
+          {
+            "id": "9eaa1aab331bf3fb",
+            "distinct_files": 5,
+            "window_size": 11,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 476
+              },
+              {
+                "file": "coverage/src/colors.ts.html",
+                "line": 245
+              },
+              {
+                "file": "coverage/src/config.ts.html",
+                "line": 131
+              },
+              {
+                "file": "coverage/src/effort.ts.html",
+                "line": 233
+              },
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 602
+              }
+            ],
+            "sample": [
+              "}",
+              "&nbsp;</pre></td></tr></table></pre>",
+              "",
+              "                <div class='push'></div><!-- for sticky footer -->"
+            ]
+          },
+          {
+            "id": "187f6095f01a6ec5",
+            "distinct_files": 4,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 217
+              },
+              {
+                "file": "coverage/src/colors.ts.html",
+                "line": 128
+              },
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 282
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 161
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "6a7f112669054e13",
+            "distinct_files": 4,
+            "window_size": 23,
+            "locations": [
+              {
+                "file": "coverage/index.html",
+                "line": 168
+              },
+              {
+                "file": "coverage/src/campaigns/index.html",
+                "line": 108
+              },
+              {
+                "file": "coverage/src/index.html",
+                "line": 138
+              },
+              {
+                "file": "coverage/src/segments/index.html",
+                "line": 153
+              }
+            ],
+            "sample": [
+              "</td>",
+              "\t</tr>",
+              "",
+              "</tbody>"
+            ]
+          },
+          {
+            "id": "b6cff3b4692d6338",
+            "distinct_files": 3,
+            "window_size": 61,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 64
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 64
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 64
+              }
+            ],
+            "sample": [
+              "'></div>",
+              "    <pre><table class=\"coverage\">",
+              "<tr><td class=\"line-count quiet\"><a name='L1'></a><a href='#L1'>1</a>",
+              "<a name='L2'></a><a href='#L2'>2</a>"
+            ]
+          },
+          {
+            "id": "d58b03de0428429c",
+            "distinct_files": 3,
+            "window_size": 19,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/data.ts.html",
+                "line": 135
+              },
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 477
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 228
+              }
+            ],
+            "sample": [
+              "&nbsp;</pre></td></tr></table></pre>",
+              "",
+              "                <div class='push'></div><!-- for sticky footer -->",
+              "            </div><!-- /wrapper -->"
+            ]
+          },
+          {
+            "id": "e736630dfd30ce57",
+            "distinct_files": 3,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/data.ts.html",
+                "line": 42
+              },
+              {
+                "file": "coverage/src/config.ts.html",
+                "line": 42
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 42
+              }
+            ],
+            "sample": [
+              "</span>",
+              "            </div>",
+              "        ",
+              "            "
+            ]
+          },
+          {
+            "id": "026510ab920c9d6b",
+            "distinct_files": 2,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/effort.ts.html",
+                "line": 131
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 120
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "02938227a208f5c7",
+            "distinct_files": 2,
+            "window_size": 18,
+            "locations": [
+              {
+                "file": "coverage/src/segments/index.html",
+                "line": 158
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 228
+              }
+            ],
+            "sample": [
+              ">",
+              "                <div class='push'></div><!-- for sticky footer -->",
+              "            </div><!-- /wrapper -->",
+              "            <div class='footer quiet pad2 space-top1 center small'>"
+            ]
+          },
+          {
+            "id": "02d36c55f77174ce",
+            "distinct_files": 2,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/data.ts.html",
+                "line": 109
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 171
+              }
+            ],
+            "sample": [
+              "\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span></td><td class=\"text\"><pre class=\"prettyprint lang-js\">import type { Campaign } from '../types.js';"
+            ]
+          },
+          {
+            "id": "038efa3c98f0d138",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 412
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 181
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">6x</span>"
+            ]
+          },
+          {
+            "id": "0596680a1fcf87f5",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/index.html",
+                "line": 147
+              },
+              {
+                "file": "coverage/src/campaigns/index.html",
+                "line": 102
+              }
+            ],
+            "sample": [
+              "</td>",
+              "\t<td data-value=\"64.58\" class=\"pct medium\">64.58%</td>",
+              "\t<td data-value=\"48\" class=\"abs medium\">31/48</td>",
+              "\t<td data-value=\"100\" class=\"pct high\">100%</td>"
+            ]
+          },
+          {
+            "id": "08631f28d14b51ef",
+            "distinct_files": 2,
+            "window_size": 23,
+            "locations": [
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 125
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 240
+              }
+            ],
+            "sample": [
+              "\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "0a12939138bb3b4a",
+            "distinct_files": 2,
+            "window_size": 11,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 213
+              },
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 259
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">1x</span>"
+            ]
+          },
+          {
+            "id": "0eb156dd56cccc41",
+            "distinct_files": 2,
+            "window_size": 7,
+            "locations": [
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 104
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 178
+              }
+            ],
+            "sample": [
+              "\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">2x</span>"
+            ]
+          },
+          {
+            "id": "114cd99a183129df",
+            "distinct_files": 2,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/data.ts.html",
+                "line": 27
+              },
+              {
+                "file": "coverage/src/config.ts.html",
+                "line": 41
+              }
+            ],
+            "sample": [
+              "</span>",
+              "                <span class='fraction'>1/1</span>",
+              "            </div>",
+              "        "
+            ]
+          },
+          {
+            "id": "11770b85574cf4d0",
+            "distinct_files": 2,
+            "window_size": 11,
+            "locations": [
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 318
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 145
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">6x</span>",
+              "<span class=\"cline-any cline-yes\">6x</span>"
+            ]
+          },
+          {
+            "id": "17e4ab97f0e3e846",
+            "distinct_files": 2,
+            "window_size": 21,
+            "locations": [
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 226
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 226
+              }
+            ],
+            "sample": [
+              "},",
+              "};",
+              "&nbsp;</pre></td></tr></table></pre>",
+              ""
+            ]
+          },
+          {
+            "id": "194165157582a074",
+            "distinct_files": 2,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 294
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 143
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "1c272547f0fd9830",
+            "distinct_files": 2,
+            "window_size": 11,
+            "locations": [
+              {
+                "file": "coverage/src/segments/campaign.ts.html",
+                "line": 150
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 148
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "2031fca881da7c5f",
+            "distinct_files": 2,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 103
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 247
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "2760563e4237bfea",
+            "distinct_files": 2,
+            "window_size": 15,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 295
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 237
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "2df0a718b096d6b9",
+            "distinct_files": 2,
+            "window_size": 12,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 325
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 122
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">1x</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "33251b8bb31ee5fe",
+            "distinct_files": 2,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 406
+              },
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 108
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">7x</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "33479fa494ef7629",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/src/effort.ts.html",
+                "line": 130
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 173
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-yes\">2x</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "3a7b6be07f2341a7",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 317
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 151
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">6x</span>"
+            ]
+          },
+          {
+            "id": "3e355b09ddce3a89",
+            "distinct_files": 2,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/segments/campaign.ts.html",
+                "line": 35
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 35
+              }
+            ],
+            "sample": [
+              "</span>",
+              "            </div>",
+              "        ",
+              "            "
+            ]
+          },
+          {
+            "id": "4d50702d97324abb",
+            "distinct_files": 2,
+            "window_size": 9,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 332
+              },
+              {
+                "file": "coverage/src/segments/campaign.ts.html",
+                "line": 116
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "558842440811c366",
+            "distinct_files": 2,
+            "window_size": 7,
+            "locations": [
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 171
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 139
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">2x</span>"
+            ]
+          },
+          {
+            "id": "5666ecc08b885bf4",
+            "distinct_files": 2,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 247
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 170
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "57df51443ce2699d",
+            "distinct_files": 2,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 320
+              },
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 272
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "57e261a9f0ea5893",
+            "distinct_files": 2,
+            "window_size": 17,
+            "locations": [
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 158
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 239
+              }
+            ],
+            "sample": [
+              "\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "589c475a00fe2a7a",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 345
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 120
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "598ad2f5337e2b33",
+            "distinct_files": 2,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 161
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 120
+              }
+            ],
+            "sample": [
+              ">",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "5bf9d1db1dd3fe1e",
+            "distinct_files": 2,
+            "window_size": 24,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 272
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 235
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "5f23b1e6149ebbc1",
+            "distinct_files": 2,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/index.html",
+                "line": 89
+              },
+              {
+                "file": "coverage/src/segments/index.html",
+                "line": 149
+              }
+            ],
+            "sample": [
+              "</td>",
+              "\t<td data-value=\"100\" class=\"pct high\">100%</td>",
+              "\t<td data-value=\"4\" class=\"abs high\">4/4</td>",
+              "\t<td data-value=\"100\" class=\"pct high\">100%</td>"
+            ]
+          },
+          {
+            "id": "6f4033cc23d2504e",
+            "distinct_files": 2,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/config.ts.html",
+                "line": 92
+              },
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 255
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-yes\">1x</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "74117db589d7af87",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 256
+              },
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 107
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">7x</span>"
+            ]
+          },
+          {
+            "id": "78d5b4d2b4c4d303",
+            "distinct_files": 2,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 420
+              },
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 108
+              }
+            ],
+            "sample": [
+              "\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">7x</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "80f6ed49c879272d",
+            "distinct_files": 2,
+            "window_size": 22,
+            "locations": [
+              {
+                "file": "coverage/src/segments/campaign.ts.html",
+                "line": 201
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 225
+              }
+            ],
+            "sample": [
+              "width, lines };</span>",
+              "  },",
+              "};",
+              "&nbsp;</pre></td></tr></table></pre>"
+            ]
+          },
+          {
+            "id": "84e62603282346b3",
+            "distinct_files": 2,
+            "window_size": 11,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 258
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 247
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "86b000cc90068167",
+            "distinct_files": 2,
+            "window_size": 19,
+            "locations": [
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 110
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 166
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">9x</span>",
+              "<span class=\"cline-any cline-yes\">9x</span>"
+            ]
+          },
+          {
+            "id": "86e04c2eea4e9d45",
+            "distinct_files": 2,
+            "window_size": 26,
+            "locations": [
+              {
+                "file": "coverage/src/effort.ts.html",
+                "line": 141
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 236
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "89b9f6a383c15f28",
+            "distinct_files": 2,
+            "window_size": 7,
+            "locations": [
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 414
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 147
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-yes\">6x</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">6x</span>"
+            ]
+          },
+          {
+            "id": "8a21faf4babfc4e6",
+            "distinct_files": 2,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 320
+              },
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 418
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "9281bf5d56d5231a",
+            "distinct_files": 2,
+            "window_size": 22,
+            "locations": [
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 159
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 225
+              }
+            ],
+            "sample": [
+              "lines };",
+              "  },",
+              "};",
+              "&nbsp;</pre></td></tr></table></pre>"
+            ]
+          },
           {
             "id": "98eb361341a66fed",
             "distinct_files": 2,
@@ -5311,6 +6709,90 @@
             ]
           },
           {
+            "id": "a9af8562421efbe8",
+            "distinct_files": 2,
+            "window_size": 22,
+            "locations": [
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 348
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 225
+              }
+            ],
+            "sample": [
+              "width, lines };",
+              "  },",
+              "};",
+              "&nbsp;</pre></td></tr></table></pre>"
+            ]
+          },
+          {
+            "id": "b541c85a3ac1e5a1",
+            "distinct_files": 2,
+            "window_size": 17,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 230
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 120
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "c4712b89331df0bb",
+            "distinct_files": 2,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 144
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 247
+              }
+            ],
+            "sample": [
+              "\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "cf5a1ec178169364",
+            "distinct_files": 2,
+            "window_size": 19,
+            "locations": [
+              {
+                "file": "coverage/src/index.html",
+                "line": 64
+              },
+              {
+                "file": "coverage/src/segments/index.html",
+                "line": 64
+              }
+            ],
+            "sample": [
+              "'></div>",
+              "    <div class=\"pad1\">",
+              "<table class=\"coverage-summary\">",
+              "<thead>"
+            ]
+          },
+          {
             "id": "d09b29e13ff20126",
             "distinct_files": 2,
             "window_size": 10,
@@ -5330,12 +6812,222 @@
               "",
               "function makeData(overrides: Partial<StatusLineData> = {}): StatusLineData {"
             ]
+          },
+          {
+            "id": "d0ac0e962361ddaf",
+            "distinct_files": 2,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/segments/campaign.ts.html",
+                "line": 28
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 28
+              }
+            ],
+            "sample": [
+              "</span>",
+              "            </div>",
+              "        ",
+              "            "
+            ]
+          },
+          {
+            "id": "d763658881468953",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/src/segments/campaign.ts.html",
+                "line": 149
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 120
+              }
+            ],
+            "sample": [
+              "\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "d92f45f9f2bb4c2a",
+            "distinct_files": 2,
+            "window_size": 5,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/index.html",
+                "line": 85
+              },
+              {
+                "file": "coverage/src/index.html",
+                "line": 104
+              }
+            ],
+            "sample": [
+              "</td>",
+              "\t<td data-value=\"100\" class=\"pct high\">100%</td>",
+              "\t<td data-value=\"1\" class=\"abs high\">1/1</td>",
+              "\t<td data-value=\"100\" class=\"pct high\">100%</td>"
+            ]
+          },
+          {
+            "id": "db5c4cd415af2a27",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 216
+              },
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 147
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-yes\">1x</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "dc782f606f9b0013",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/src/effort.ts.html",
+                "line": 136
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 140
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">2x</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "dffb0471400dbb02",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/src/segments/git.ts.html",
+                "line": 151
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 238
+              }
+            ],
+            "sample": [
+              "\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "e3c10bdba57c6063",
+            "distinct_files": 2,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "coverage/src/segments/context.ts.html",
+                "line": 124
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 198
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-yes\">9x</span>",
+              "<span class=\"cline-any cline-yes\">9x</span>"
+            ]
+          },
+          {
+            "id": "e6f23c795e9e66d8",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "coverage/src/layout.ts.html",
+                "line": 389
+              },
+              {
+                "file": "coverage/src/segments/usage.ts.html",
+                "line": 120
+              }
+            ],
+            "sample": [
+              "</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
+          },
+          {
+            "id": "e8290610e6e9e845",
+            "distinct_files": 2,
+            "window_size": 20,
+            "locations": [
+              {
+                "file": "coverage/src/campaigns/engine.ts.html",
+                "line": 28
+              },
+              {
+                "file": "coverage/src/campaigns/index.html",
+                "line": 28
+              }
+            ],
+            "sample": [
+              "</span>",
+              "            </div>",
+              "        ",
+              "            "
+            ]
+          },
+          {
+            "id": "f887f4eead4bd7ba",
+            "distinct_files": 2,
+            "window_size": 37,
+            "locations": [
+              {
+                "file": "coverage/src/segments/campaign.ts.html",
+                "line": 117
+              },
+              {
+                "file": "coverage/src/segments/model.ts.html",
+                "line": 246
+              }
+            ],
+            "sample": [
+              "\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>",
+              "<span class=\"cline-any cline-no\">&nbsp;</span>",
+              "<span class=\"cline-any cline-neutral\">&nbsp;</span>"
+            ]
           }
         ]
       },
       "security": {
         "version": 1,
-        "fingerprint": "7fc6efe3cf6e683c64c113c9b05a3c63736e739c",
+        "fingerprint": "1f736936de970cc1d42e05c6895fe2c1b1877100",
         "entries": [],
         "files_scanned": 14,
         "coverage": null
@@ -5476,7 +7168,7 @@
   },
   "zone_distribution": {
     "production": 14,
-    "test": 5
+    "test": 6
   },
   "tool_hash": "36b113ba9d94",
   "scan_path": ".",
@@ -5500,7 +7192,7 @@
       "naming": 3,
       "facade": 14,
       "test_coverage": 103,
-      "smells": 15,
+      "smells": 17,
       "react": 0,
       "security": 14,
       "subjective_review": 20,
@@ -5511,18 +7203,18 @@
   },
   "codebase_metrics": {
     "typescript": {
-      "total_files": 19,
-      "total_loc": 1297,
+      "total_files": 20,
+      "total_loc": 1324,
       "total_directories": 3
     }
   },
   "dimension_scores": {
     "Code quality": {
-      "score": 91.5,
-      "strict": 91.5,
-      "verified_strict_score": 91.5,
-      "checks": 78,
-      "failing": 13,
+      "score": 91.4,
+      "strict": 91.4,
+      "verified_strict_score": 91.4,
+      "checks": 80,
+      "failing": 14,
       "tier": 3,
       "detectors": {
         "unused": {
@@ -5538,10 +7230,10 @@
           "weighted_failures": 1.0
         },
         "smells": {
-          "potential": 15,
-          "pass_rate": 0.6733333333333335,
-          "failing": 11,
-          "weighted_failures": 4.8999999999999995
+          "potential": 17,
+          "pass_rate": 0.6941176470588236,
+          "failing": 12,
+          "weighted_failures": 5.199999999999999
         },
         "orphaned": {
           "potential": 14,
@@ -5875,13 +7567,13 @@
       "strict": 88.5,
       "verified_strict_score": 88.5,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.885,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 1.15,
           "assessment_score": 88.5,
           "placeholder": false,
@@ -6084,11 +7776,12 @@
   "reminder_history": {
     "auto_fixers_available": 3,
     "dry_run_first": 3,
-    "report_scores": 7,
+    "report_scores": 8,
     "feedback_nudge": 3,
     "review_issues_pending": 3,
     "stagnant_nudge": 4,
-    "zone_classification": 2
+    "zone_classification": 3,
+    "review_not_run": 1
   },
   "concern_dismissals": {
     "6dd8d52fb6d185d2": {

@@ -1,15 +1,26 @@
 {
-  "command": "suppress",
-  "pattern": "test_coverage::src/index.ts::untested_module",
-  "removed": 1,
+  "command": "resolve",
+  "patterns": [
+    "review::.::holistic::high_level_elegance::cli_help_missing_segments"
+  ],
+  "status": "fixed",
+  "resolved": [
+    "review::.::holistic::high_level_elegance::cli_help_missing_segments"
+  ],
+  "count": 1,
+  "next_command": "desloppify next",
   "overall_score": 82.5,
   "objective_score": 83.5,
   "strict_score": 82.5,
   "verified_strict_score": 83.5,
-  "attestation": "I have actually verified index.ts is a stdin entry point that delegates to tested render() and I am not gaming the score",
+  "prev_overall_score": 82.5,
+  "prev_objective_score": 83.5,
+  "prev_strict_score": 82.5,
+  "prev_verified_strict_score": 83.5,
+  "attestation": "I have actually Added all 5 segments (context, model, promo, git, usage) to CLI help text in cli.ts and I am not gaming the score.",
   "narrative": {
-    "phase": "stagnation",
-    "headline": "Crossed 80% strict! (25 review work items \u2014 run `desloppify show review --status open`)",
+    "phase": "refinement",
+    "headline": "Crossed 80% strict! (24 review work items \u2014 run `desloppify show review --status open`)",
     "dimensions": {
       "lowest_dimensions": [
         {
@@ -50,11 +61,6 @@
         {
           "name": "Duplication",
           "strict": 100.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Test health",
-          "strict": 64.2,
           "stuck_scans": 5
         },
         {
@@ -218,8 +224,8 @@
       {
         "type": "refactor",
         "detector": "review",
-        "count": 25,
-        "description": "25 review work items need investigation \u2014 run `desloppify show review --status open` to see them",
+        "count": 24,
+        "description": "24 review work items need investigation \u2014 run `desloppify show review --status open` to see them",
         "command": "desloppify show review --status open",
         "impact": 0.0,
         "dimension": "Unknown",
@@ -229,8 +235,8 @@
       {
         "type": "manual_fix",
         "detector": "smells",
-        "count": 15,
-        "description": "15 smells issues \u2014 inspect with `desloppify next` and fix manually",
+        "count": 16,
+        "description": "16 smells issues \u2014 inspect with `desloppify next` and fix manually",
         "command": "desloppify show smells --status open",
         "impact": 0.0,
         "dimension": "Code quality",
@@ -252,8 +258,8 @@
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 2,
-        "total_count": 103,
-        "coverage": 0.019,
+        "total_count": 101,
+        "coverage": 0.02,
         "impact_ratio": 0.0,
         "recommendation": "none"
       },
@@ -291,7 +297,7 @@
           "actions": [
             7
           ],
-          "file_count": 11,
+          "file_count": 12,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
@@ -316,7 +322,7 @@
         }
       },
       "can_parallelize": true,
-      "hint": "5 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 25 issue(s) \u2014 `desloppify show review --status open`."
+      "hint": "5 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 24 issue(s) \u2014 `desloppify show review --status open`."
     },
     "tools": {
       "fixers": [
@@ -347,13 +353,13 @@
         {
           "name": "dead-useeffect",
           "detector": "smells",
-          "open_count": 15,
+          "open_count": 16,
           "command": "desloppify autofix dead-useeffect --dry-run"
         },
         {
           "name": "empty-if-chain",
           "detector": "smells",
-          "open_count": 15,
+          "open_count": 16,
           "command": "desloppify autofix empty-if-chain --dry-run"
         }
       ],
@@ -386,7 +392,7 @@
       "command": "desloppify autofix unused-imports --dry-run",
       "description": "1 unused issues \u2014 run `desloppify autofix unused-imports --dry-run` to preview, then apply"
     },
-    "why_now": "5 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 25 issue(s) \u2014 `desloppify show review --status open`.",
+    "why_now": "5 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 24 issue(s) \u2014 `desloppify show review --status open`.",
     "verification_step": {
       "command": "desloppify scan",
       "reason": "revalidate after changes"
@@ -401,18 +407,18 @@
     },
     "reminders": [
       {
+        "type": "rereview_needed",
+        "message": "Subjective results may be stale after resolve. Re-run `desloppify review --prepare` to refresh, or reset with `desloppify scan --reset-subjective` before a clean rerun.",
+        "command": "desloppify review --prepare",
+        "priority": 1,
+        "severity": "high"
+      },
+      {
         "type": "rescan_needed",
         "message": "Rescan to verify \u2014 cascading effects may create new issues.",
         "command": "desloppify scan",
         "priority": 1,
         "severity": "high"
-      },
-      {
-        "type": "zone_classification",
-        "message": "5 of 19 files classified as non-production (5 test). Override with `desloppify zone set <file> production` if any are misclassified.",
-        "command": "desloppify zone show",
-        "priority": 2,
-        "severity": "medium"
       },
       {
         "type": "review_not_run",
@@ -425,13 +431,14 @@
     "reminder_history": {
       "auto_fixers_available": 3,
       "dry_run_first": 3,
-      "report_scores": 7,
+      "report_scores": 8,
       "feedback_nudge": 3,
       "review_issues_pending": 3,
       "stagnant_nudge": 4,
       "zone_classification": 3,
-      "rescan_needed": 1,
-      "review_not_run": 1
+      "review_not_run": 2,
+      "rereview_needed": 1,
+      "rescan_needed": 1
     }
   },
   "config": {
@@ -467,7 +474,7 @@
     "issue_noise_budget": 10,
     "issue_noise_global_budget": 0,
     "execution_log_max_entries": 10000,
-    "needs_rescan": true,
+    "needs_rescan": false,
     "languages": {},
     "commit_tracking_enabled": true,
     "commit_pr": 0,

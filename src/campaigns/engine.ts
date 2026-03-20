@@ -4,9 +4,7 @@ import { campaigns } from './data.js';
 export interface CampaignStatus {
   campaign: Campaign;
   state: 'active-boosted' | 'active-normal' | 'upcoming' | 'ended' | 'weekend';
-  /** Countdown string to next state change */
   countdown: string;
-  /** 0-1 progress through current period */
   progress: number;
 }
 
@@ -32,7 +30,6 @@ function isWeekend(dow: string): boolean {
   return dow === 'Sat' || dow === 'Sun';
 }
 
-/** ET day-of-week: Mon=1..Sun=7 */
 function getDowNum(dow: string): number {
   const map: Record<string, number> = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
   return map[dow] ?? 1;
@@ -46,6 +43,55 @@ function formatCountdown(totalSeconds: number): string {
   return `${m}m`;
 }
 
+interface TimingContext {
+  currentSecs: number;
+  peakStartSecs: number;
+  peakEndSecs: number;
+  dow: string;
+}
+
+function resolveWeekendState(ctx: TimingContext, campaign: Campaign): CampaignStatus {
+  const { currentSecs, peakStartSecs, peakEndSecs, dow } = ctx;
+  const dowNum = getDowNum(dow);
+  const daysUntilMon = 8 - dowNum;
+  const secsUntilPeak = daysUntilMon * 86400 + peakStartSecs - currentSecs;
+
+  const totalWeekendSecs = (2 * 86400) + peakStartSecs + (86400 - peakEndSecs);
+  const daysSinceFri = dowNum - 5;
+  const secsSinceFriPeak = daysSinceFri * 86400 + (currentSecs - peakEndSecs);
+  const progress = Math.max(0, Math.min(1, secsSinceFriPeak / totalWeekendSecs));
+
+  return { campaign, state: 'weekend', countdown: formatCountdown(secsUntilPeak), progress };
+}
+
+function resolvePeakState(ctx: TimingContext, campaign: Campaign): CampaignStatus {
+  const { currentSecs, peakStartSecs, peakEndSecs } = ctx;
+  const secsUntilChange = peakEndSecs - currentSecs;
+  const progress = (currentSecs - peakStartSecs) / (peakEndSecs - peakStartSecs);
+  return { campaign, state: 'active-normal', countdown: formatCountdown(secsUntilChange), progress };
+}
+
+function resolveOffPeakState(ctx: TimingContext, campaign: Campaign): CampaignStatus {
+  const { currentSecs, peakStartSecs, peakEndSecs, dow } = ctx;
+
+  let secsUntilPeak: number;
+  if (currentSecs < peakStartSecs) {
+    secsUntilPeak = peakStartSecs - currentSecs;
+  } else {
+    const dowNum = getDowNum(dow);
+    const daysUntil = dowNum === 5 ? 3 : 1;
+    secsUntilPeak = daysUntil * 86400 + peakStartSecs - currentSecs;
+  }
+
+  const secsSinceLastPeak = currentSecs >= peakEndSecs
+    ? currentSecs - peakEndSecs
+    : 86400 - peakEndSecs + currentSecs;
+  const totalOffPeak = secsSinceLastPeak + secsUntilPeak;
+  const progress = totalOffPeak > 0 ? secsSinceLastPeak / totalOffPeak : 0;
+
+  return { campaign, state: 'active-boosted', countdown: formatCountdown(secsUntilPeak), progress };
+}
+
 export function getActiveCampaign(): CampaignStatus | null {
   const now = new Date();
 
@@ -53,84 +99,24 @@ export function getActiveCampaign(): CampaignStatus | null {
     const start = new Date(campaign.start);
     const end = new Date(campaign.end);
 
-    if (now < start) {
-      return { campaign, state: 'upcoming', countdown: '', progress: 0 };
-    }
-
+    if (now < start) return { campaign, state: 'upcoming', countdown: '', progress: 0 };
     if (now > end) continue;
 
     const rules = campaign.rules;
     const tz = rules.peakHours?.tz ?? 'America/New_York';
-    const { hour, minute, second, dow } = getTimeInTz(tz);
-    const currentSecs = hour * 3600 + minute * 60 + second;
-    const peakStartSecs = (rules.peakHours?.start ?? 8) * 3600;
-    const peakEndSecs = (rules.peakHours?.end ?? 14) * 3600;
-    const peakDuration = peakEndSecs - peakStartSecs;
+    const time = getTimeInTz(tz);
+    const ctx: TimingContext = {
+      currentSecs: time.hour * 3600 + time.minute * 60 + time.second,
+      peakStartSecs: (rules.peakHours?.start ?? 8) * 3600,
+      peakEndSecs: (rules.peakHours?.end ?? 14) * 3600,
+      dow: time.dow,
+    };
 
-    if (rules.weekdaysOnly && isWeekend(dow)) {
-      // Weekend: countdown to Monday 8AM ET
-      const dowNum = getDowNum(dow);
-      const daysUntilMon = 8 - dowNum; // Sat→2, Sun→1
-      const secsUntilPeak = daysUntilMon * 86400 + peakStartSecs - currentSecs;
-      // Progress: how far through the weekend off-peak period
-      // From Friday peakEnd to Monday peakStart
-      const totalWeekendSecs = (2 * 86400) + peakStartSecs + (86400 - peakEndSecs);
-      const daysSinceFri = dowNum - 5; // Sat→1, Sun→2
-      const secsSinceFriPeak = daysSinceFri * 86400 + (currentSecs - peakEndSecs);
-      const progress = Math.max(0, Math.min(1, secsSinceFriPeak / totalWeekendSecs));
+    if (rules.weekdaysOnly && isWeekend(time.dow)) return resolveWeekendState(ctx, campaign);
+    if (!rules.peakHours) return { campaign, state: 'active-boosted', countdown: '', progress: 0 };
 
-      return {
-        campaign,
-        state: 'weekend',
-        countdown: formatCountdown(secsUntilPeak),
-        progress,
-      };
-    }
-
-    if (rules.peakHours) {
-      const isPeak = currentSecs >= peakStartSecs && currentSecs < peakEndSecs;
-
-      if (isPeak) {
-        const secsUntilChange = peakEndSecs - currentSecs;
-        const progress = (currentSecs - peakStartSecs) / peakDuration;
-        return {
-          campaign,
-          state: 'active-normal',
-          countdown: formatCountdown(secsUntilChange),
-          progress,
-        };
-      }
-
-      // Off-peak weekday
-      let secsUntilPeak: number;
-      if (currentSecs < peakStartSecs) {
-        secsUntilPeak = peakStartSecs - currentSecs;
-      } else {
-        // After peak today, next peak is tomorrow (or Monday if Friday)
-        const dowNum = getDowNum(dow);
-        const daysUntil = dowNum === 5 ? 3 : 1;
-        secsUntilPeak = daysUntil * 86400 + peakStartSecs - currentSecs;
-      }
-
-      // Progress through off-peak: from last peak end to next peak start
-      let secsSinceLastPeak: number;
-      if (currentSecs >= peakEndSecs) {
-        secsSinceLastPeak = currentSecs - peakEndSecs;
-      } else {
-        secsSinceLastPeak = 86400 - peakEndSecs + currentSecs;
-      }
-      const totalOffPeak = secsSinceLastPeak + secsUntilPeak;
-      const progress = totalOffPeak > 0 ? secsSinceLastPeak / totalOffPeak : 0;
-
-      return {
-        campaign,
-        state: 'active-boosted',
-        countdown: formatCountdown(secsUntilPeak),
-        progress,
-      };
-    }
-
-    return { campaign, state: 'active-boosted', countdown: '', progress: 0 };
+    const isPeak = ctx.currentSecs >= ctx.peakStartSecs && ctx.currentSecs < ctx.peakEndSecs;
+    return isPeak ? resolvePeakState(ctx, campaign) : resolveOffPeakState(ctx, campaign);
   }
 
   return null;

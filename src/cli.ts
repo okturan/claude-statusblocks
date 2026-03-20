@@ -5,6 +5,7 @@ import { join } from 'path';
 import { homedir } from 'os';
 import { render } from './layout.js';
 import { loadConfig } from './config.js';
+import { color, c } from './colors.js';
 import type { StatusLineData } from './types.js';
 
 function settingsPath(): string {
@@ -29,11 +30,11 @@ function preview() {
   const config = loadConfig();
   const widths = [120, 80, 50];
 
-  console.log('\n\x1b[1mclaude-statusblocks\x1b[0m preview\n');
+  console.log(`\n${color('claude-statusblocks', c.bold)} preview\n`);
 
   for (const w of widths) {
-    console.log(`\x1b[2m${'─'.repeat(w)}\x1b[0m`);
-    console.log(`\x1b[2m${w} cols:\x1b[0m`);
+    console.log(color('─'.repeat(w), c.dim));
+    console.log(color(`${w} cols:`, c.dim));
     const output = render(MOCK_DATA, w, config);
     console.log(output);
     console.log();
@@ -41,16 +42,16 @@ function preview() {
 }
 
 function init() {
-  console.log('\n\x1b[38;2;217;119;87m\x1b[1mclaude-statusblocks\x1b[0m setup\n');
+  console.log(`\n${color('claude-statusblocks', c.orange, c.bold)} setup\n`);
   try {
     const raw = readFileSync(settingsPath(), 'utf8');
     const settings = JSON.parse(raw);
     const oldCommand = settings.statusLine?.command;
     settings.statusLine = { type: 'command', command: 'npx -y claude-statusblocks@latest', padding: 0 };
     writeFileSync(settingsPath(), JSON.stringify(settings, null, 2) + '\n');
-    if (oldCommand) console.log(`  Replaced: \x1b[2m${oldCommand}\x1b[0m`);
-    console.log('  Installed: \x1b[32mnpx -y claude-statusblocks@latest\x1b[0m');
-    console.log('  Settings:  \x1b[2m~/.claude/settings.json\x1b[0m\n');
+    if (oldCommand) console.log(`  Replaced: ${color(oldCommand, c.dim)}`);
+    console.log(`  Installed: ${color('npx -y claude-statusblocks@latest', c.green)}`);
+    console.log(`  Settings:  ${color('~/.claude/settings.json', c.dim)}\n`);
   } catch (err) {
     console.error(`  Error: Could not update ${settingsPath()}`);
     console.error(`  ${err instanceof Error ? err.message : err}\n`);
@@ -60,21 +61,21 @@ function init() {
 
 function help() {
   console.log(`
-\x1b[38;2;217;119;87m\x1b[1mclaude-statusblocks\x1b[0m — block-based status line for Claude Code
+${color('claude-statusblocks', c.orange, c.bold)} — block-based status line for Claude Code
 
-\x1b[1mUsage:\x1b[0m
+${color('Usage:', c.bold)}
   claude-statusblocks init       Install into Claude Code settings
   claude-statusblocks preview    Preview with mock data at various widths
   claude-statusblocks help       Show this help
 
-\x1b[1mBlocks:\x1b[0m
+${color('Blocks:', c.bold)}
   context    Context window fill bar, percentage, token counts
   model      Model name, directory, effort, duration, version
   promo      Rate promotion status with peak/off-peak countdown
   git        Branch, staged/modified counts, lines added/removed
   usage      5-hour and 7-day rate limit utilization
 
-\x1b[1mCustomize:\x1b[0m
+${color('Customize:', c.bold)}
   ~/.claude-statusblocks.json:  { "segments": ["context", "model", "git"] }
   Env vars:            CLAUDE_STATUSBLOCKS_SEGMENTS=context,model
 `);
