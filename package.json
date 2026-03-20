@@ -1,6 +1,6 @@
 {
   "name": "claude-statusblocks",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Opinionated, adaptive block-based status line for Claude Code with bin-packing layout, rate limit tracking, and campaign monitoring",
   "type": "module",
   "bin": {

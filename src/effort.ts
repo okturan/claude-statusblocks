@@ -25,9 +25,9 @@ function readEffortFromTranscript(path: string): EffortLevel | null {
           : '';
         const match = EFFORT_RE.exec(text);
         if (match) return match[1]!.toLowerCase() as EffortLevel;
-      } catch { /* skip malformed JSONL lines */ }
+      } catch { /* malformed JSONL entry — skip to next line */ }
     }
-  } catch { /* transcript file not readable */ }
+  } catch { /* transcript file missing or unreadable — fall through to settings */ }
   return null;
 }
 
@@ -39,7 +39,7 @@ function readEffortFromSettings(): EffortLevel | null {
     if (settings.effortLevel && VALID_LEVELS.has(settings.effortLevel)) {
       return settings.effortLevel as EffortLevel;
     }
-  } catch { /* no settings file */ }
+  } catch { /* settings file missing or invalid — return null */ }
   return null;
 }
 

@@ -32,9 +32,9 @@ describe('resolveEffort', () => {
     expect(resolveEffort(transcriptPath)).toBe('max');
   });
 
-  it('returns a valid EffortLevel type', () => {
-    const result = resolveEffort(transcriptPath);
-    expect(['low', 'medium', 'high', 'max']).toContain(result);
+  it('returns same cached value on repeated calls', () => {
+    // Third call still returns cached 'max'
+    expect(resolveEffort(transcriptPath)).toBe('max');
   });
 
   it('returns max from cache even without transcript path', () => {

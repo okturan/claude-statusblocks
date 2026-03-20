@@ -10,7 +10,10 @@ import { usageSegment } from './segments/usage.js';
 const ALL_SEGMENTS: Segment[] = [contextSegment, modelSegment, gitSegment, promoSegment, usageSegment];
 const DEFAULT_ORDER = ['context', 'model', 'promo', 'git', 'usage'];
 const INK_PADDING = 4;       // Claude Code's outer paddingX: 2 on each side
-const ROW1_NOTIF_MARGIN = 12; // Extra right margin on row 1 for Claude Code's notification panel
+// Row 1 needs extra margin because Claude Code's Ink notification panel
+// (e.g. "auto mode temporarily unavail…") overlaps from the right.
+// Only row 1 height is affected; subsequent rows sit below the panel.
+const ROW1_NOTIF_MARGIN = 12;
 
 function getSegmentOrder(config: StatusBlocksConfig): string[] {
   return config.segments ?? DEFAULT_ORDER;
