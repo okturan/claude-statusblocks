@@ -1,20 +1,16 @@
 {
   "version": 8,
   "created": "2026-03-20T17:37:28+00:00",
-  "updated": "2026-03-20T19:49:50+00:00",
+  "updated": "2026-03-20T20:04:09+00:00",
   "queue_order": [
-    "review::.::holistic::design_coherence::model_render_variable_density",
-    "review::.::holistic::api_surface_coherence::alloc_width_unused",
-    "review::.::holistic::contract_coherence::promo_double_call_divergence",
-    "review::.::holistic::cross_module_architecture::layout_hardcoded_segment_imports",
-    "review::.::holistic::error_consistency::git_bare_catch",
-    "review::.::holistic::logic_clarity::row1_notif_margin_rationale",
-    "review::.::holistic::low_level_elegance::find_optimal_assignment_density",
-    "review::.::holistic::low_level_elegance::resolve_effort_nested_try_catch",
-    "review::.::holistic::test_strategy::campaign_edge_cases",
-    "review::.::holistic::test_strategy::cli_untested",
-    "review::.::holistic::test_strategy::effort_tautological_assertions",
-    "review::.::holistic::type_safety::stdin_json_unvalidated"
+    "review::.::holistic::error_consistency::bare_catch_git_ts",
+    "review::.::holistic::logic_clarity::row1_notif_margin_docs",
+    "review::.::holistic::low_level_elegance::findoptimal_dense_algorithm",
+    "review::.::holistic::low_level_elegance::resolve_effort_nested_try",
+    "review::.::holistic::test_strategy::cli_zero_coverage",
+    "review::.::holistic::test_strategy::effort_tautological_assertion",
+    "review::.::holistic::test_strategy::engine_boundary_tests",
+    "review::.::holistic::type_safety::stdin_cast_without_validation"
   ],
   "deferred": [],
   "skipped": {},
@@ -293,19 +289,67 @@
       "superseded_at": "2026-03-20T18:51:03+00:00",
       "remapped_to": null,
       "candidates": []
+    },
+    "review::.::holistic::api_surface_coherence::allocwidth_unused_param": {
+      "original_id": "review::.::holistic::api_surface_coherence::allocwidth_unused_param",
+      "original_detector": "review",
+      "original_file": ".",
+      "original_summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
+      "status": "superseded",
+      "superseded_at": "2026-03-20T20:04:09+00:00",
+      "remapped_to": null,
+      "candidates": [
+        "review::.::holistic::error_consistency::bare_catch_git_ts",
+        "review::.::holistic::low_level_elegance::findoptimal_dense_algorithm",
+        "review::.::holistic::low_level_elegance::resolve_effort_nested_try",
+        "review::.::holistic::test_strategy::effort_tautological_assertion",
+        "review::.::holistic::test_strategy::cli_zero_coverage"
+      ]
+    },
+    "review::.::holistic::cross_module_architecture::hardcoded_segment_registration": {
+      "original_id": "review::.::holistic::cross_module_architecture::hardcoded_segment_registration",
+      "original_detector": "review",
+      "original_file": ".",
+      "original_summary": "layout.ts hardcodes all segment imports -- adding a segment requires editing layout.ts",
+      "status": "superseded",
+      "superseded_at": "2026-03-20T20:04:09+00:00",
+      "remapped_to": null,
+      "candidates": [
+        "review::.::holistic::error_consistency::bare_catch_git_ts",
+        "review::.::holistic::low_level_elegance::findoptimal_dense_algorithm",
+        "review::.::holistic::low_level_elegance::resolve_effort_nested_try",
+        "review::.::holistic::test_strategy::effort_tautological_assertion",
+        "review::.::holistic::test_strategy::cli_zero_coverage"
+      ]
+    },
+    "review::.::holistic::design_coherence::model_render_variable_density": {
+      "original_id": "review::.::holistic::design_coherence::model_render_variable_density",
+      "original_detector": "review",
+      "original_file": ".",
+      "original_summary": "model.ts render() still has high local variable density despite spreadLine() extraction",
+      "status": "superseded",
+      "superseded_at": "2026-03-20T20:04:09+00:00",
+      "remapped_to": null,
+      "candidates": [
+        "review::.::holistic::error_consistency::bare_catch_git_ts",
+        "review::.::holistic::low_level_elegance::findoptimal_dense_algorithm",
+        "review::.::holistic::low_level_elegance::resolve_effort_nested_try",
+        "review::.::holistic::test_strategy::effort_tautological_assertion",
+        "review::.::holistic::test_strategy::cli_zero_coverage"
+      ]
     }
   },
   "promoted_ids": [],
   "plan_start_scores": {
-    "strict": 87.2,
-    "overall": 87.8,
-    "objective": 92.4,
-    "verified": 92.4
+    "strict": 87.0,
+    "overall": 87.6,
+    "objective": 92.3,
+    "verified": 92.3
   },
   "refresh_state": {
     "lifecycle_phase": "review_initial",
-    "subjective_review_completed_at_scan_count": 20,
-    "postflight_scan_completed_at_scan_count": 22
+    "subjective_review_completed_at_scan_count": 23,
+    "postflight_scan_completed_at_scan_count": 25
   },
   "execution_log": [
     {
@@ -1627,6 +1671,219 @@
       "detail": {
         "scan_count": 22
       }
+    },
+    {
+      "timestamp": "2026-03-20T20:00:37+00:00",
+      "action": "review_import_sync",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "trigger": "review_import",
+        "new_ids": [
+          "review::.::holistic::api_surface_coherence::allocwidth_unused_param",
+          "review::.::holistic::contract_coherence::promo_enabled_render_coupling",
+          "review::.::holistic::cross_module_architecture::hardcoded_segment_registration",
+          "review::.::holistic::design_coherence::model_render_variable_density",
+          "review::.::holistic::error_consistency::bare_catch_git_ts",
+          "review::.::holistic::logic_clarity::row1_notif_margin_docs",
+          "review::.::holistic::low_level_elegance::findoptimal_dense_algorithm",
+          "review::.::holistic::low_level_elegance::resolve_effort_nested_try",
+          "review::.::holistic::test_strategy::cli_zero_coverage",
+          "review::.::holistic::test_strategy::effort_tautological_assertion",
+          "review::.::holistic::test_strategy::engine_boundary_tests",
+          "review::.::holistic::type_safety::stdin_cast_without_validation"
+        ],
+        "added_to_queue": [
+          "review::.::holistic::api_surface_coherence::allocwidth_unused_param",
+          "review::.::holistic::contract_coherence::promo_enabled_render_coupling",
+          "review::.::holistic::cross_module_architecture::hardcoded_segment_registration",
+          "review::.::holistic::error_consistency::bare_catch_git_ts",
+          "review::.::holistic::logic_clarity::row1_notif_margin_docs",
+          "review::.::holistic::low_level_elegance::findoptimal_dense_algorithm",
+          "review::.::holistic::low_level_elegance::resolve_effort_nested_try",
+          "review::.::holistic::test_strategy::cli_zero_coverage",
+          "review::.::holistic::test_strategy::effort_tautological_assertion",
+          "review::.::holistic::test_strategy::engine_boundary_tests",
+          "review::.::holistic::type_safety::stdin_cast_without_validation"
+        ],
+        "workflow_injected_ids": [],
+        "triage_injected": false,
+        "triage_injected_ids": [],
+        "triage_deferred": false,
+        "diff_new": 10,
+        "diff_reopened": 1,
+        "diff_auto_resolved": 31,
+        "stale_pruned_from_queue": [
+          "review::.::holistic::api_surface_coherence::alloc_width_unused",
+          "review::.::holistic::contract_coherence::promo_double_call_divergence",
+          "review::.::holistic::cross_module_architecture::layout_hardcoded_segment_imports",
+          "review::.::holistic::error_consistency::git_bare_catch",
+          "review::.::holistic::logic_clarity::row1_notif_margin_rationale",
+          "review::.::holistic::low_level_elegance::find_optimal_assignment_density",
+          "review::.::holistic::low_level_elegance::resolve_effort_nested_try_catch",
+          "review::.::holistic::test_strategy::campaign_edge_cases",
+          "review::.::holistic::test_strategy::cli_untested",
+          "review::.::holistic::test_strategy::effort_tautological_assertions",
+          "review::.::holistic::type_safety::stdin_json_unvalidated"
+        ],
+        "covered_subjective_pruned_from_queue": [],
+        "covered_subjective": [
+          "subjective::abstraction_fitness",
+          "subjective::ai_generated_debt",
+          "subjective::api_surface_coherence",
+          "subjective::authorization_consistency",
+          "subjective::contract_coherence",
+          "subjective::convention_outlier",
+          "subjective::cross_module_architecture",
+          "subjective::dependency_health",
+          "subjective::design_coherence",
+          "subjective::error_consistency",
+          "subjective::high_level_elegance",
+          "subjective::incomplete_migration",
+          "subjective::initialization_coupling",
+          "subjective::logic_clarity",
+          "subjective::low_level_elegance",
+          "subjective::mid_level_elegance",
+          "subjective::naming_quality",
+          "subjective::package_organization",
+          "subjective::test_strategy",
+          "subjective::type_safety"
+        ],
+        "stale_sync_injected": [],
+        "stale_sync_pruned": [],
+        "auto_cluster_changes": 0,
+        "import_scores_injected": [],
+        "import_scores_pruned": [],
+        "sync_status": "synced",
+        "sync_message": null
+      }
+    },
+    {
+      "timestamp": "2026-03-20T20:00:52+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T20:00:52+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 24
+      }
+    },
+    {
+      "timestamp": "2026-03-20T20:01:23+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "review::.::holistic::design_coherence::model_render_variable_density"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "model.ts render is a linear pipeline after spreadLine extraction \u2014 further splitting would increase indirection without reducing complexity",
+      "detail": {
+        "kind": "permanent",
+        "reason": null
+      }
+    },
+    {
+      "timestamp": "2026-03-20T20:02:24+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "review::.::holistic::api_surface_coherence::allocwidth_unused_param"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "allocWidth is part of the Segment interface contract \u2014 making it optional adds ceremony for a 5-segment codebase",
+      "detail": {
+        "kind": "permanent",
+        "reason": null
+      }
+    },
+    {
+      "timestamp": "2026-03-20T20:02:56+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::contract_coherence::promo_enabled_render_coupling"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Added module-level cachedStatus in promo.ts \u2014 enabled() stores getActiveCampaign() result, render() reuses it",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T20:02:56+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::contract_coherence::promo_enabled_render_coupling"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Added module-level cachedStatus in promo.ts \u2014 enabled() stores getActiveCampaign() result, render() reuses it",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually Added module-level cachedStatus in promo.ts \u2014 enabled() stores getActiveCampaign() result, render() reuses it and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-03-20T20:03:47+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "review::.::holistic::cross_module_architecture::hardcoded_segment_registration"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Pragmatic for 5 segments \u2014 a dynamic registry would add indirection without benefit at this scale",
+      "detail": {
+        "kind": "permanent",
+        "reason": null
+      }
+    },
+    {
+      "timestamp": "2026-03-20T20:04:09+00:00",
+      "action": "reconcile",
+      "issue_ids": [
+        "review::.::holistic::api_surface_coherence::allocwidth_unused_param",
+        "review::.::holistic::cross_module_architecture::hardcoded_segment_registration",
+        "review::.::holistic::design_coherence::model_render_variable_density"
+      ],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 3,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-20T20:04:09+00:00",
+      "action": "seed_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T20:04:09+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 25
+      }
     }
   ],
   "epic_triage_meta": {},
@@ -1640,8 +1897,9 @@
     "review::.::holistic::mid_level_elegance::row1_magic_offset_in_layout",
     "review::.::holistic::logic_clarity::promo_contentwidth_misleading",
     "review::.::holistic::logic_clarity::weekend_negative_intermediate",
-    "review::.::holistic::design_coherence::systemic_magic_numbers"
+    "review::.::holistic::design_coherence::systemic_magic_numbers",
+    "review::.::holistic::contract_coherence::promo_enabled_render_coupling"
   ],
   "commit_tracking_branch": null,
-  "scan_count_at_plan_start": 22
+  "scan_count_at_plan_start": 25
 }
