@@ -34,10 +34,10 @@ export const promoSegment: Segment = {
       line2 = color('upcoming', c.dim);
     }
 
-    const contentWidth = Math.max(visibleLength(line1), visibleLength(line2));
+    const separatorWidth = Math.max(visibleLength(line1), visibleLength(line2));
     const lines = [
       line1,
-      line2 || color('─'.repeat(contentWidth), c.gray),
+      line2 || color('─'.repeat(separatorWidth), c.gray),
     ];
 
     const width = Math.max(...lines.map(visibleLength));

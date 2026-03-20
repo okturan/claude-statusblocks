@@ -58,6 +58,7 @@ function resolveWeekendState(ctx: TimingContext, campaign: Campaign): CampaignSt
 
   const totalWeekendSecs = (2 * 86400) + peakStartSecs + (86400 - peakEndSecs);
   const daysSinceFri = dowNum - 5;
+  // Can be negative on early Saturday before peak-end time; clamped below
   const secsSinceFriPeak = daysSinceFri * 86400 + (currentSecs - peakEndSecs);
   const progress = Math.max(0, Math.min(1, secsSinceFriPeak / totalWeekendSecs));
 

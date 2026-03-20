@@ -1,5 +1,5 @@
 import type { Segment } from '../types.js';
-import { color, c, visibleLength, padRight } from '../colors.js';
+import { color, c, visibleLength, padRight, pctColor } from '../colors.js';
 
 function formatResetTime(epochSec: number): string {
   if (!epochSec) return '';
@@ -14,7 +14,7 @@ function formatResetTime(epochSec: number): string {
 }
 
 function miniBar(pct: number, width: number): string {
-  const barColor = pct >= 90 ? c.red : pct >= 70 ? c.yellow : c.green;
+  const barColor = pctColor(pct);
   const filled = Math.round(pct * width / 100);
   const empty = width - filled;
   return color('█'.repeat(filled), barColor) + color('▒'.repeat(empty), c.gray);
@@ -33,7 +33,7 @@ export const usageSegment: Segment = {
 
     // Line 1: 5-hour usage
     const s5 = Math.round(rl.five_hour?.used_percentage ?? 0);
-    const s5Color = s5 >= 90 ? c.red : s5 >= 70 ? c.yellow : c.green;
+    const s5Color = pctColor(s5);
     const s5Reset = formatResetTime(rl.five_hour?.resets_at ?? 0);
     const pct5 = padRight(color(`${s5}%`, s5Color, c.bold), 4);
     const rst5 = padRight(color('↻', c.dim) + ' ' + s5Reset, 9);
@@ -41,7 +41,7 @@ export const usageSegment: Segment = {
 
     // Line 2: 7-day usage
     const s7 = Math.round(rl.seven_day?.used_percentage ?? 0);
-    const s7Color = s7 >= 90 ? c.red : s7 >= 70 ? c.yellow : c.green;
+    const s7Color = pctColor(s7);
     const s7Reset = formatResetTime(rl.seven_day?.resets_at ?? 0);
     const pct7 = padRight(color(`${s7}%`, s7Color, c.bold), 4);
     const rst7 = padRight(color('↻', c.dim) + ' ' + s7Reset, 9);

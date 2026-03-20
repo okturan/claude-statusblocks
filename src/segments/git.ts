@@ -2,11 +2,12 @@ import { execSync } from 'child_process';
 import type { Segment } from '../types.js';
 import { color, c, visibleLength } from '../colors.js';
 
+const GIT_CACHE_TTL = 5000;
 let gitCache: { branch: string; staged: number; modified: number; added: number; removed: number; ts: number } | null = null;
 
 function getGitInfo(cwd: string): typeof gitCache {
   const now = Date.now();
-  if (gitCache && now - gitCache.ts < 5000) return gitCache;
+  if (gitCache && now - gitCache.ts < GIT_CACHE_TTL) return gitCache;
   try {
     execSync('git rev-parse --git-dir', { cwd, stdio: 'ignore' });
     const branch = execSync('git branch --show-current', { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();

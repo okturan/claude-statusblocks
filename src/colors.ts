@@ -24,6 +24,11 @@ export function color(text: string, ...codes: string[]): string {
   return codes.join('') + text + c.reset;
 }
 
+/** ANSI color code for a percentage threshold: red ≥90%, yellow ≥70%, green below */
+export function pctColor(pct: number): string {
+  return pct >= 90 ? c.red : pct >= 70 ? c.yellow : c.green;
+}
+
 /** Strip ANSI codes to get visible length */
 export function visibleLength(str: string): number {
   // eslint-disable-next-line no-control-regex

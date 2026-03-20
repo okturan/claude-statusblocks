@@ -1,5 +1,5 @@
 import type { Segment } from '../types.js';
-import { color, c, visibleLength } from '../colors.js';
+import { color, c, visibleLength, pctColor } from '../colors.js';
 
 function formatTokens(n: number): string {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
@@ -13,7 +13,7 @@ export const contextSegment: Segment = {
   enabled: () => true,
   render(data) {
     const pct = Math.floor(data.context_window.used_percentage ?? 0);
-    const barColor = pct >= 90 ? c.red : pct >= 70 ? c.yellow : c.green;
+    const barColor = pctColor(pct);
     const total = data.context_window.context_window_size;
     const used = Math.round(pct * total / 100);
 

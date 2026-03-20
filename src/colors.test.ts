@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { color, c, visibleLength, padRight } from './colors.js';
+import { color, c, visibleLength, padRight, pctColor } from './colors.js';
 
 describe('color', () => {
   it('wraps text with ANSI codes and reset', () => {
@@ -64,5 +64,22 @@ describe('padRight', () => {
     const result = padRight('exact', 5);
     expect(visibleLength(result)).toBe(5);
     expect(result).toContain('exact');
+  });
+});
+
+describe('pctColor', () => {
+  it('returns red for >= 90%', () => {
+    expect(pctColor(90)).toBe(c.red);
+    expect(pctColor(100)).toBe(c.red);
+  });
+
+  it('returns yellow for >= 70%', () => {
+    expect(pctColor(70)).toBe(c.yellow);
+    expect(pctColor(89)).toBe(c.yellow);
+  });
+
+  it('returns green for < 70%', () => {
+    expect(pctColor(0)).toBe(c.green);
+    expect(pctColor(69)).toBe(c.green);
   });
 });
