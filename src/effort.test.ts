@@ -48,14 +48,18 @@ describe('resolveEffort', () => {
     expect(second).toBe('high');
   });
 
-  it('handles empty transcript file', async () => {
-    const { resolveEffort } = await import('./effort.js');
-    const path = join(tmpDir, 'empty.jsonl');
-    writeFileSync(path, '');
-    // Falls through to settings — result depends on user's settings.json
-    const result = resolveEffort(path);
-    if (result !== null) {
-      expect(['low', 'medium', 'high', 'max']).toContain(result);
+  it('returns null for empty transcript when no settings exist', async () => {
+    // Point CLAUDE_CONFIG_DIR to a nonexistent path so settings fallback returns null
+    const origDir = process.env.CLAUDE_CONFIG_DIR;
+    process.env.CLAUDE_CONFIG_DIR = join(tmpDir, 'nonexistent');
+    try {
+      const { resolveEffort } = await import('./effort.js');
+      const path = join(tmpDir, 'empty.jsonl');
+      writeFileSync(path, '');
+      expect(resolveEffort(path)).toBeNull();
+    } finally {
+      if (origDir !== undefined) process.env.CLAUDE_CONFIG_DIR = origDir;
+      else delete process.env.CLAUDE_CONFIG_DIR;
     }
   });
 });
