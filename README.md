@@ -35,9 +35,7 @@ Cards show up based on context: `git` only in repos, `promo` only during active 
 
 ## Layout
 
-Cards flow into rows with a pyramid shape: row 1 is narrower than row 2. When cards don't fit on a single row, it tries every possible assignment and picks the tightest pyramid.
-
-On narrow terminals, lower-priority cards are dropped entirely rather than wrapping badly.
+Cards are bin-packed into rows for optimal fit — blocks can be freely reordered across rows. Rows are sorted narrowest-on-top (pyramid shape). The algorithm tries every possible assignment and picks the layout with fewest rows and most balanced widths.
 
 ## Configure
 

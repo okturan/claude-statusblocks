@@ -1,6 +1,6 @@
 {
   "name": "claude-statusblocks",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "Opinionated, adaptive status line for Claude Code",
   "type": "module",
   "bin": {

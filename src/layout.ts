@@ -126,12 +126,12 @@ export function render(data: StatusLineData, termWidth: number, config: StatusBl
         if (count > 1) rowRW[r] += (count - 1) * GAP;
       }
 
-      // Sort rows by earliest segment index (build order mapping)
+      // Sort rows by width ascending (pyramid: narrowest on top, widest on bottom)
       const rowOrder: number[] = [];
       for (let r = 0; r < numRows; r++) rowOrder.push(r);
-      rowOrder.sort((a, b) => minIdx[a]! - minIdx[b]!);
+      rowOrder.sort((a, b) => rowRW[a]! - rowRW[b]!);
 
-      // Validate: row 1 uses tighter width, others use maxRowWidth
+      // Validate: row 1 (narrowest) uses tighter width, others use maxRowWidth
       let valid = true;
       for (let i = 0; i < rowOrder.length; i++) {
         const limit = i === 0 ? row1MaxWidth : maxRowWidth;
@@ -139,11 +139,10 @@ export function render(data: StatusLineData, termWidth: number, config: StatusBl
       }
       if (!valid) continue;
 
-      // Score: fewer rows > smaller widest row > pyramid shape
+      // Score: fewer rows > smaller widest row
       let maxRW = 0;
       for (let r = 0; r < numRows; r++) if (rowRW[r]! > maxRW) maxRW = rowRW[r]!;
-      const pyramid = numRows < 2 || rowRW[rowOrder[0]!]! <= rowRW[rowOrder[1]!]!;
-      const score = -(numRows * 1e9) - (maxRW * 1e3) + (pyramid ? 500 : 0);
+      const score = -(numRows * 1e9) - (maxRW * 1e3);
 
       if (score > bestScore) {
         bestScore = score;
@@ -161,9 +160,14 @@ export function render(data: StatusLineData, termWidth: number, config: StatusBl
     for (let r = 0; r < numRows; r++) {
       const idx: number[] = [];
       for (let i = 0; i < n; i++) if (bestAssign[i] === r) idx.push(i);
-      if (idx.length > 0) groups.push({ indices: idx, rw: 0 });
+      if (idx.length > 0) {
+        let rw = 0;
+        for (const i of idx) rw += widths[i]! + BOX_CHROME;
+        if (idx.length > 1) rw += (idx.length - 1) * GAP;
+        groups.push({ indices: idx, rw });
+      }
     }
-    groups.sort((a, b) => a.indices[0]! - b.indices[0]!);
+    groups.sort((a, b) => a.rw - b.rw);
     bestGroups = groups.map(g => ({
       blocks: g.indices.map(i => blocks[i]!),
       widths: g.indices.map(i => widths[i]!),
