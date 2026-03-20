@@ -85,76 +85,65 @@ export function render(data: StatusLineData, termWidth: number, config: StatusBl
     return ws.reduce((sum, w) => sum + w + BOX_CHROME, 0) + (ws.length - 1) * GAP;
   }
 
-  const totalWidth = rowWidth(widths);
   type RowGroup = { blocks: Block[]; widths: number[] };
-  let rowGroups: RowGroup[];
 
-  if (totalWidth <= maxRowWidth) {
-    // Everything fits on one row
-    rowGroups = [{ blocks: [...blocks], widths: [...widths] }];
-  } else {
-    // Order-preserving 2-row split: try each contiguous split point k,
-    // where row1 = blocks[0..k), row2 = blocks[k..n). This guarantees
-    // segments never jump between rows as the terminal width changes.
-    const n = blocks.length;
-    let bestK = -1;
-    let bestScore = -Infinity;
+  // Row 1 gets extra right margin for Claude Code's notification panel
+  const ROW1_NOTIF_RESERVE = 5;
+  const row1MaxWidth = maxRowWidth - ROW1_NOTIF_RESERVE;
 
-    for (let k = 1; k < n; k++) {
-      const r1w = rowWidth(widths.slice(0, k));
-      const r2w = rowWidth(widths.slice(k));
-      if (r1w > maxRowWidth || r2w > maxRowWidth) continue;
-      // Prefer pyramid (row1 narrower), then minimize width gap
-      const pyramid = r1w <= r2w;
-      const gap = Math.abs(r1w - r2w);
-      // Score: pyramid splits beat non-pyramid; among same type, smaller gap wins
-      const score = (pyramid ? 1e6 : 0) - gap;
+  // Optimal layout: assign blocks to rows freely (not order-preserving).
+  // Within each row, blocks keep their original segment order.
+  // Rows are ordered by their earliest segment. For ≤5 blocks this
+  // tries at most ~4400 assignments — instant.
+  const n = blocks.length;
+  let bestGroups: RowGroup[] | null = null;
+  let bestScore = -Infinity;
+
+  for (let numRows = 1; numRows <= n; numRows++) {
+    const total = numRows ** n;
+    for (let assign = 0; assign < total; assign++) {
+      // Decode: which row each block goes to
+      const rowOf: number[] = [];
+      let v = assign;
+      for (let i = 0; i < n; i++) { rowOf.push(v % numRows); v = Math.floor(v / numRows); }
+      // Skip if any row is empty
+      if (new Set(rowOf).size !== numRows) continue;
+
+      // Build groups; blocks within each row stay in original order
+      const groups: { indices: number[]; rw: number }[] = [];
+      for (let r = 0; r < numRows; r++) {
+        const idx: number[] = [];
+        for (let i = 0; i < n; i++) if (rowOf[i] === r) idx.push(i);
+        groups.push({ indices: idx, rw: rowWidth(idx.map(i => widths[i]!)) });
+      }
+      // Order rows by earliest segment index
+      groups.sort((a, b) => a.indices[0]! - b.indices[0]!);
+
+      // Validate: row 1 uses tighter width, others use maxRowWidth
+      let valid = true;
+      for (let r = 0; r < groups.length; r++) {
+        if (groups[r]!.rw > (r === 0 ? row1MaxWidth : maxRowWidth)) { valid = false; break; }
+      }
+      if (!valid) continue;
+
+      const rws = groups.map(g => g.rw);
+      const maxRW = Math.max(...rws);
+      const pyramid = numRows < 2 || rws[0]! <= rws[1]!;
+      const score = -(numRows * 1e9) - (maxRW * 1e3) + (pyramid ? 500 : 0);
+
       if (score > bestScore) {
         bestScore = score;
-        bestK = k;
+        bestGroups = groups.map(g => ({
+          blocks: g.indices.map(i => blocks[i]!),
+          widths: g.indices.map(i => widths[i]!),
+        }));
       }
     }
-
-    if (bestK !== -1) {
-      rowGroups = [
-        { blocks: blocks.slice(0, bestK), widths: widths.slice(0, bestK) },
-        { blocks: blocks.slice(bestK), widths: widths.slice(bestK) },
-      ];
-    } else {
-      // No valid 2-row split — sequential flow with wrapping (3+ rows)
-      rowGroups = [];
-      let currentRow: RowGroup = { blocks: [], widths: [] };
-      let currentW = 0;
-      for (let i = 0; i < blocks.length; i++) {
-        const needed = (currentRow.blocks.length > 0 ? GAP : 0) + widths[i]! + BOX_CHROME;
-        if (currentRow.blocks.length > 0 && currentW + needed > maxRowWidth) {
-          rowGroups.push(currentRow);
-          currentRow = { blocks: [], widths: [] };
-          currentW = 0;
-        }
-        currentRow.blocks.push(blocks[i]!);
-        currentRow.widths.push(widths[i]!);
-        currentW += (currentRow.blocks.length > 1 ? GAP : 0) + widths[i]! + BOX_CHROME;
-      }
-      if (currentRow.blocks.length > 0) rowGroups.push(currentRow);
-    }
+    if (bestGroups) break; // found valid layout at this row count, no need for more rows
   }
 
-  // Expand multi-block rows to match the widest row (not maxRowWidth,
-  // which can be wrong on split-pane terminals)
-  const targetWidth = Math.max(...rowGroups.map(g => rowWidth(g.widths)));
-  for (const group of rowGroups) {
-    if (group.widths.length < 2) continue;
-    const currentW = rowWidth(group.widths);
-    const slack = targetWidth - currentW;
-    if (slack > 0) {
-      const perBlock = Math.floor(slack / group.widths.length);
-      const remainder = slack % group.widths.length;
-      for (let i = 0; i < group.widths.length; i++) {
-        group.widths[i]! += perBlock + (i < remainder ? 1 : 0);
-      }
-    }
-  }
+  // Fallback: each block on its own row
+  const rowGroups: RowGroup[] = bestGroups ?? blocks.map((b, i) => ({ blocks: [b], widths: [widths[i]!] }));
 
   // Render each row independently
   const allRows: string[] = [];
