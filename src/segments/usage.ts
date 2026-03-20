@@ -1,7 +1,7 @@
 import type { Segment } from '../types.js';
 import { color, c, visibleLength, padRight } from '../colors.js';
 
-function resetCountdown(epochSec: number): string {
+function formatResetTime(epochSec: number): string {
   if (!epochSec) return '';
   const ms = epochSec * 1000 - Date.now();
   if (ms <= 0) return 'now';
@@ -34,7 +34,7 @@ export const usageSegment: Segment = {
     // Line 1: 5-hour usage
     const s5 = Math.round(rl.five_hour?.used_percentage ?? 0);
     const s5Color = s5 >= 90 ? c.red : s5 >= 70 ? c.yellow : c.green;
-    const s5Reset = resetCountdown(rl.five_hour?.resets_at ?? 0);
+    const s5Reset = formatResetTime(rl.five_hour?.resets_at ?? 0);
     const pct5 = padRight(color(`${s5}%`, s5Color, c.bold), 4);
     const rst5 = padRight(color('↻', c.dim) + ' ' + s5Reset, 9);
     const line1 = `${miniBar(s5, barW)} ${pct5}${dot}${rst5}${dot}${color('5h', c.dim)}`;
@@ -42,7 +42,7 @@ export const usageSegment: Segment = {
     // Line 2: 7-day usage
     const s7 = Math.round(rl.seven_day?.used_percentage ?? 0);
     const s7Color = s7 >= 90 ? c.red : s7 >= 70 ? c.yellow : c.green;
-    const s7Reset = resetCountdown(rl.seven_day?.resets_at ?? 0);
+    const s7Reset = formatResetTime(rl.seven_day?.resets_at ?? 0);
     const pct7 = padRight(color(`${s7}%`, s7Color, c.bold), 4);
     const rst7 = padRight(color('↻', c.dim) + ' ' + s7Reset, 9);
     const line2 = `${miniBar(s7, barW)} ${pct7}${dot}${rst7}${dot}${color('7d', c.dim)}`;

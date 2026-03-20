@@ -9,7 +9,8 @@ import { usageSegment } from './segments/usage.js';
 
 const ALL_SEGMENTS: Segment[] = [contextSegment, modelSegment, gitSegment, promoSegment, usageSegment];
 const DEFAULT_ORDER = ['context', 'model', 'promo', 'git', 'usage'];
-const INK_PADDING = 4; // Claude Code's outer paddingX: 2 on each side
+const INK_PADDING = 4;       // Claude Code's outer paddingX: 2 on each side
+const ROW1_NOTIF_MARGIN = 5; // Extra right margin on row 1 for Claude Code's notification panel
 
 function getSegmentOrder(config: StatusBlocksConfig): string[] {
   return config.segments ?? DEFAULT_ORDER;
@@ -168,7 +169,7 @@ export function render(data: StatusLineData, termWidth: number, config: StatusBl
   const widths = blocks.map(b => Math.max(...b.lines.map(l => visibleLength(l))));
 
   // Row 1 gets extra right margin for Claude Code's notification panel
-  const row1MaxWidth = maxRowWidth - 5;
+  const row1MaxWidth = maxRowWidth - ROW1_NOTIF_MARGIN;
 
   const bestAssign = findOptimalAssignment(blocks.length, widths, row1MaxWidth, maxRowWidth);
   const rowGroups = bestAssign

@@ -14,7 +14,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 - `claude-statusblocks init` — writes `statusLine` config into `~/.claude/settings.json`
 - `claude-statusblocks preview` — renders at 120/80/50 column widths with mock data
 
-There are no tests or linters configured.
+- `npm test` — run vitest test suite (co-located `.test.ts` files)
 
 ## Architecture
 

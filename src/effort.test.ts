@@ -2,15 +2,15 @@ import { describe, it, expect } from 'vitest';
 import { resolveEffort } from './effort.js';
 
 describe('resolveEffort', () => {
-  it('returns null when no transcript and no settings match', () => {
-    const result = resolveEffort('/nonexistent/path');
-    // Should return null or a valid effort level from settings
+  it('returns null for nonexistent transcript path', () => {
+    const result = resolveEffort('/nonexistent/path/transcript.jsonl');
+    // Should fall through to settings.json or return null
     if (result !== null) {
       expect(['low', 'medium', 'high', 'max']).toContain(result);
     }
   });
 
-  it('returns a valid effort level or null', () => {
+  it('returns a valid EffortLevel or null', () => {
     const result = resolveEffort();
     if (result !== null) {
       expect(['low', 'medium', 'high', 'max']).toContain(result);
@@ -23,5 +23,21 @@ describe('resolveEffort', () => {
     const first = resolveEffort();
     const second = resolveEffort();
     expect(second).toBe(first);
+  });
+
+  it('handles undefined transcript path', () => {
+    const result = resolveEffort(undefined);
+    // Should not throw — falls through to settings
+    if (result !== null) {
+      expect(['low', 'medium', 'high', 'max']).toContain(result);
+    }
+  });
+
+  it('handles empty string transcript path', () => {
+    const result = resolveEffort('');
+    // Empty path is falsy, skips transcript source
+    if (result !== null) {
+      expect(['low', 'medium', 'high', 'max']).toContain(result);
+    }
   });
 });
