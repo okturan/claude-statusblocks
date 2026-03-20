@@ -10,7 +10,7 @@ import { usageSegment } from './segments/usage.js';
 const ALL_SEGMENTS: Segment[] = [contextSegment, modelSegment, gitSegment, promoSegment, usageSegment];
 const DEFAULT_ORDER = ['context', 'model', 'promo', 'git', 'usage'];
 const INK_PADDING = 4;       // Claude Code's outer paddingX: 2 on each side
-const ROW1_NOTIF_MARGIN = 5; // Extra right margin on row 1 for Claude Code's notification panel
+const ROW1_NOTIF_MARGIN = 12; // Extra right margin on row 1 for Claude Code's notification panel
 
 function getSegmentOrder(config: StatusBlocksConfig): string[] {
   return config.segments ?? DEFAULT_ORDER;
