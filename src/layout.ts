@@ -79,67 +79,95 @@ export function render(data: StatusLineData, termWidth: number, config: StatusBl
   const blocks = active.map(s => s.render(data, allocWidth));
   const widths = blocks.map(b => Math.max(...b.lines.map(l => visibleLength(l))));
 
-  // Row width helper for layout calculations
-  function rowWidth(ws: number[]): number {
-    if (ws.length === 0) return 0;
-    return ws.reduce((sum, w) => sum + w + BOX_CHROME, 0) + (ws.length - 1) * GAP;
-  }
-
   type RowGroup = { blocks: Block[]; widths: number[] };
 
   // Row 1 gets extra right margin for Claude Code's notification panel
-  const ROW1_NOTIF_RESERVE = 5;
-  const row1MaxWidth = maxRowWidth - ROW1_NOTIF_RESERVE;
+  const row1MaxWidth = maxRowWidth - 5;
 
   // Optimal layout: assign blocks to rows freely (not order-preserving).
   // Within each row, blocks keep their original segment order.
   // Rows are ordered by their earliest segment. For ≤5 blocks this
   // tries at most ~4400 assignments — instant.
   const n = blocks.length;
-  let bestGroups: RowGroup[] | null = null;
+  let bestAssign: number[] | null = null;
   let bestScore = -Infinity;
+
+  // Reusable buffers to avoid per-iteration allocations
+  const rowOf = new Array<number>(n);
+  const seen = new Array<boolean>(n);     // max possible rows = n
+  const rowRW = new Array<number>(n);
+  const minIdx = new Array<number>(n);
 
   for (let numRows = 1; numRows <= n; numRows++) {
     const total = numRows ** n;
     for (let assign = 0; assign < total; assign++) {
       // Decode: which row each block goes to
-      const rowOf: number[] = [];
       let v = assign;
-      for (let i = 0; i < n; i++) { rowOf.push(v % numRows); v = Math.floor(v / numRows); }
-      // Skip if any row is empty
-      if (new Set(rowOf).size !== numRows) continue;
+      for (let i = 0; i < n; i++) { rowOf[i] = v % numRows; v = Math.floor(v / numRows); }
 
-      // Build groups; blocks within each row stay in original order
-      const groups: { indices: number[]; rw: number }[] = [];
-      for (let r = 0; r < numRows; r++) {
-        const idx: number[] = [];
-        for (let i = 0; i < n; i++) if (rowOf[i] === r) idx.push(i);
-        groups.push({ indices: idx, rw: rowWidth(idx.map(i => widths[i]!)) });
+      // Skip if any row is empty (without allocating a Set)
+      seen.fill(false, 0, numRows);
+      for (let i = 0; i < n; i++) seen[rowOf[i]!] = true;
+      let allUsed = true;
+      for (let r = 0; r < numRows; r++) { if (!seen[r]) { allUsed = false; break; } }
+      if (!allUsed) continue;
+
+      // Compute row widths and min segment index per row inline
+      for (let r = 0; r < numRows; r++) { rowRW[r] = 0; minIdx[r] = n; }
+      for (let i = 0; i < n; i++) {
+        const r = rowOf[i]!;
+        rowRW[r] += widths[i]! + BOX_CHROME;
+        if (i < minIdx[r]!) minIdx[r] = i;
       }
-      // Order rows by earliest segment index
-      groups.sort((a, b) => a.indices[0]! - b.indices[0]!);
+      for (let r = 0; r < numRows; r++) {
+        // Count blocks in this row for gap calculation
+        let count = 0;
+        for (let i = 0; i < n; i++) if (rowOf[i] === r) count++;
+        if (count > 1) rowRW[r] += (count - 1) * GAP;
+      }
+
+      // Sort rows by earliest segment index (build order mapping)
+      const rowOrder: number[] = [];
+      for (let r = 0; r < numRows; r++) rowOrder.push(r);
+      rowOrder.sort((a, b) => minIdx[a]! - minIdx[b]!);
 
       // Validate: row 1 uses tighter width, others use maxRowWidth
       let valid = true;
-      for (let r = 0; r < groups.length; r++) {
-        if (groups[r]!.rw > (r === 0 ? row1MaxWidth : maxRowWidth)) { valid = false; break; }
+      for (let i = 0; i < rowOrder.length; i++) {
+        const limit = i === 0 ? row1MaxWidth : maxRowWidth;
+        if (rowRW[rowOrder[i]!]! > limit) { valid = false; break; }
       }
       if (!valid) continue;
 
-      const rws = groups.map(g => g.rw);
-      const maxRW = Math.max(...rws);
-      const pyramid = numRows < 2 || rws[0]! <= rws[1]!;
+      // Score: fewer rows > smaller widest row > pyramid shape
+      let maxRW = 0;
+      for (let r = 0; r < numRows; r++) if (rowRW[r]! > maxRW) maxRW = rowRW[r]!;
+      const pyramid = numRows < 2 || rowRW[rowOrder[0]!]! <= rowRW[rowOrder[1]!]!;
       const score = -(numRows * 1e9) - (maxRW * 1e3) + (pyramid ? 500 : 0);
 
       if (score > bestScore) {
         bestScore = score;
-        bestGroups = groups.map(g => ({
-          blocks: g.indices.map(i => blocks[i]!),
-          widths: g.indices.map(i => widths[i]!),
-        }));
+        bestAssign = rowOf.slice(0, n);
       }
     }
-    if (bestGroups) break; // found valid layout at this row count, no need for more rows
+    if (bestAssign) break;
+  }
+
+  // Materialize best assignment into RowGroups
+  let bestGroups: RowGroup[] | null = null;
+  if (bestAssign) {
+    const numRows = Math.max(...bestAssign) + 1;
+    const groups: { indices: number[]; rw: number }[] = [];
+    for (let r = 0; r < numRows; r++) {
+      const idx: number[] = [];
+      for (let i = 0; i < n; i++) if (bestAssign[i] === r) idx.push(i);
+      if (idx.length > 0) groups.push({ indices: idx, rw: 0 });
+    }
+    groups.sort((a, b) => a.indices[0]! - b.indices[0]!);
+    bestGroups = groups.map(g => ({
+      blocks: g.indices.map(i => blocks[i]!),
+      widths: g.indices.map(i => widths[i]!),
+    }));
   }
 
   // Fallback: each block on its own row
