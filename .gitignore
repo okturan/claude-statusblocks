@@ -1,3 +1,5 @@
 node_modules/
 dist/
 .cache/
+coverage/
+scorecard.png

@@ -12,8 +12,8 @@
     "auto_resolved": 4,
     "deferred": 0,
     "false_positive": 0,
-    "fixed": 42,
-    "open": 54,
+    "fixed": 43,
+    "open": 53,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -21,8 +21,8 @@
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 12,
-        "open": 9,
+        "fixed": 13,
+        "open": 8,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -2747,11 +2747,11 @@
         "reasoning": "",
         "summary_hash": "ae16504c"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Added all 5 segments (context, model, promo, git, usage) to CLI help text in cli.ts",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:33:31+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2759,7 +2759,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Added all 5 segments (context, model, promo, git, usage) to CLI help text in cli.ts and I am not gaming the score.",
+        "attested_at": "2026-03-20T18:33:31+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::undocumented_catch_blocks": {
       "id": "review::.::holistic::error_consistency::undocumented_catch_blocks",
@@ -4099,7 +4105,10 @@
     "high_level_elegance": {
       "score": 88.5,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:11:31+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-03-20T18:33:31+00:00"
     },
     "incomplete_migration": {
       "score": 93.0,
@@ -7558,13 +7567,13 @@
       "strict": 88.5,
       "verified_strict_score": 88.5,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.885,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 1.15,
           "assessment_score": 88.5,
           "placeholder": false,
