@@ -140,11 +140,13 @@ export function render(data: StatusLineData, termWidth: number, config: StatusBl
     }
   }
 
-  // Expand multi-block rows to fill maxRowWidth so rows align
+  // Expand multi-block rows to match the widest row (not maxRowWidth,
+  // which can be wrong on split-pane terminals)
+  const targetWidth = Math.max(...rowGroups.map(g => rowWidth(g.widths)));
   for (const group of rowGroups) {
     if (group.widths.length < 2) continue;
     const currentW = rowWidth(group.widths);
-    const slack = maxRowWidth - currentW;
+    const slack = targetWidth - currentW;
     if (slack > 0) {
       const perBlock = Math.floor(slack / group.widths.length);
       const remainder = slack % group.widths.length;
