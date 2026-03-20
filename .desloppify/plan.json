@@ -1,21 +1,20 @@
 {
   "version": 8,
   "created": "2026-03-20T17:37:28+00:00",
-  "updated": "2026-03-20T19:36:42+00:00",
+  "updated": "2026-03-20T19:47:45+00:00",
   "queue_order": [
-    "review::.::holistic::api_surface_coherence::allocwidth_unused_by_most_segments",
-    "review::.::holistic::contract_coherence::promo_enabled_render_divergence",
-    "review::.::holistic::cross_module_architecture::hardcoded_segment_registration",
     "review::.::holistic::design_coherence::model_render_variable_density",
-    "review::.::holistic::error_consistency::bare_catch_git_segment",
-    "review::.::holistic::logic_clarity::row1_notif_margin_unexplained",
-    "review::.::holistic::low_level_elegance::findOptimalAssignment_scoring_opaque",
-    "review::.::holistic::low_level_elegance::resolveEffort_nested_try_catch",
-    "review::.::holistic::test_strategy::effort_test_tautological",
-    "review::.::holistic::test_strategy::engine_test_more_pinned_timestamps",
-    "review::.::holistic::test_strategy::layout_assignment_indirectly_tested",
-    "review::.::holistic::type_safety::config_json_unvalidated_cast",
-    "review::.::holistic::type_safety::stdin_json_unvalidated_cast"
+    "review::.::holistic::api_surface_coherence::alloc_width_unused",
+    "review::.::holistic::contract_coherence::promo_double_call_divergence",
+    "review::.::holistic::cross_module_architecture::layout_hardcoded_segment_imports",
+    "review::.::holistic::error_consistency::git_bare_catch",
+    "review::.::holistic::logic_clarity::row1_notif_margin_rationale",
+    "review::.::holistic::low_level_elegance::find_optimal_assignment_density",
+    "review::.::holistic::low_level_elegance::resolve_effort_nested_try_catch",
+    "review::.::holistic::test_strategy::campaign_edge_cases",
+    "review::.::holistic::test_strategy::cli_untested",
+    "review::.::holistic::test_strategy::effort_tautological_assertions",
+    "review::.::holistic::type_safety::stdin_json_unvalidated"
   ],
   "deferred": [],
   "skipped": {},
@@ -297,16 +296,11 @@
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {
-    "strict": 86.3,
-    "overall": 86.9,
-    "objective": 92.4,
-    "verified": 92.4
-  },
+  "plan_start_scores": {},
   "refresh_state": {
     "lifecycle_phase": "review_initial",
-    "subjective_review_completed_at_scan_count": 17,
-    "postflight_scan_completed_at_scan_count": 19
+    "subjective_review_completed_at_scan_count": 20,
+    "postflight_scan_completed_at_scan_count": 21
   },
   "execution_log": [
     {
@@ -1498,6 +1492,115 @@
       "note": null,
       "detail": {
         "scan_count": 19
+      }
+    },
+    {
+      "timestamp": "2026-03-20T19:47:29+00:00",
+      "action": "review_import_sync",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "trigger": "review_import",
+        "new_ids": [
+          "review::.::holistic::api_surface_coherence::alloc_width_unused",
+          "review::.::holistic::contract_coherence::promo_double_call_divergence",
+          "review::.::holistic::cross_module_architecture::layout_hardcoded_segment_imports",
+          "review::.::holistic::design_coherence::model_render_variable_density",
+          "review::.::holistic::error_consistency::git_bare_catch",
+          "review::.::holistic::logic_clarity::row1_notif_margin_rationale",
+          "review::.::holistic::low_level_elegance::find_optimal_assignment_density",
+          "review::.::holistic::low_level_elegance::resolve_effort_nested_try_catch",
+          "review::.::holistic::test_strategy::campaign_edge_cases",
+          "review::.::holistic::test_strategy::cli_untested",
+          "review::.::holistic::test_strategy::effort_tautological_assertions",
+          "review::.::holistic::type_safety::stdin_json_unvalidated"
+        ],
+        "added_to_queue": [
+          "review::.::holistic::api_surface_coherence::alloc_width_unused",
+          "review::.::holistic::contract_coherence::promo_double_call_divergence",
+          "review::.::holistic::cross_module_architecture::layout_hardcoded_segment_imports",
+          "review::.::holistic::error_consistency::git_bare_catch",
+          "review::.::holistic::logic_clarity::row1_notif_margin_rationale",
+          "review::.::holistic::low_level_elegance::find_optimal_assignment_density",
+          "review::.::holistic::low_level_elegance::resolve_effort_nested_try_catch",
+          "review::.::holistic::test_strategy::campaign_edge_cases",
+          "review::.::holistic::test_strategy::cli_untested",
+          "review::.::holistic::test_strategy::effort_tautological_assertions",
+          "review::.::holistic::type_safety::stdin_json_unvalidated"
+        ],
+        "workflow_injected_ids": [],
+        "triage_injected": false,
+        "triage_injected_ids": [],
+        "triage_deferred": false,
+        "diff_new": 8,
+        "diff_reopened": 3,
+        "diff_auto_resolved": 32,
+        "stale_pruned_from_queue": [
+          "review::.::holistic::api_surface_coherence::allocwidth_unused_by_most_segments",
+          "review::.::holistic::contract_coherence::promo_enabled_render_divergence",
+          "review::.::holistic::cross_module_architecture::hardcoded_segment_registration",
+          "review::.::holistic::error_consistency::bare_catch_git_segment",
+          "review::.::holistic::logic_clarity::row1_notif_margin_unexplained",
+          "review::.::holistic::low_level_elegance::findOptimalAssignment_scoring_opaque",
+          "review::.::holistic::low_level_elegance::resolveEffort_nested_try_catch",
+          "review::.::holistic::test_strategy::effort_test_tautological",
+          "review::.::holistic::test_strategy::engine_test_more_pinned_timestamps",
+          "review::.::holistic::test_strategy::layout_assignment_indirectly_tested",
+          "review::.::holistic::type_safety::config_json_unvalidated_cast",
+          "review::.::holistic::type_safety::stdin_json_unvalidated_cast"
+        ],
+        "covered_subjective_pruned_from_queue": [],
+        "covered_subjective": [
+          "subjective::abstraction_fitness",
+          "subjective::ai_generated_debt",
+          "subjective::api_surface_coherence",
+          "subjective::authorization_consistency",
+          "subjective::contract_coherence",
+          "subjective::convention_outlier",
+          "subjective::cross_module_architecture",
+          "subjective::dependency_health",
+          "subjective::design_coherence",
+          "subjective::error_consistency",
+          "subjective::high_level_elegance",
+          "subjective::incomplete_migration",
+          "subjective::initialization_coupling",
+          "subjective::logic_clarity",
+          "subjective::low_level_elegance",
+          "subjective::mid_level_elegance",
+          "subjective::naming_quality",
+          "subjective::package_organization",
+          "subjective::test_strategy",
+          "subjective::type_safety"
+        ],
+        "stale_sync_injected": [],
+        "stale_sync_pruned": [],
+        "auto_cluster_changes": 0,
+        "import_scores_injected": [],
+        "import_scores_pruned": [],
+        "sync_status": "synced",
+        "sync_message": null
+      }
+    },
+    {
+      "timestamp": "2026-03-20T19:47:45+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T19:47:45+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 21
       }
     }
   ],

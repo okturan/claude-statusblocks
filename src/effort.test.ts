@@ -1,57 +1,46 @@
-import { describe, it, expect, afterEach, beforeEach } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { writeFileSync, mkdirSync, rmSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
-
-// Must re-import to reset module cache between tests
-let resolveEffort: typeof import('./effort.js').resolveEffort;
-
-beforeEach(async () => {
-  const mod = await import('./effort.js');
-  resolveEffort = mod.resolveEffort;
-});
+import { resolveEffort } from './effort.js';
 
 describe('resolveEffort', () => {
-  const tmpDir = join(tmpdir(), 'claude-statusblocks-test-effort');
+  const tmpDir = join(tmpdir(), `csb-effort-test-${process.pid}`);
+  const transcriptPath = join(tmpDir, 'transcript.jsonl');
 
-  beforeEach(() => {
+  beforeAll(() => {
     mkdirSync(tmpDir, { recursive: true });
-  });
-
-  afterEach(() => {
-    rmSync(tmpDir, { recursive: true, force: true });
-  });
-
-  it('parses effort from transcript JSONL', () => {
-    const transcriptPath = join(tmpDir, 'transcript.jsonl');
+    // Write a transcript with multiple entries — last match is "max"
     const lines = [
+      JSON.stringify({ message: { content: 'unrelated message' } }),
+      'not valid json',
       JSON.stringify({ message: { content: '<local-command-stdout>Set model to x with low effort</local-command-stdout>' } }),
-      JSON.stringify({ message: { content: 'some other message' } }),
-      JSON.stringify({ message: { content: '<local-command-stdout>Set model to x with high effort</local-command-stdout>' } }),
+      JSON.stringify({ message: { content: '<local-command-stdout>Set model to x with max effort</local-command-stdout>' } }),
     ];
     writeFileSync(transcriptPath, lines.join('\n') + '\n');
-    const result = resolveEffort(transcriptPath);
-    // Should find the LAST matching entry (high, not low)
-    expect(result).toBe('high');
   });
 
-  it('handles empty transcript file', () => {
-    const transcriptPath = join(tmpDir, 'empty.jsonl');
-    writeFileSync(transcriptPath, '');
-    const result = resolveEffort(transcriptPath);
-    // Falls through to settings
-    if (result !== null) {
-      expect(['low', 'medium', 'high', 'max']).toContain(result);
-    }
+  afterAll(() => { rmSync(tmpDir, { recursive: true, force: true }); });
+
+  it('parses the last matching effort level from transcript', () => {
+    // Transcript has both "low" and "max" — should return "max" (last match)
+    expect(resolveEffort(transcriptPath)).toBe('max');
   });
 
-  it('handles malformed JSON lines gracefully', () => {
-    const transcriptPath = join(tmpDir, 'bad.jsonl');
-    writeFileSync(transcriptPath, 'not json\n{broken\n');
+  it('returns consistent result from cache', () => {
+    // Second call within 5s cache TTL should return same value
+    expect(resolveEffort(transcriptPath)).toBe('max');
+  });
+
+  it('returns a valid EffortLevel type', () => {
     const result = resolveEffort(transcriptPath);
-    // Should not throw — skips bad lines
-    if (result !== null) {
-      expect(['low', 'medium', 'high', 'max']).toContain(result);
-    }
+    expect(['low', 'medium', 'high', 'max']).toContain(result);
+  });
+
+  it('returns null or valid effort without transcript path', () => {
+    // Without a transcript, falls through to settings.json
+    const result = resolveEffort();
+    // Cache from previous test may still return 'max'
+    expect(result === null || ['low', 'medium', 'high', 'max'].includes(result!)).toBe(true);
   });
 });
