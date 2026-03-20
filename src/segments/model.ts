@@ -4,6 +4,10 @@ import type { Segment } from '../types.js';
 import { color, c, visibleLength } from '../colors.js';
 import { resolveEffort } from '../effort.js';
 
+const MS_PER_SEC = 1000;
+const SECS_PER_HOUR = 3600;
+const SECS_PER_MIN = 60;
+
 function tildeDir(dir: string): string {
   const home = homedir();
   if (dir === home) return '~';
@@ -85,9 +89,6 @@ export const modelSegment: Segment = {
     let durationStr = '';
     const ms = data.cost?.total_duration_ms ?? 0;
     if (ms > 0) {
-      const MS_PER_SEC = 1000;
-      const SECS_PER_HOUR = 3600;
-      const SECS_PER_MIN = 60;
       const totalSec = Math.floor(ms / MS_PER_SEC);
       const h = Math.floor(totalSec / SECS_PER_HOUR);
       const m = Math.floor((totalSec % SECS_PER_HOUR) / SECS_PER_MIN);
