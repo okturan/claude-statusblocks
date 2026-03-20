@@ -23,7 +23,7 @@ function getGitInfo(cwd: string): typeof gitCache {
     }
     gitCache = { branch, staged, modified, added, removed, ts: now };
     return gitCache;
-  } catch { return null; }
+  } catch { /* not a git repo or git unavailable */ return null; }
 }
 
 export const gitSegment: Segment = {

@@ -71,65 +71,83 @@ function renderRow(group: RowGroup): string[] {
  * Rows are sorted by width ascending (pyramid shape).
  * Returns the best assignment as a row-index-per-block array, or null.
  */
-function findOptimalAssignment(
-  n: number, widths: number[], row1MaxWidth: number, maxRowWidth: number,
+export function findOptimalAssignment(
+  blockCount: number, blockWidths: number[], row1MaxWidth: number, maxRowWidth: number,
 ): number[] | null {
-  let bestAssign: number[] | null = null;
+  let bestAssignment: number[] | null = null;
   let bestScore = -Infinity;
 
-  const rowOf = new Array<number>(n);
-  const seen = new Array<boolean>(n);
-  const rowRW = new Array<number>(n);
+  // Reusable buffers to avoid per-iteration allocations
+  const blockRow = new Array<number>(blockCount);
+  const rowUsed = new Array<boolean>(blockCount);
+  const rowWidths = new Array<number>(blockCount);
 
-  for (let numRows = 1; numRows <= n; numRows++) {
-    const total = numRows ** n;
-    for (let assign = 0; assign < total; assign++) {
-      let v = assign;
-      for (let i = 0; i < n; i++) { rowOf[i] = v % numRows; v = Math.floor(v / numRows); }
+  for (let targetRows = 1; targetRows <= blockCount; targetRows++) {
+    const totalCombinations = targetRows ** blockCount;
 
-      seen.fill(false, 0, numRows);
-      for (let i = 0; i < n; i++) seen[rowOf[i]!] = true;
-      let allUsed = true;
-      for (let r = 0; r < numRows; r++) { if (!seen[r]) { allUsed = false; break; } }
-      if (!allUsed) continue;
-
-      // Compute row widths inline
-      for (let r = 0; r < numRows; r++) rowRW[r] = 0;
-      for (let i = 0; i < n; i++) rowRW[rowOf[i]!] += widths[i]! + BOX_CHROME;
-      for (let r = 0; r < numRows; r++) {
-        let count = 0;
-        for (let i = 0; i < n; i++) if (rowOf[i] === r) count++;
-        if (count > 1) rowRW[r] += (count - 1) * GAP;
+    for (let combo = 0; combo < totalCombinations; combo++) {
+      // Decode combo into per-block row assignments (base-targetRows digits)
+      let encoded = combo;
+      for (let block = 0; block < blockCount; block++) {
+        blockRow[block] = encoded % targetRows;
+        encoded = Math.floor(encoded / targetRows);
       }
 
-      // Sort rows by width ascending for pyramid validation
-      const rowOrder: number[] = [];
-      for (let r = 0; r < numRows; r++) rowOrder.push(r);
-      rowOrder.sort((a, b) => rowRW[a]! - rowRW[b]!);
+      // Verify all target rows are occupied
+      rowUsed.fill(false, 0, targetRows);
+      for (let block = 0; block < blockCount; block++) rowUsed[blockRow[block]!] = true;
+      let allRowsOccupied = true;
+      for (let row = 0; row < targetRows; row++) {
+        if (!rowUsed[row]) { allRowsOccupied = false; break; }
+      }
+      if (!allRowsOccupied) continue;
 
+      // Compute total width per row (block widths + chrome + gaps)
+      for (let row = 0; row < targetRows; row++) rowWidths[row] = 0;
+      for (let block = 0; block < blockCount; block++) {
+        rowWidths[blockRow[block]!] += blockWidths[block]! + BOX_CHROME;
+      }
+      for (let row = 0; row < targetRows; row++) {
+        let blocksInRow = 0;
+        for (let block = 0; block < blockCount; block++) {
+          if (blockRow[block] === row) blocksInRow++;
+        }
+        if (blocksInRow > 1) rowWidths[row] += (blocksInRow - 1) * GAP;
+      }
+
+      // Sort rows by width ascending (pyramid: narrowest on top)
+      const displayOrder: number[] = [];
+      for (let row = 0; row < targetRows; row++) displayOrder.push(row);
+      displayOrder.sort((a, b) => rowWidths[a]! - rowWidths[b]!);
+
+      // Validate: narrowest row (displayed first) uses tighter width limit
       let valid = true;
-      for (let i = 0; i < rowOrder.length; i++) {
-        if (rowRW[rowOrder[i]!]! > (i === 0 ? row1MaxWidth : maxRowWidth)) { valid = false; break; }
+      for (let pos = 0; pos < displayOrder.length; pos++) {
+        const widthLimit = pos === 0 ? row1MaxWidth : maxRowWidth;
+        if (rowWidths[displayOrder[pos]!]! > widthLimit) { valid = false; break; }
       }
       if (!valid) continue;
 
-      let maxRW = 0;
-      for (let r = 0; r < numRows; r++) if (rowRW[r]! > maxRW) maxRW = rowRW[r]!;
-      const score = -(numRows * 1e9) - (maxRW * 1e3);
+      // Score: fewer rows first, then smaller widest row
+      let widestRow = 0;
+      for (let row = 0; row < targetRows; row++) {
+        if (rowWidths[row]! > widestRow) widestRow = rowWidths[row]!;
+      }
+      const score = -(targetRows * 1e9) - (widestRow * 1e3);
 
       if (score > bestScore) {
         bestScore = score;
-        bestAssign = rowOf.slice(0, n);
+        bestAssignment = blockRow.slice(0, blockCount);
       }
     }
-    if (bestAssign) break;
+    if (bestAssignment) break;
   }
 
-  return bestAssign;
+  return bestAssignment;
 }
 
 /** Materialize a block-to-row assignment into sorted RowGroups */
-function materializeAssignment(
+export function materializeAssignment(
   bestAssign: number[], blocks: Block[], widths: number[],
 ): RowGroup[] {
   const n = blocks.length;

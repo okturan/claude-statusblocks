@@ -1,25 +1,25 @@
 {
   "version": 8,
   "created": "2026-03-20T17:37:28+00:00",
-  "updated": "2026-03-20T18:51:41+00:00",
+  "updated": "2026-03-20T19:06:04+00:00",
   "queue_order": [
-    "review::.::holistic::api_surface_coherence::allocwidth_unused_by_most_segments",
-    "review::.::holistic::contract_coherence::promo_double_call",
-    "review::.::holistic::cross_module_architecture::layout_dual_responsibility",
-    "review::.::holistic::design_coherence::model_gap_distribution",
-    "review::.::holistic::error_consistency::bare_catch_rationale",
-    "review::.::holistic::high_level_elegance::claude_md_test_claim_stale",
-    "review::.::holistic::logic_clarity::layout_row1_magic_offset",
     "review::.::holistic::logic_clarity::promo_contentwidth_misleading",
     "review::.::holistic::logic_clarity::weekend_negative_intermediate",
-    "review::.::holistic::low_level_elegance::findoptimal_dense_brute_force",
-    "review::.::holistic::low_level_elegance::model_line2_gap_arithmetic",
-    "review::.::holistic::naming_quality::reset_countdown_misleading",
-    "review::.::holistic::test_strategy::effort_tautological_tests",
-    "review::.::holistic::test_strategy::engine_test_superficial",
-    "review::.::holistic::test_strategy::no_findoptimal_unit_tests",
-    "review::.::holistic::type_safety::config_unsafe_cast",
-    "review::.::holistic::type_safety::stdin_unsafe_cast"
+    "review::.::holistic::api_surface_coherence::segment_allocwidth_unused",
+    "review::.::holistic::contract_coherence::promo_double_call_divergence",
+    "review::.::holistic::cross_module_architecture::layout_hardcoded_segment_imports",
+    "review::.::holistic::design_coherence::model_gap_distribution_still_open",
+    "review::.::holistic::design_coherence::systemic_magic_numbers",
+    "review::.::holistic::error_consistency::bare_catch_git_getinfo",
+    "review::.::holistic::high_level_elegance::claude_md_test_docs_stale",
+    "review::.::holistic::logic_clarity::layout_row1_offset",
+    "review::.::holistic::low_level_elegance::effort_nested_trycatch",
+    "review::.::holistic::low_level_elegance::findOptimalAssignment_opaque_loop",
+    "review::.::holistic::test_strategy::effort_tautological_assertions",
+    "review::.::holistic::test_strategy::engine_shallow_tests",
+    "review::.::holistic::test_strategy::layout_algorithm_untested",
+    "review::.::holistic::type_safety::config_json_unsafe_cast",
+    "review::.::holistic::type_safety::stdin_json_unsafe_cast"
   ],
   "deferred": [],
   "skipped": {},
@@ -301,11 +301,16 @@
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {},
+  "plan_start_scores": {
+    "strict": 85.4,
+    "overall": 86.0,
+    "objective": 92.3,
+    "verified": 92.3
+  },
   "refresh_state": {
     "lifecycle_phase": "review_initial",
-    "subjective_review_completed_at_scan_count": 11,
-    "postflight_scan_completed_at_scan_count": 12
+    "subjective_review_completed_at_scan_count": 14,
+    "postflight_scan_completed_at_scan_count": 13
   },
   "execution_log": [
     {
@@ -1114,6 +1119,138 @@
         "status": "fixed",
         "attestation": "I have actually Fixed: CLAUDE.md updated, resetCountdown renamed to formatResetTime, magic 5 extracted to ROW1_NOTIF_MARGIN constant and I am not gaming the score."
       }
+    },
+    {
+      "timestamp": "2026-03-20T18:51:42+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::logic_clarity::layout_unexplained_offset"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Fixed: CLAUDE.md updated, resetCountdown renamed to formatResetTime, magic 5 extracted to ROW1_NOTIF_MARGIN constant",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T18:59:34+00:00",
+      "action": "seed_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T18:59:34+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 13
+      }
+    },
+    {
+      "timestamp": "2026-03-20T19:06:04+00:00",
+      "action": "review_import_sync",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "trigger": "review_import",
+        "new_ids": [
+          "review::.::holistic::api_surface_coherence::segment_allocwidth_unused",
+          "review::.::holistic::contract_coherence::promo_double_call_divergence",
+          "review::.::holistic::cross_module_architecture::layout_hardcoded_segment_imports",
+          "review::.::holistic::design_coherence::model_gap_distribution_still_open",
+          "review::.::holistic::design_coherence::systemic_magic_numbers",
+          "review::.::holistic::error_consistency::bare_catch_git_getinfo",
+          "review::.::holistic::high_level_elegance::claude_md_test_docs_stale",
+          "review::.::holistic::logic_clarity::layout_row1_offset",
+          "review::.::holistic::logic_clarity::promo_contentwidth_misleading",
+          "review::.::holistic::logic_clarity::weekend_negative_intermediate",
+          "review::.::holistic::low_level_elegance::effort_nested_trycatch",
+          "review::.::holistic::low_level_elegance::findOptimalAssignment_opaque_loop",
+          "review::.::holistic::test_strategy::effort_tautological_assertions",
+          "review::.::holistic::test_strategy::engine_shallow_tests",
+          "review::.::holistic::test_strategy::layout_algorithm_untested",
+          "review::.::holistic::type_safety::config_json_unsafe_cast",
+          "review::.::holistic::type_safety::stdin_json_unsafe_cast"
+        ],
+        "added_to_queue": [
+          "review::.::holistic::api_surface_coherence::segment_allocwidth_unused",
+          "review::.::holistic::contract_coherence::promo_double_call_divergence",
+          "review::.::holistic::cross_module_architecture::layout_hardcoded_segment_imports",
+          "review::.::holistic::design_coherence::model_gap_distribution_still_open",
+          "review::.::holistic::design_coherence::systemic_magic_numbers",
+          "review::.::holistic::error_consistency::bare_catch_git_getinfo",
+          "review::.::holistic::high_level_elegance::claude_md_test_docs_stale",
+          "review::.::holistic::logic_clarity::layout_row1_offset",
+          "review::.::holistic::low_level_elegance::effort_nested_trycatch",
+          "review::.::holistic::low_level_elegance::findOptimalAssignment_opaque_loop",
+          "review::.::holistic::test_strategy::effort_tautological_assertions",
+          "review::.::holistic::test_strategy::engine_shallow_tests",
+          "review::.::holistic::test_strategy::layout_algorithm_untested",
+          "review::.::holistic::type_safety::config_json_unsafe_cast",
+          "review::.::holistic::type_safety::stdin_json_unsafe_cast"
+        ],
+        "workflow_injected_ids": [],
+        "triage_injected": false,
+        "triage_injected_ids": [],
+        "triage_deferred": false,
+        "diff_new": 15,
+        "diff_reopened": 0,
+        "diff_auto_resolved": 35,
+        "stale_pruned_from_queue": [
+          "review::.::holistic::api_surface_coherence::allocwidth_unused_by_most_segments",
+          "review::.::holistic::contract_coherence::promo_double_call",
+          "review::.::holistic::cross_module_architecture::layout_dual_responsibility",
+          "review::.::holistic::design_coherence::model_gap_distribution",
+          "review::.::holistic::error_consistency::bare_catch_rationale",
+          "review::.::holistic::high_level_elegance::claude_md_test_claim_stale",
+          "review::.::holistic::logic_clarity::layout_row1_magic_offset",
+          "review::.::holistic::low_level_elegance::findoptimal_dense_brute_force",
+          "review::.::holistic::low_level_elegance::model_line2_gap_arithmetic",
+          "review::.::holistic::naming_quality::reset_countdown_misleading",
+          "review::.::holistic::test_strategy::effort_tautological_tests",
+          "review::.::holistic::test_strategy::engine_test_superficial",
+          "review::.::holistic::test_strategy::no_findoptimal_unit_tests",
+          "review::.::holistic::type_safety::config_unsafe_cast",
+          "review::.::holistic::type_safety::stdin_unsafe_cast"
+        ],
+        "covered_subjective_pruned_from_queue": [],
+        "covered_subjective": [
+          "subjective::abstraction_fitness",
+          "subjective::ai_generated_debt",
+          "subjective::api_surface_coherence",
+          "subjective::authorization_consistency",
+          "subjective::contract_coherence",
+          "subjective::convention_outlier",
+          "subjective::cross_module_architecture",
+          "subjective::dependency_health",
+          "subjective::design_coherence",
+          "subjective::error_consistency",
+          "subjective::high_level_elegance",
+          "subjective::incomplete_migration",
+          "subjective::initialization_coupling",
+          "subjective::logic_clarity",
+          "subjective::low_level_elegance",
+          "subjective::mid_level_elegance",
+          "subjective::naming_quality",
+          "subjective::package_organization",
+          "subjective::test_strategy",
+          "subjective::type_safety"
+        ],
+        "stale_sync_injected": [],
+        "stale_sync_pruned": [],
+        "auto_cluster_changes": 0,
+        "import_scores_injected": [],
+        "import_scores_pruned": [],
+        "sync_status": "synced",
+        "sync_message": null
+      }
     }
   ],
   "epic_triage_meta": {},
@@ -1127,5 +1264,5 @@
     "review::.::holistic::mid_level_elegance::row1_magic_offset_in_layout"
   ],
   "commit_tracking_branch": null,
-  "scan_count_at_plan_start": 10
+  "scan_count_at_plan_start": 13
 }
