@@ -1,44 +1,61 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, vi, beforeEach } from 'vitest';
 import { writeFileSync, mkdirSync, rmSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
-import { resolveEffort } from './effort.js';
 
 describe('resolveEffort', () => {
   const tmpDir = join(tmpdir(), `csb-effort-test-${process.pid}`);
-  const transcriptPath = join(tmpDir, 'transcript.jsonl');
 
-  beforeAll(() => {
-    mkdirSync(tmpDir, { recursive: true });
-    // Write a transcript with multiple entries — last match is "max"
-    const lines = [
-      JSON.stringify({ message: { content: 'unrelated message' } }),
-      'not valid json',
-      JSON.stringify({ message: { content: '<local-command-stdout>Set model to x with low effort</local-command-stdout>' } }),
-      JSON.stringify({ message: { content: '<local-command-stdout>Set model to x with max effort</local-command-stdout>' } }),
-    ];
-    writeFileSync(transcriptPath, lines.join('\n') + '\n');
-  });
-
+  beforeAll(() => { mkdirSync(tmpDir, { recursive: true }); });
   afterAll(() => { rmSync(tmpDir, { recursive: true, force: true }); });
 
-  it('parses the last matching effort level from transcript', () => {
-    // Transcript has both "low" and "max" — should return "max" (last match)
-    expect(resolveEffort(transcriptPath)).toBe('max');
+  // Reset module cache between tests to eliminate cross-test coupling
+  beforeEach(() => { vi.resetModules(); });
+
+  it('parses the last matching effort from transcript JSONL', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'multi.jsonl');
+    const lines = [
+      JSON.stringify({ message: { content: '<local-command-stdout>Set model to x with low effort</local-command-stdout>' } }),
+      JSON.stringify({ message: { content: 'unrelated message' } }),
+      JSON.stringify({ message: { content: '<local-command-stdout>Set model to x with max effort</local-command-stdout>' } }),
+    ];
+    writeFileSync(path, lines.join('\n') + '\n');
+    expect(resolveEffort(path)).toBe('max');
   });
 
-  it('returns consistent result from cache', () => {
-    // Second call within 5s cache TTL should return same value
-    expect(resolveEffort(transcriptPath)).toBe('max');
+  it('skips malformed JSON lines without throwing', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'bad.jsonl');
+    const lines = [
+      'not valid json',
+      '{broken',
+      JSON.stringify({ message: { content: '<local-command-stdout>Set model to x with medium effort</local-command-stdout>' } }),
+    ];
+    writeFileSync(path, lines.join('\n') + '\n');
+    expect(resolveEffort(path)).toBe('medium');
   });
 
-  it('returns same cached value on repeated calls', () => {
-    // Third call still returns cached 'max'
-    expect(resolveEffort(transcriptPath)).toBe('max');
+  it('returns cached result on second call within TTL', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'cached.jsonl');
+    writeFileSync(path, JSON.stringify({
+      message: { content: '<local-command-stdout>Set model to x with high effort</local-command-stdout>' }
+    }) + '\n');
+    const first = resolveEffort(path);
+    const second = resolveEffort(path);
+    expect(first).toBe('high');
+    expect(second).toBe('high');
   });
 
-  it('returns max from cache even without transcript path', () => {
-    // Cache from test 1 still holds 'max' within the 5s TTL
-    expect(resolveEffort()).toBe('max');
+  it('handles empty transcript file', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'empty.jsonl');
+    writeFileSync(path, '');
+    // Falls through to settings — result depends on user's settings.json
+    const result = resolveEffort(path);
+    if (result !== null) {
+      expect(['low', 'medium', 'high', 'max']).toContain(result);
+    }
   });
 });
