@@ -1,8 +1,8 @@
 {
   "version": 3,
   "created": "2026-03-20T17:37:17+00:00",
-  "last_scan": "2026-03-20T19:47:44+00:00",
-  "scan_count": 21,
+  "last_scan": "2026-03-20T19:49:49+00:00",
+  "scan_count": 22,
   "overall_score": 87.8,
   "objective_score": 92.4,
   "strict_score": 87.2,
@@ -150,7 +150,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -544,7 +544,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -574,7 +574,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -604,7 +604,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -635,7 +635,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -672,7 +672,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -703,7 +703,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -734,7 +734,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -795,7 +795,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -828,7 +828,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -858,7 +858,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -900,7 +900,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -934,7 +934,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -968,7 +968,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1002,7 +1002,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1036,7 +1036,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1070,7 +1070,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1104,7 +1104,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1138,7 +1138,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1172,7 +1172,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1206,7 +1206,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1240,7 +1240,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1274,7 +1274,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1308,7 +1308,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1342,7 +1342,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1376,7 +1376,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1410,7 +1410,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1444,7 +1444,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1478,7 +1478,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1512,7 +1512,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1546,7 +1546,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T19:47:44+00:00",
+        "scan_verified_at": "2026-03-20T19:49:49+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -3608,7 +3608,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3617,7 +3617,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T19:47:44+00:00",
+      "suppressed_at": "2026-03-20T19:49:49+00:00",
       "suppression_pattern": "test_coverage::src/index.ts"
     },
     "test_coverage::src/campaigns/engine.ts::transitive_only": {
@@ -3664,7 +3664,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3673,7 +3673,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T19:47:44+00:00",
+      "suppressed_at": "2026-03-20T19:49:49+00:00",
       "suppression_pattern": "test_coverage::src/campaigns/data.ts"
     },
     "test_coverage::src/config.ts::untested_module": {
@@ -3720,7 +3720,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3729,7 +3729,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T19:47:44+00:00",
+      "suppressed_at": "2026-03-20T19:49:49+00:00",
       "suppression_pattern": "test_coverage::src/cli.ts"
     },
     "test_coverage::src/segments/git.ts::transitive_only": {
@@ -3748,7 +3748,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3757,7 +3757,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T19:47:44+00:00",
+      "suppressed_at": "2026-03-20T19:49:49+00:00",
       "suppression_pattern": "test_coverage::src/segments/git.ts"
     },
     "test_coverage::src/layout.ts::shallow::layout.test.ts": {
@@ -3994,7 +3994,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4031,7 +4031,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4061,7 +4061,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4091,7 +4091,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4873,7 +4873,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:51:03+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4901,7 +4901,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:51:03+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4927,7 +4927,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:51:03+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5958,7 +5958,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T19:27:23+00:00",
-      "last_seen": "2026-03-20T19:47:44+00:00",
+      "last_seen": "2026-03-20T19:49:49+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -6265,7 +6265,7 @@
         }
       },
       "warnings": [],
-      "updated_at": "2026-03-20T19:47:44+00:00"
+      "updated_at": "2026-03-20T19:49:49+00:00"
     }
   },
   "score_confidence": {
@@ -6409,135 +6409,6 @@
     }
   },
   "scan_history": [
-    {
-      "timestamp": "2026-03-20T17:46:51+00:00",
-      "lang": "typescript",
-      "strict_score": 14.8,
-      "verified_strict_score": 59.1,
-      "objective_score": 59.1,
-      "overall_score": 14.8,
-      "open": 48,
-      "diff_new": 1,
-      "diff_resolved": 0,
-      "ignored": 0,
-      "raw_issues": 48,
-      "suppressed_pct": 0.0,
-      "ignore_patterns": 0,
-      "subjective_integrity": {
-        "status": "pass",
-        "matched_count": 0,
-        "reset_count": 0,
-        "target_score": 95.0
-      },
-      "score_confidence": {
-        "status": "full",
-        "confidence": 1.0,
-        "detector_count": 0,
-        "dimension_count": 0
-      },
-      "dimension_scores": {
-        "Code quality": {
-          "score": 91.0,
-          "strict": 91.0
-        },
-        "Security": {
-          "score": 100.0,
-          "strict": 100.0
-        },
-        "File health": {
-          "score": 100.0,
-          "strict": 100.0
-        },
-        "Duplication": {
-          "score": 100.0,
-          "strict": 100.0
-        },
-        "Test health": {
-          "score": 0.2,
-          "strict": 0.2
-        },
-        "Abstraction fit": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "AI generated debt": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "API coherence": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Auth consistency": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Contracts": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Convention drift": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Cross-module arch": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Dep health": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Design coherence": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Error consistency": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "High elegance": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Stale migration": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Init coupling": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Logic clarity": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Low elegance": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Mid elegance": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Naming quality": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Structure nav": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Test strategy": {
-          "score": 0.0,
-          "strict": 0.0
-        },
-        "Type safety": {
-          "score": 0.0,
-          "strict": 0.0
-        }
-      }
-    },
     {
       "timestamp": "2026-03-20T17:47:01+00:00",
       "lang": "typescript",
@@ -8988,13 +8859,142 @@
           "strict": 78.0
         }
       }
+    },
+    {
+      "timestamp": "2026-03-20T19:49:49+00:00",
+      "lang": "typescript",
+      "strict_score": 87.2,
+      "verified_strict_score": 92.4,
+      "objective_score": 92.4,
+      "overall_score": 87.8,
+      "open": 37,
+      "diff_new": 0,
+      "diff_resolved": 20,
+      "ignored": 4,
+      "raw_issues": 23,
+      "suppressed_pct": 17.4,
+      "ignore_patterns": 16,
+      "subjective_integrity": {
+        "status": "penalized",
+        "matched_count": 2,
+        "reset_count": 2,
+        "target_score": 95.0
+      },
+      "score_confidence": {
+        "status": "full",
+        "confidence": 1.0,
+        "detector_count": 0,
+        "dimension_count": 0
+      },
+      "dimension_scores": {
+        "Code quality": {
+          "score": 91.9,
+          "strict": 91.9
+        },
+        "Security": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "File health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Duplication": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Test health": {
+          "score": 86.4,
+          "strict": 79.9
+        },
+        "Abstraction fit": {
+          "score": 94.0,
+          "strict": 94.0
+        },
+        "AI generated debt": {
+          "score": 93.0,
+          "strict": 93.0
+        },
+        "API coherence": {
+          "score": 88.0,
+          "strict": 88.0
+        },
+        "Auth consistency": {
+          "score": 0.0,
+          "strict": 0.0
+        },
+        "Contracts": {
+          "score": 86.0,
+          "strict": 86.0
+        },
+        "Convention drift": {
+          "score": 93.0,
+          "strict": 93.0
+        },
+        "Cross-module arch": {
+          "score": 88.5,
+          "strict": 88.5
+        },
+        "Dep health": {
+          "score": 96.0,
+          "strict": 96.0
+        },
+        "Design coherence": {
+          "score": 85.0,
+          "strict": 85.0
+        },
+        "Error consistency": {
+          "score": 82.0,
+          "strict": 82.0
+        },
+        "High elegance": {
+          "score": 92.0,
+          "strict": 92.0
+        },
+        "Stale migration": {
+          "score": 0.0,
+          "strict": 0.0
+        },
+        "Init coupling": {
+          "score": 87.0,
+          "strict": 87.0
+        },
+        "Logic clarity": {
+          "score": 87.0,
+          "strict": 87.0
+        },
+        "Low elegance": {
+          "score": 83.0,
+          "strict": 83.0
+        },
+        "Mid elegance": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "Naming quality": {
+          "score": 91.5,
+          "strict": 91.5
+        },
+        "Structure nav": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "Test strategy": {
+          "score": 68.0,
+          "strict": 68.0
+        },
+        "Type safety": {
+          "score": 78.0,
+          "strict": 78.0
+        }
+      }
     }
   ],
   "review_cache": {
     "detectors": {
       "boilerplate": {
         "version": 1,
-        "fingerprint": "549e3ecd2a0332b3250ca72eb636ef8dff8c1c0b",
+        "fingerprint": "340c10ebfd9cad5cb09c6af7cad633b0f8f5142d",
         "entries": [
           {
             "id": "fd7d626bfe08facc",
@@ -10566,7 +10566,7 @@
       },
       "security": {
         "version": 1,
-        "fingerprint": "16442518ba9a9de03fac1f19ee84a063c408566d",
+        "fingerprint": "4abdc6fba047be1dd88d47e357494c10b8c001ed",
         "entries": [],
         "files_scanned": 14,
         "coverage": null
@@ -10764,7 +10764,7 @@
   "codebase_metrics": {
     "typescript": {
       "total_files": 21,
-      "total_loc": 1548,
+      "total_loc": 1537,
       "total_directories": 4
     }
   },
@@ -11342,7 +11342,7 @@
   "reminder_history": {
     "auto_fixers_available": 3,
     "dry_run_first": 3,
-    "report_scores": 14,
+    "report_scores": 15,
     "feedback_nudge": 3,
     "review_issues_pending": 3,
     "stagnant_nudge": 4,

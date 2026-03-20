@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-03-20T17:37:28+00:00",
-  "updated": "2026-03-20T19:47:29+00:00",
+  "updated": "2026-03-20T19:47:45+00:00",
   "queue_order": [
     "review::.::holistic::design_coherence::model_render_variable_density",
     "review::.::holistic::api_surface_coherence::alloc_width_unused",
@@ -296,16 +296,11 @@
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {
-    "strict": 86.3,
-    "overall": 86.9,
-    "objective": 92.4,
-    "verified": 92.4
-  },
+  "plan_start_scores": {},
   "refresh_state": {
     "lifecycle_phase": "review_initial",
     "subjective_review_completed_at_scan_count": 20,
-    "postflight_scan_completed_at_scan_count": 19
+    "postflight_scan_completed_at_scan_count": 21
   },
   "execution_log": [
     {
@@ -1586,6 +1581,26 @@
         "import_scores_pruned": [],
         "sync_status": "synced",
         "sync_message": null
+      }
+    },
+    {
+      "timestamp": "2026-03-20T19:47:45+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T19:47:45+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 21
       }
     }
   ],

@@ -391,11 +391,11 @@
         "src/layout.ts": 3,
         "src/config.ts": 3,
         "src/campaigns/engine.ts": 2,
+        "src/effort.ts": 2,
         "src/segments/context.ts": 2,
         "src/segments/model.ts": 2,
         "src/segments/usage.ts": 2,
-        "src/campaigns/data.ts": 1,
-        "src/effort.ts": 1
+        "src/campaigns/data.ts": 1
       }
     },
     "coupling": {},
@@ -513,8 +513,8 @@
             "layout.ts",
             "types.ts"
           ],
-          "total_loc": 561,
-          "avg_fan_in": 4.3,
+          "total_loc": 564,
+          "avg_fan_in": 4.4,
           "avg_fan_out": 2.1,
           "zones": {
             "production": 7
@@ -560,7 +560,7 @@
     },
     "codebase_stats": {
       "total_files": 14,
-      "total_loc": 999
+      "total_loc": 1002
     },
     "authorization": {},
     "ai_debt_signals": {},
@@ -724,11 +724,11 @@
         "src/layout.ts": 3,
         "src/config.ts": 3,
         "src/campaigns/engine.ts": 2,
+        "src/effort.ts": 2,
         "src/segments/context.ts": 2,
         "src/segments/model.ts": 2,
         "src/segments/usage.ts": 2,
         "src/campaigns/data.ts": 1,
-        "src/effort.ts": 1,
         "src/segments/git.ts": 1,
         "src/segments/promo.ts": 1
       }
@@ -804,7 +804,7 @@
     },
     "codebase_stats": {
       "total_files": 14,
-      "total_loc": 999,
+      "total_loc": 1002,
       "avg_file_loc": 71
     },
     "sibling_conventions": {
@@ -858,27 +858,27 @@
   },
   "historical_review_issues": {
     "summary": {
-      "total_review_issues": 90,
-      "open_review_issues": 13,
+      "total_review_issues": 98,
+      "open_review_issues": 12,
       "status_counts": {
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 77,
-        "open": 13,
+        "fixed": 86,
+        "open": 12,
         "triaged_out": 0,
         "wontfix": 0
       },
       "dimension_open_counts": {
         "test_strategy": 3,
         "low_level_elegance": 2,
-        "type_safety": 2,
         "api_surface_coherence": 1,
         "contract_coherence": 1,
         "cross_module_architecture": 1,
         "design_coherence": 1,
         "error_consistency": 1,
-        "logic_clarity": 1
+        "logic_clarity": 1,
+        "type_safety": 1
       }
     },
     "recent_issues": [
@@ -892,8 +892,143 @@
         ],
         "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
         "confidence": "low",
-        "first_seen": "2026-03-20T18:11:31+00:00",
-        "last_seen": "2026-03-20T19:27:12+00:00"
+        "first_seen": "2026-03-20T19:06:04+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "open",
+        "summary": "effort.test.ts has tautological assertions that accept any return value and never fail",
+        "suggestion": "Mock readFileSync or use vi.spyOn to control file system reads. Test specific scenarios: (1) no transcript, no settings -> null, (2) transcript with effort line -> correct level, (3) settings with...",
+        "related_files": [
+          "src/effort.test.ts"
+        ],
+        "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
+        "confidence": "high",
+        "first_seen": "2026-03-20T19:06:04+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "contract_coherence",
+        "status": "open",
+        "summary": "promoSegment.enabled() and render() both call getActiveCampaign() independently, risking state divergence",
+        "suggestion": "This was previously reported and remains open. The practical risk is minimal since campaign transitions occur at hour boundaries and the calls are milliseconds apart. If it is to be fixed, cache th...",
+        "related_files": [
+          "src/segments/promo.ts"
+        ],
+        "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
+        "confidence": "low",
+        "first_seen": "2026-03-20T19:06:04+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "design_coherence",
+        "status": "open",
+        "summary": "model.ts render() still has high local variable density despite spreadLine() extraction",
+        "suggestion": "The spreadLine() extraction already addressed the most complex part. The remaining variables are mostly sequential computations for line1 and line2 that flow linearly. No further extraction would r...",
+        "related_files": [
+          "src/segments/model.ts"
+        ],
+        "note": "",
+        "confidence": "low",
+        "first_seen": "2026-03-20T19:27:12+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "error_consistency",
+        "status": "open",
+        "summary": "Catch blocks inconsistently document their rationale -- git.ts line 27 has bare catch",
+        "suggestion": "Add a brief rationale comment to git.ts line 27: catch { /* not a git repo or git unavailable */ return null; }",
+        "related_files": [
+          "src/segments/git.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T19:47:29+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "low_level_elegance",
+        "status": "open",
+        "summary": "findOptimalAssignment uses dense brute-force iteration with single-letter variables across 55 lines",
+        "suggestion": "Add a 2-line comment above line 136 explaining the scoring formula: 'Score penalizes more rows heavily (-1e9 per row) and wider rows lightly (-1e3 per pixel), so fewer rows always win over narrower...",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "note": "",
+        "confidence": "low",
+        "first_seen": "2026-03-20T19:47:29+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "low_level_elegance",
+        "status": "open",
+        "summary": "resolveEffort has 3 levels of nested try-catch creating unnecessary depth",
+        "suggestion": "The inner JSON.parse try-catch on line 27 is necessary per-line, but the two source blocks could each be extracted into small helpers like readEffortFromTranscript(path) and readEffortFromSettings(...",
+        "related_files": [
+          "src/effort.ts"
+        ],
+        "note": "",
+        "confidence": "low",
+        "first_seen": "2026-03-20T19:47:29+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "open",
+        "summary": "Campaign engine's timezone-aware date arithmetic lacks peak boundary edge case tests",
+        "suggestion": "Add tests for exact boundary timestamps: exactly at peak start (08:00:00 ET), exactly at peak end (14:00:00 ET), and Friday at 14:00:00 ET to verify the weekend transition.",
+        "related_files": [
+          "src/campaigns/engine.test.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T19:47:29+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "open",
+        "summary": "cli.ts (92 LOC) has zero test coverage for init, preview, and help commands",
+        "suggestion": "Add basic tests for preview (verify it produces output without throwing) and help (verify it contains expected keywords). init() is harder to test without mocking fs, but at minimum test that it re...",
+        "related_files": [
+          "src/cli.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T19:47:29+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "api_surface_coherence",
+        "status": "open",
+        "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
+        "suggestion": "This is a pragmatic interface design for a 5-segment codebase -- making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments a...",
+        "related_files": [
+          "src/types.ts",
+          "src/segments/model.ts",
+          "src/segments/context.ts",
+          "src/segments/promo.ts",
+          "src/segments/git.ts",
+          "src/segments/usage.ts"
+        ],
+        "note": "",
+        "confidence": "low",
+        "first_seen": "2026-03-20T19:47:29+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "logic_clarity",
+        "status": "open",
+        "summary": "layout.ts applies an additional 5-char offset for row 1 beyond the existing INK_PADDING",
+        "suggestion": "Expand the comment to explain the mechanism: '// Row 1 overlaps with Claude Code's notification/status badge in the top-right corner; subsequent rows render below it and don't need the extra cleara...",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T19:47:29+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
       },
       {
         "dimension": "type_safety",
@@ -903,14 +1038,40 @@
         "related_files": [
           "src/index.ts"
         ],
-        "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T19:47:29+00:00",
+        "last_seen": "2026-03-20T19:47:29+00:00"
+      },
+      {
+        "dimension": "cross_module_architecture",
+        "status": "fixed",
+        "summary": "layout.ts hardcodes all segment imports -- adding a segment requires editing layout.ts",
+        "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern...",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "note": "",
+        "confidence": "low",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T19:27:12+00:00"
+      },
+      {
+        "dimension": "type_safety",
+        "status": "fixed",
+        "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
+        "suggestion": "Expand the guard on lines 15-17 to validate the fields that segments actually access: if (!parsed?.model?.display_name || !parsed?.context_window || !parsed?.workspace?.current_dir || !parsed?.vers...",
+        "related_files": [
+          "src/index.ts"
+        ],
+        "note": "",
         "confidence": "medium",
         "first_seen": "2026-03-20T18:11:31+00:00",
         "last_seen": "2026-03-20T19:27:12+00:00"
       },
       {
         "dimension": "api_surface_coherence",
-        "status": "open",
+        "status": "fixed",
         "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
         "suggestion": "This is a pragmatic interface design for a 5-segment codebase \u2014 making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments ar...",
         "related_files": [
@@ -921,7 +1082,7 @@
           "src/segments/git.ts",
           "src/segments/usage.ts"
         ],
-        "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
+        "note": "",
         "confidence": "low",
         "first_seen": "2026-03-20T18:50:43+00:00",
         "last_seen": "2026-03-20T19:27:12+00:00"
@@ -972,7 +1133,7 @@
       },
       {
         "dimension": "error_consistency",
-        "status": "open",
+        "status": "fixed",
         "summary": "Catch blocks inconsistently document their rationale -- git.ts line 26 has bare catch",
         "suggestion": "Add a brief rationale comment to git.ts line 26: catch { /* not a git repo or git unavailable */ return null; }",
         "related_files": [
@@ -985,7 +1146,7 @@
       },
       {
         "dimension": "low_level_elegance",
-        "status": "open",
+        "status": "fixed",
         "summary": "findOptimalAssignment uses dense brute-force iteration with single-letter variables across 55 lines",
         "suggestion": "Add a 2-line comment above line 136 explaining the scoring formula: 'Score penalizes more rows heavily (-1e9 per row) and wider rows lightly (-1e3 per pixel), so fewer rows always win over narrower...",
         "related_files": [
@@ -998,7 +1159,7 @@
       },
       {
         "dimension": "low_level_elegance",
-        "status": "open",
+        "status": "fixed",
         "summary": "resolveEffort has 3 levels of nested try-catch creating unnecessary depth",
         "suggestion": "The inner JSON.parse try-catch on line 27 is necessary per-line, but the two source blocks (transcript and settings) could each be extracted into small helpers like readEffortFromTranscript(path) a...",
         "related_files": [
@@ -1011,7 +1172,7 @@
       },
       {
         "dimension": "test_strategy",
-        "status": "open",
+        "status": "fixed",
         "summary": "effort.test.ts has tautological assertions that accept any return value and never fail",
         "suggestion": "Mock readFileSync or use vi.spyOn to control file system reads. Test specific scenarios: (1) no transcript, no settings -> null, (2) transcript with effort line -> correct level, (3) settings with...",
         "related_files": [
@@ -1024,7 +1185,7 @@
       },
       {
         "dimension": "test_strategy",
-        "status": "open",
+        "status": "fixed",
         "summary": "Campaign engine's timezone-aware date arithmetic has only 1 pinned-timestamp test out of 6",
         "suggestion": "This issue has been substantially resolved. The remaining improvement would be to test edge cases: exactly at peak boundary (08:00:00 ET), exactly at peak end (14:00:00 ET), and Friday after peak t...",
         "related_files": [
@@ -1037,7 +1198,7 @@
       },
       {
         "dimension": "test_strategy",
-        "status": "open",
+        "status": "fixed",
         "summary": "Combinatorial layout assignment algorithm tested only indirectly through render()",
         "suggestion": "This issue has been resolved \u2014 findOptimalAssignment and materializeAssignment are now exported and directly unit tested with 8 targeted tests.",
         "related_files": [
@@ -1049,21 +1210,8 @@
         "last_seen": "2026-03-20T19:27:12+00:00"
       },
       {
-        "dimension": "design_coherence",
-        "status": "open",
-        "summary": "model.ts render() still has high local variable density despite spreadLine() extraction",
-        "suggestion": "The spreadLine() extraction already addressed the most complex part. The remaining variables are mostly sequential computations for line1 and line2 that flow linearly. No further extraction would r...",
-        "related_files": [
-          "src/segments/model.ts"
-        ],
-        "note": "",
-        "confidence": "low",
-        "first_seen": "2026-03-20T19:27:12+00:00",
-        "last_seen": "2026-03-20T19:27:12+00:00"
-      },
-      {
         "dimension": "contract_coherence",
-        "status": "open",
+        "status": "fixed",
         "summary": "promoSegment.enabled() and render() both call getActiveCampaign() independently, risking state divergence",
         "suggestion": "This was previously reported and remains open. The practical risk is minimal since campaign transitions occur at hour boundaries and the calls are milliseconds apart. If it is to be fixed, cache th...",
         "related_files": [
@@ -1076,7 +1224,7 @@
       },
       {
         "dimension": "logic_clarity",
-        "status": "open",
+        "status": "fixed",
         "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
         "suggestion": "Expand the comment to explain the mechanism: '// Row 1 overlaps with Claude Code's notification/status badge in the top-right corner; subsequent rows render below it and don't need the extra cleara...",
         "related_files": [
@@ -1089,7 +1237,7 @@
       },
       {
         "dimension": "type_safety",
-        "status": "open",
+        "status": "fixed",
         "summary": "Config file JSON.parse result cast to StatusBlocksConfig without shape validation",
         "suggestion": "Add shape validation after the cast: if (config.segments && !Array.isArray(config.segments)) delete config.segments; if (config.theme && !VALID_THEMES.has(config.theme)) delete config.theme; This a...",
         "related_files": [
@@ -1099,19 +1247,6 @@
         "confidence": "medium",
         "first_seen": "2026-03-20T19:27:12+00:00",
         "last_seen": "2026-03-20T19:27:12+00:00"
-      },
-      {
-        "dimension": "cross_module_architecture",
-        "status": "fixed",
-        "summary": "layout.ts hardcodes all segment imports -- adding a segment requires editing layout.ts",
-        "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern...",
-        "related_files": [
-          "src/layout.ts"
-        ],
-        "note": "",
-        "confidence": "low",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
       },
       {
         "dimension": "high_level_elegance",
@@ -1152,143 +1287,6 @@
         "confidence": "low",
         "first_seen": "2026-03-20T19:06:04+00:00",
         "last_seen": "2026-03-20T19:06:04+00:00"
-      },
-      {
-        "dimension": "low_level_elegance",
-        "status": "fixed",
-        "summary": "resolveEffort has 3 levels of nested try-catch creating unnecessary depth",
-        "suggestion": "The inner JSON.parse try-catch on line 27 is necessary per-line, but the two source blocks (transcript and settings) could each be extracted into small helpers like readEffortFromTranscript(path) a...",
-        "related_files": [
-          "src/effort.ts"
-        ],
-        "note": "",
-        "confidence": "low",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
-      },
-      {
-        "dimension": "test_strategy",
-        "status": "fixed",
-        "summary": "effort.test.ts has tautological assertions that accept any return value and never fail",
-        "suggestion": "Mock readFileSync or use vi.spyOn to control file system reads. Test specific scenarios: (1) no transcript, no settings -> null, (2) transcript with effort line -> correct level, (3) settings with...",
-        "related_files": [
-          "src/effort.test.ts"
-        ],
-        "note": "",
-        "confidence": "high",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
-      },
-      {
-        "dimension": "test_strategy",
-        "status": "fixed",
-        "summary": "Campaign engine's timezone-aware date arithmetic has only 1 pinned-timestamp test out of 6",
-        "suggestion": "Write targeted tests using vi.useFakeTimers() to pin Date.now() at: weekday 10am ET (expect active-normal), weekday 6pm ET (expect active-boosted), weekday 7am ET before peak (expect active-boosted...",
-        "related_files": [
-          "src/campaigns/engine.test.ts",
-          "src/campaigns/engine.ts"
-        ],
-        "note": "",
-        "confidence": "high",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
-      },
-      {
-        "dimension": "test_strategy",
-        "status": "fixed",
-        "summary": "Combinatorial layout assignment algorithm tested only indirectly through render()",
-        "suggestion": "Export findOptimalAssignment (or test through a thin wrapper) and add unit tests with known block widths: (1) single block returns [0], (2) two blocks fitting one row return same-row assignment, (3...",
-        "related_files": [
-          "src/layout.test.ts",
-          "src/layout.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
-      },
-      {
-        "dimension": "api_surface_coherence",
-        "status": "fixed",
-        "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
-        "suggestion": "This is a pragmatic interface design for a 5-segment codebase -- making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments a...",
-        "related_files": [
-          "src/types.ts",
-          "src/segments/model.ts",
-          "src/segments/context.ts",
-          "src/segments/promo.ts",
-          "src/segments/git.ts",
-          "src/segments/usage.ts"
-        ],
-        "note": "",
-        "confidence": "low",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
-      },
-      {
-        "dimension": "design_coherence",
-        "status": "fixed",
-        "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution across effort/duration/version",
-        "suggestion": "This issue was addressed by the spreadLine() extraction. The remaining local variables (nameStyled, sep, nameLen, dirBudget, tilde, dir, effort, effortStr, durationStr, ms, totalSec, h, m, versionS...",
-        "related_files": [
-          "src/segments/model.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
-      },
-      {
-        "dimension": "contract_coherence",
-        "status": "fixed",
-        "summary": "promoSegment.enabled() and render() both call getActiveCampaign() independently, risking state divergence",
-        "suggestion": "This was previously reported and remains open. The practical risk is minimal since campaign transitions occur at hour boundaries and the calls are milliseconds apart. If it is to be fixed, cache th...",
-        "related_files": [
-          "src/segments/promo.ts"
-        ],
-        "note": "",
-        "confidence": "low",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
-      },
-      {
-        "dimension": "logic_clarity",
-        "status": "fixed",
-        "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
-        "suggestion": "Expand the comment to explain the mechanism: '// Row 1 overlaps with Claude Code's notification/status badge in the top-right corner; subsequent rows render below it and don't need the extra cleara...",
-        "related_files": [
-          "src/layout.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
-      },
-      {
-        "dimension": "type_safety",
-        "status": "fixed",
-        "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
-        "suggestion": "Expand the guard on lines 15-17 to validate the fields that segments actually access: if (!parsed?.model?.display_name || !parsed?.context_window || !parsed?.workspace?.current_dir || !parsed?.vers...",
-        "related_files": [
-          "src/index.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
-      },
-      {
-        "dimension": "type_safety",
-        "status": "fixed",
-        "summary": "Config file JSON.parse result cast to StatusBlocksConfig without shape validation",
-        "suggestion": "Add shape validation after the cast: if (config.segments && !Array.isArray(config.segments)) delete config.segments; if (config.theme && !VALID_THEMES.has(config.theme)) delete config.theme; This a...",
-        "related_files": [
-          "src/config.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T19:06:04+00:00",
-        "last_seen": "2026-03-20T19:06:04+00:00"
       }
     ]
   },
@@ -1317,8 +1315,8 @@
             ],
             "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
             "confidence": "low",
-            "first_seen": "2026-03-20T18:11:31+00:00",
-            "last_seen": "2026-03-20T19:27:12+00:00"
+            "first_seen": "2026-03-20T19:06:04+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
           },
           {
             "dimension": "cross_module_architecture",
@@ -1330,8 +1328,8 @@
             ],
             "note": "",
             "confidence": "low",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T19:27:12+00:00"
           }
         ]
       }
@@ -1395,11 +1393,24 @@
           "error_consistency"
         ],
         "max_items": 20,
-        "selected_count": 2,
+        "selected_count": 3,
         "issues": [
           {
             "dimension": "error_consistency",
             "status": "open",
+            "summary": "Catch blocks inconsistently document their rationale -- git.ts line 27 has bare catch",
+            "suggestion": "Add a brief rationale comment to git.ts line 27: catch { /* not a git repo or git unavailable */ return null; }",
+            "related_files": [
+              "src/segments/git.ts"
+            ],
+            "note": "",
+            "confidence": "medium",
+            "first_seen": "2026-03-20T19:47:29+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
+          },
+          {
+            "dimension": "error_consistency",
+            "status": "fixed",
             "summary": "Catch blocks inconsistently document their rationale -- git.ts line 26 has bare catch",
             "suggestion": "Add a brief rationale comment to git.ts line 26: catch { /* not a git repo or git unavailable */ return null; }",
             "related_files": [
@@ -1489,11 +1500,37 @@
           "low_level_elegance"
         ],
         "max_items": 20,
-        "selected_count": 4,
+        "selected_count": 5,
         "issues": [
           {
             "dimension": "low_level_elegance",
             "status": "open",
+            "summary": "findOptimalAssignment uses dense brute-force iteration with single-letter variables across 55 lines",
+            "suggestion": "Add a 2-line comment above line 136 explaining the scoring formula: 'Score penalizes more rows heavily (-1e9 per row) and wider rows lightly (-1e3 per pixel), so fewer rows always win over narrower...",
+            "related_files": [
+              "src/layout.ts"
+            ],
+            "note": "",
+            "confidence": "low",
+            "first_seen": "2026-03-20T19:47:29+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
+          },
+          {
+            "dimension": "low_level_elegance",
+            "status": "open",
+            "summary": "resolveEffort has 3 levels of nested try-catch creating unnecessary depth",
+            "suggestion": "The inner JSON.parse try-catch on line 27 is necessary per-line, but the two source blocks could each be extracted into small helpers like readEffortFromTranscript(path) and readEffortFromSettings(...",
+            "related_files": [
+              "src/effort.ts"
+            ],
+            "note": "",
+            "confidence": "low",
+            "first_seen": "2026-03-20T19:47:29+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
+          },
+          {
+            "dimension": "low_level_elegance",
+            "status": "fixed",
             "summary": "findOptimalAssignment uses dense brute-force iteration with single-letter variables across 55 lines",
             "suggestion": "Add a 2-line comment above line 136 explaining the scoring formula: 'Score penalizes more rows heavily (-1e9 per row) and wider rows lightly (-1e3 per pixel), so fewer rows always win over narrower...",
             "related_files": [
@@ -1506,7 +1543,7 @@
           },
           {
             "dimension": "low_level_elegance",
-            "status": "open",
+            "status": "fixed",
             "summary": "resolveEffort has 3 levels of nested try-catch creating unnecessary depth",
             "suggestion": "The inner JSON.parse try-catch on line 27 is necessary per-line, but the two source blocks (transcript and settings) could each be extracted into small helpers like readEffortFromTranscript(path) a...",
             "related_files": [
@@ -1524,19 +1561,6 @@
             "suggestion": "Add a 2-line comment above the score computation (line 118) explaining the scoring formula: 'Score penalizes more rows heavily (-1e9 per row) and wider rows lightly (-1e3 per pixel), so fewer rows...",
             "related_files": [
               "src/layout.ts"
-            ],
-            "note": "",
-            "confidence": "low",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
-          },
-          {
-            "dimension": "low_level_elegance",
-            "status": "fixed",
-            "summary": "resolveEffort has 3 levels of nested try-catch creating unnecessary depth",
-            "suggestion": "The inner JSON.parse try-catch on line 27 is necessary per-line, but the two source blocks (transcript and settings) could each be extracted into small helpers like readEffortFromTranscript(path) a...",
-            "related_files": [
-              "src/effort.ts"
             ],
             "note": "",
             "confidence": "low",
@@ -1585,6 +1609,41 @@
             "summary": "effort.test.ts has tautological assertions that accept any return value and never fail",
             "suggestion": "Mock readFileSync or use vi.spyOn to control file system reads. Test specific scenarios: (1) no transcript, no settings -> null, (2) transcript with effort line -> correct level, (3) settings with...",
             "related_files": [],
+            "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
+            "confidence": "high",
+            "first_seen": "2026-03-20T19:06:04+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
+          },
+          {
+            "dimension": "test_strategy",
+            "status": "open",
+            "summary": "Campaign engine's timezone-aware date arithmetic lacks peak boundary edge case tests",
+            "suggestion": "Add tests for exact boundary timestamps: exactly at peak start (08:00:00 ET), exactly at peak end (14:00:00 ET), and Friday at 14:00:00 ET to verify the weekend transition.",
+            "related_files": [],
+            "note": "",
+            "confidence": "medium",
+            "first_seen": "2026-03-20T19:47:29+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
+          },
+          {
+            "dimension": "test_strategy",
+            "status": "open",
+            "summary": "cli.ts (92 LOC) has zero test coverage for init, preview, and help commands",
+            "suggestion": "Add basic tests for preview (verify it produces output without throwing) and help (verify it contains expected keywords). init() is harder to test without mocking fs, but at minimum test that it re...",
+            "related_files": [
+              "src/cli.ts"
+            ],
+            "note": "",
+            "confidence": "medium",
+            "first_seen": "2026-03-20T19:47:29+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
+          },
+          {
+            "dimension": "test_strategy",
+            "status": "fixed",
+            "summary": "effort.test.ts has tautological assertions that accept any return value and never fail",
+            "suggestion": "Mock readFileSync or use vi.spyOn to control file system reads. Test specific scenarios: (1) no transcript, no settings -> null, (2) transcript with effort line -> correct level, (3) settings with...",
+            "related_files": [],
             "note": "",
             "confidence": "high",
             "first_seen": "2026-03-20T19:27:12+00:00",
@@ -1592,7 +1651,7 @@
           },
           {
             "dimension": "test_strategy",
-            "status": "open",
+            "status": "fixed",
             "summary": "Campaign engine's timezone-aware date arithmetic has only 1 pinned-timestamp test out of 6",
             "suggestion": "This issue has been substantially resolved. The remaining improvement would be to test edge cases: exactly at peak boundary (08:00:00 ET), exactly at peak end (14:00:00 ET), and Friday after peak t...",
             "related_files": [],
@@ -1603,7 +1662,7 @@
           },
           {
             "dimension": "test_strategy",
-            "status": "open",
+            "status": "fixed",
             "summary": "Combinatorial layout assignment algorithm tested only indirectly through render()",
             "suggestion": "This issue has been resolved \u2014 findOptimalAssignment and materializeAssignment are now exported and directly unit tested with 8 targeted tests.",
             "related_files": [],
@@ -1611,43 +1670,6 @@
             "confidence": "medium",
             "first_seen": "2026-03-20T19:27:12+00:00",
             "last_seen": "2026-03-20T19:27:12+00:00"
-          },
-          {
-            "dimension": "test_strategy",
-            "status": "fixed",
-            "summary": "effort.test.ts has tautological assertions that accept any return value and never fail",
-            "suggestion": "Mock readFileSync or use vi.spyOn to control file system reads. Test specific scenarios: (1) no transcript, no settings -> null, (2) transcript with effort line -> correct level, (3) settings with...",
-            "related_files": [],
-            "note": "",
-            "confidence": "high",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
-          },
-          {
-            "dimension": "test_strategy",
-            "status": "fixed",
-            "summary": "Campaign engine's timezone-aware date arithmetic has only 1 pinned-timestamp test out of 6",
-            "suggestion": "Write targeted tests using vi.useFakeTimers() to pin Date.now() at: weekday 10am ET (expect active-normal), weekday 6pm ET (expect active-boosted), weekday 7am ET before peak (expect active-boosted...",
-            "related_files": [
-              "src/campaigns/engine.ts"
-            ],
-            "note": "",
-            "confidence": "high",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
-          },
-          {
-            "dimension": "test_strategy",
-            "status": "fixed",
-            "summary": "Combinatorial layout assignment algorithm tested only indirectly through render()",
-            "suggestion": "Export findOptimalAssignment (or test through a thin wrapper) and add unit tests with known block widths: (1) single block returns [0], (2) two blocks fitting one row return same-row assignment, (3...",
-            "related_files": [
-              "src/layout.ts"
-            ],
-            "note": "",
-            "confidence": "medium",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
           }
         ]
       }
@@ -1673,24 +1695,6 @@
             "dimension": "api_surface_coherence",
             "status": "open",
             "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
-            "suggestion": "This is a pragmatic interface design for a 5-segment codebase \u2014 making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments ar...",
-            "related_files": [
-              "src/types.ts",
-              "src/segments/model.ts",
-              "src/segments/context.ts",
-              "src/segments/promo.ts",
-              "src/segments/git.ts",
-              "src/segments/usage.ts"
-            ],
-            "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
-            "confidence": "low",
-            "first_seen": "2026-03-20T18:50:43+00:00",
-            "last_seen": "2026-03-20T19:27:12+00:00"
-          },
-          {
-            "dimension": "api_surface_coherence",
-            "status": "fixed",
-            "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
             "suggestion": "This is a pragmatic interface design for a 5-segment codebase -- making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments a...",
             "related_files": [
               "src/types.ts",
@@ -1702,8 +1706,26 @@
             ],
             "note": "",
             "confidence": "low",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
+            "first_seen": "2026-03-20T19:47:29+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
+          },
+          {
+            "dimension": "api_surface_coherence",
+            "status": "fixed",
+            "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
+            "suggestion": "This is a pragmatic interface design for a 5-segment codebase \u2014 making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments ar...",
+            "related_files": [
+              "src/types.ts",
+              "src/segments/model.ts",
+              "src/segments/context.ts",
+              "src/segments/promo.ts",
+              "src/segments/git.ts",
+              "src/segments/usage.ts"
+            ],
+            "note": "",
+            "confidence": "low",
+            "first_seen": "2026-03-20T18:50:43+00:00",
+            "last_seen": "2026-03-20T19:27:12+00:00"
           }
         ]
       }
@@ -1829,8 +1851,21 @@
           "design_coherence"
         ],
         "max_items": 20,
-        "selected_count": 3,
+        "selected_count": 2,
         "issues": [
+          {
+            "dimension": "design_coherence",
+            "status": "open",
+            "summary": "model.ts render() still has high local variable density despite spreadLine() extraction",
+            "suggestion": "The spreadLine() extraction already addressed the most complex part. The remaining variables are mostly sequential computations for line1 and line2 that flow linearly. No further extraction would r...",
+            "related_files": [
+              "src/segments/model.ts"
+            ],
+            "note": "",
+            "confidence": "low",
+            "first_seen": "2026-03-20T19:27:12+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
+          },
           {
             "dimension": "design_coherence",
             "status": "fixed",
@@ -1848,32 +1883,6 @@
             "confidence": "medium",
             "first_seen": "2026-03-20T19:06:04+00:00",
             "last_seen": "2026-03-20T19:27:12+00:00"
-          },
-          {
-            "dimension": "design_coherence",
-            "status": "open",
-            "summary": "model.ts render() still has high local variable density despite spreadLine() extraction",
-            "suggestion": "The spreadLine() extraction already addressed the most complex part. The remaining variables are mostly sequential computations for line1 and line2 that flow linearly. No further extraction would r...",
-            "related_files": [
-              "src/segments/model.ts"
-            ],
-            "note": "",
-            "confidence": "low",
-            "first_seen": "2026-03-20T19:27:12+00:00",
-            "last_seen": "2026-03-20T19:27:12+00:00"
-          },
-          {
-            "dimension": "design_coherence",
-            "status": "fixed",
-            "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution across effort/duration/version",
-            "suggestion": "This issue was addressed by the spreadLine() extraction. The remaining local variables (nameStyled, sep, nameLen, dirBudget, tilde, dir, effort, effortStr, durationStr, ms, totalSec, h, m, versionS...",
-            "related_files": [
-              "src/segments/model.ts"
-            ],
-            "note": "",
-            "confidence": "medium",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
           }
         ]
       }
@@ -1900,10 +1909,10 @@
             "related_files": [
               "src/segments/promo.ts"
             ],
-            "note": "",
+            "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
             "confidence": "low",
-            "first_seen": "2026-03-20T19:27:12+00:00",
-            "last_seen": "2026-03-20T19:27:12+00:00"
+            "first_seen": "2026-03-20T19:06:04+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
           },
           {
             "dimension": "contract_coherence",
@@ -1915,8 +1924,8 @@
             ],
             "note": "",
             "confidence": "low",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
+            "first_seen": "2026-03-20T19:27:12+00:00",
+            "last_seen": "2026-03-20T19:27:12+00:00"
           }
         ]
       }
@@ -1941,6 +1950,19 @@
         "max_items": 20,
         "selected_count": 4,
         "issues": [
+          {
+            "dimension": "logic_clarity",
+            "status": "open",
+            "summary": "layout.ts applies an additional 5-char offset for row 1 beyond the existing INK_PADDING",
+            "suggestion": "Expand the comment to explain the mechanism: '// Row 1 overlaps with Claude Code's notification/status badge in the top-right corner; subsequent rows render below it and don't need the extra cleara...",
+            "related_files": [
+              "src/layout.ts"
+            ],
+            "note": "",
+            "confidence": "medium",
+            "first_seen": "2026-03-20T19:47:29+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
+          },
           {
             "dimension": "logic_clarity",
             "status": "fixed",
@@ -1969,7 +1991,7 @@
           },
           {
             "dimension": "logic_clarity",
-            "status": "open",
+            "status": "fixed",
             "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
             "suggestion": "Expand the comment to explain the mechanism: '// Row 1 overlaps with Claude Code's notification/status badge in the top-right corner; subsequent rows render below it and don't need the extra cleara...",
             "related_files": [
@@ -1979,19 +2001,6 @@
             "confidence": "medium",
             "first_seen": "2026-03-20T19:27:12+00:00",
             "last_seen": "2026-03-20T19:27:12+00:00"
-          },
-          {
-            "dimension": "logic_clarity",
-            "status": "fixed",
-            "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
-            "suggestion": "Expand the comment to explain the mechanism: '// Row 1 overlaps with Claude Code's notification/status badge in the top-right corner; subsequent rows render below it and don't need the extra cleara...",
-            "related_files": [
-              "src/layout.ts"
-            ],
-            "note": "",
-            "confidence": "medium",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
           }
         ]
       }
@@ -2008,7 +2017,7 @@
           "type_safety"
         ],
         "max_items": 20,
-        "selected_count": 4,
+        "selected_count": 3,
         "issues": [
           {
             "dimension": "type_safety",
@@ -2018,23 +2027,10 @@
             "related_files": [
               "src/index.ts"
             ],
-            "note": "Reopened (\u00d71) \u2014 reappeared in scan (was fixed)",
-            "confidence": "medium",
-            "first_seen": "2026-03-20T18:11:31+00:00",
-            "last_seen": "2026-03-20T19:27:12+00:00"
-          },
-          {
-            "dimension": "type_safety",
-            "status": "open",
-            "summary": "Config file JSON.parse result cast to StatusBlocksConfig without shape validation",
-            "suggestion": "Add shape validation after the cast: if (config.segments && !Array.isArray(config.segments)) delete config.segments; if (config.theme && !VALID_THEMES.has(config.theme)) delete config.theme; This a...",
-            "related_files": [
-              "src/config.ts"
-            ],
             "note": "",
             "confidence": "medium",
-            "first_seen": "2026-03-20T19:27:12+00:00",
-            "last_seen": "2026-03-20T19:27:12+00:00"
+            "first_seen": "2026-03-20T19:47:29+00:00",
+            "last_seen": "2026-03-20T19:47:29+00:00"
           },
           {
             "dimension": "type_safety",
@@ -2046,8 +2042,8 @@
             ],
             "note": "",
             "confidence": "medium",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T19:27:12+00:00"
           },
           {
             "dimension": "type_safety",
@@ -2059,8 +2055,8 @@
             ],
             "note": "",
             "confidence": "medium",
-            "first_seen": "2026-03-20T19:06:04+00:00",
-            "last_seen": "2026-03-20T19:06:04+00:00"
+            "first_seen": "2026-03-20T19:27:12+00:00",
+            "last_seen": "2026-03-20T19:27:12+00:00"
           }
         ]
       }

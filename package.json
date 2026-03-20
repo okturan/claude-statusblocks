@@ -1,7 +1,7 @@
 {
   "name": "claude-statusblocks",
-  "version": "0.2.23",
-  "description": "Opinionated, adaptive status line for Claude Code",
+  "version": "0.3.0",
+  "description": "Opinionated, adaptive block-based status line for Claude Code with bin-packing layout, rate limit tracking, and campaign monitoring",
   "type": "module",
   "bin": {
     "claude-statusblocks": "dist/cli.js"
@@ -19,13 +19,28 @@
   "keywords": [
     "claude",
     "claude-code",
+    "claude-ai",
     "statusline",
+    "status-bar",
     "terminal",
-    "cli"
+    "cli",
+    "ansi",
+    "box-drawing",
+    "rate-limit",
+    "bin-packing",
+    "layout"
   ],
+  "homepage": "https://github.com/okturan/claude-statusblocks#readme",
+  "bugs": {
+    "url": "https://github.com/okturan/claude-statusblocks/issues"
+  },
+  "author": "Okan Turan",
   "repository": {
     "type": "git",
     "url": "https://github.com/okturan/claude-statusblocks"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "license": "MIT",
   "devDependencies": {
