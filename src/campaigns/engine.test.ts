@@ -4,67 +4,103 @@ import { getActiveCampaign } from './engine.js';
 describe('getActiveCampaign', () => {
   afterEach(() => { vi.useRealTimers(); });
 
-  it('returns null or a valid campaign status shape', () => {
-    const result = getActiveCampaign();
-    if (result === null) {
-      expect(result).toBeNull();
-    } else {
-      expect(result).toHaveProperty('state');
-      expect(result).toHaveProperty('countdown');
-      expect(result).toHaveProperty('progress');
-      expect(['active-boosted', 'active-normal', 'upcoming', 'ended', 'weekend']).toContain(result.state);
-      expect(typeof result.progress).toBe('number');
-      expect(result.progress).toBeGreaterThanOrEqual(0);
-      expect(result.progress).toBeLessThanOrEqual(1);
-    }
-  });
-
-  it('returns a campaign with a valid countdown string', () => {
-    const result = getActiveCampaign();
-    if (result) {
-      expect(typeof result.countdown).toBe('string');
-      // Countdown is either empty or matches Xh Ym format
-      if (result.countdown) {
-        expect(result.countdown).toMatch(/^\d+[hm]/);
-      }
-    }
-  });
-
-  it('returns consistent state for same timestamp', () => {
+  it('returns null after all campaigns have ended', () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-03-20T12:00:00-04:00'));
-    const first = getActiveCampaign();
-    const second = getActiveCampaign();
-    expect(first?.state).toBe(second?.state);
-    expect(first?.progress).toBe(second?.progress);
-  });
-
-  it('returns upcoming for dates before campaign start', () => {
-    vi.useFakeTimers();
-    // Set time well before any campaign
-    vi.setSystemTime(new Date('2020-01-01T00:00:00Z'));
-    const result = getActiveCampaign();
-    // Should be null (no campaigns) or upcoming
-    if (result) {
-      expect(result.state).toBe('upcoming');
-    }
-  });
-
-  it('returns null for dates after all campaigns end', () => {
-    vi.useFakeTimers();
-    // Set time well after any campaign
     vi.setSystemTime(new Date('2099-01-01T00:00:00Z'));
+    expect(getActiveCampaign()).toBeNull();
+  });
+
+  it('returns upcoming before campaign start', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-12T12:00:00-04:00'));
     const result = getActiveCampaign();
-    expect(result).toBeNull();
+    expect(result).not.toBeNull();
+    expect(result!.state).toBe('upcoming');
+    expect(result!.progress).toBe(0);
+  });
+
+  it('returns active-normal during peak hours on weekday', () => {
+    vi.useFakeTimers();
+    // Wednesday 10:00 ET — within peak (8-14 ET)
+    vi.setSystemTime(new Date('2026-03-18T10:00:00-04:00'));
+    const result = getActiveCampaign();
+    expect(result).not.toBeNull();
+    expect(result!.state).toBe('active-normal');
+    expect(result!.progress).toBeGreaterThan(0);
+    expect(result!.progress).toBeLessThan(1);
+    expect(result!.countdown).toMatch(/\d+h/);
+  });
+
+  it('returns active-boosted during off-peak hours on weekday', () => {
+    vi.useFakeTimers();
+    // Wednesday 20:00 ET — after peak (8-14 ET)
+    vi.setSystemTime(new Date('2026-03-18T20:00:00-04:00'));
+    const result = getActiveCampaign();
+    expect(result).not.toBeNull();
+    expect(result!.state).toBe('active-boosted');
+    expect(result!.countdown).toBeTruthy();
+  });
+
+  it('returns active-boosted before peak hours on weekday', () => {
+    vi.useFakeTimers();
+    // Wednesday 06:00 ET — before peak (8-14 ET)
+    vi.setSystemTime(new Date('2026-03-18T06:00:00-04:00'));
+    const result = getActiveCampaign();
+    expect(result).not.toBeNull();
+    expect(result!.state).toBe('active-boosted');
+    expect(result!.countdown).toMatch(/\d+h/);
   });
 
   it('returns weekend state on Saturday', () => {
     vi.useFakeTimers();
-    // Saturday in ET
     vi.setSystemTime(new Date('2026-03-21T15:00:00-04:00'));
     const result = getActiveCampaign();
-    if (result) {
-      expect(result.state).toBe('weekend');
+    expect(result).not.toBeNull();
+    expect(result!.state).toBe('weekend');
+    expect(result!.countdown).toBeTruthy();
+  });
+
+  it('returns weekend state on Sunday', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-22T10:00:00-04:00'));
+    const result = getActiveCampaign();
+    expect(result).not.toBeNull();
+    expect(result!.state).toBe('weekend');
+  });
+
+  it('has progress between 0 and 1 for all active states', () => {
+    vi.useFakeTimers();
+    for (const time of [
+      '2026-03-18T10:00:00-04:00', // peak
+      '2026-03-18T20:00:00-04:00', // off-peak
+      '2026-03-21T15:00:00-04:00', // weekend
+    ]) {
+      vi.setSystemTime(new Date(time));
+      const result = getActiveCampaign();
+      if (result) {
+        expect(result.progress).toBeGreaterThanOrEqual(0);
+        expect(result.progress).toBeLessThanOrEqual(1);
+      }
     }
+  });
+
+  it('returns consistent results for same timestamp', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-18T10:00:00-04:00'));
+    const a = getActiveCampaign();
+    const b = getActiveCampaign();
+    expect(a?.state).toBe(b?.state);
+    expect(a?.progress).toBe(b?.progress);
+    expect(a?.countdown).toBe(b?.countdown);
+  });
+
+  it('has campaign metadata on all active states', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-18T10:00:00-04:00'));
+    const result = getActiveCampaign();
+    expect(result).not.toBeNull();
+    expect(result!.campaign).toHaveProperty('id');
+    expect(result!.campaign).toHaveProperty('name');
+    expect(result!.campaign).toHaveProperty('rules');
   });
 });

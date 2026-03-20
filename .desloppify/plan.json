@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-03-20T17:37:28+00:00",
-  "updated": "2026-03-20T19:06:12+00:00",
+  "updated": "2026-03-20T19:17:27+00:00",
   "queue_order": [
     "review::.::holistic::logic_clarity::promo_contentwidth_misleading",
     "review::.::holistic::logic_clarity::weekend_negative_intermediate",
@@ -301,11 +301,16 @@
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {},
+  "plan_start_scores": {
+    "strict": 85.3,
+    "overall": 85.9,
+    "objective": 92.3,
+    "verified": 92.3
+  },
   "refresh_state": {
     "lifecycle_phase": "review_initial",
     "subjective_review_completed_at_scan_count": 14,
-    "postflight_scan_completed_at_scan_count": 15
+    "postflight_scan_completed_at_scan_count": 16
   },
   "execution_log": [
     {
@@ -1266,6 +1271,26 @@
       "detail": {
         "scan_count": 15
       }
+    },
+    {
+      "timestamp": "2026-03-20T19:17:27+00:00",
+      "action": "seed_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T19:17:27+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 16
+      }
     }
   ],
   "epic_triage_meta": {},
@@ -1279,5 +1304,5 @@
     "review::.::holistic::mid_level_elegance::row1_magic_offset_in_layout"
   ],
   "commit_tracking_branch": null,
-  "scan_count_at_plan_start": 13
+  "scan_count_at_plan_start": 16
 }
