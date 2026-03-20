@@ -1,0 +1,103 @@
+{
+  "batch": "logic_clarity",
+  "batch_index": 19,
+  "assessments": {"logic_clarity": 78.0},
+  "dimension_notes": {
+    "logic_clarity": {
+      "evidence": [
+        "promo.ts render() computes contentWidth (line 37, formerly barWidth) that suggests a progress bar but is only used for fallback separator sizing — still present",
+        "layout.ts line 171 applies row1MaxWidth = maxRowWidth - 5 with a comment 'extra right margin for Claude Code's notification panel' but the magic number 5 is unexplained relative to INK_PADDING",
+        "engine.ts weekend progress: secsSinceFriPeak = daysSinceFri * 86400 + (currentSecs - peakEndSecs) can produce negative intermediate when currentSecs < peakEndSecs on Saturday before peak end time, but Math.max(0, ...) clamps it",
+        "effort.ts resolveEffort() control flow is clear: try transcript first, fall back to settings, cache result",
+        "index.ts terminal width detection cascade uses clear sequential fallbacks with early exits",
+        "layout.ts findOptimalAssignment() enumeration logic is dense but correct — branches are all necessary for the algorithm",
+        "All segments use consistent guard clause patterns (return fallback Block if data is missing)"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "logic_clarity": {
+      "dimension_character": "Control flow is generally direct with clear sequential fallback patterns. The codebase uses guard clauses consistently and avoids deep nesting. However, several naming and magic number issues make certain logic paths misleading: contentWidth in promo.ts suggests rendering width rather than separator sizing, the magic 5 in layout.ts row1 margin lacks explanation relative to INK_PADDING, and the weekend progress calculation's negative intermediate is non-obvious without a comment.",
+      "score_rationale": "Three previously flagged issues remain open: the misleading contentWidth variable in promo.ts, the unexplained 5-char offset in layout.ts, and the weekend progress negative intermediate. These are all real clarity issues where a developer would need to pause and trace logic to understand intent. The codebase otherwise uses clean sequential patterns that are easy to follow, keeping it above 70 but below 80."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "logic_clarity",
+      "identifier": "promo_contentwidth_misleading",
+      "summary": "promo.ts render() computes contentWidth variable that misleadingly suggests rendering width but is only used for fallback separator sizing",
+      "related_files": ["src/segments/promo.ts"],
+      "evidence": [
+        "Line 37: const contentWidth = Math.max(visibleLength(line1), visibleLength(line2)) — name suggests this is the content rendering width",
+        "Line 40: used only in the fallback: color('─'.repeat(contentWidth), c.gray) — it sizes a separator line when line2 is empty",
+        "A developer reading 'contentWidth' would expect it to define the block's width, but it's only a separator sizing aid"
+      ],
+      "suggestion": "Rename contentWidth to separatorWidth or fallbackLineWidth to clarify its actual purpose — it computes the wider of the two content lines for separator sizing when line2 is empty.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "layout_row1_magic_offset",
+      "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
+      "related_files": ["src/layout.ts"],
+      "evidence": [
+        "Line 12: const INK_PADDING = 4; // Claude Code's outer paddingX: 2 on each side",
+        "Line 171: const row1MaxWidth = maxRowWidth - 5; // Row 1 gets extra right margin for notification panel",
+        "The comment says 'notification panel' but doesn't explain why 5 specifically, or how it relates to INK_PADDING's 4"
+      ],
+      "suggestion": "Extract the 5 as a named constant (e.g., NOTIFICATION_OVERLAP = 5) next to INK_PADDING with a comment explaining that Claude Code's notification badge overlaps only the first row's right edge by approximately 5 characters beyond the general INK_PADDING.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "weekend_negative_intermediate",
+      "summary": "Weekend progress calculation produces a negative intermediate value before clamping",
+      "related_files": ["src/campaigns/engine.ts"],
+      "evidence": [
+        "Line 61 in resolveWeekendState: secsSinceFriPeak = daysSinceFri * 86400 + (currentSecs - peakEndSecs)",
+        "On Saturday before the original peak end time, currentSecs < peakEndSecs produces a negative term",
+        "Line 62: Math.max(0, ...) clamps it safely, but a reader must trace through to verify correctness"
+      ],
+      "suggestion": "Add a brief comment above line 61 explaining that secsSinceFriPeak measures total seconds since Friday's peak window ended, and the Math.max(0, ...) clamp handles the edge case where the current time of day is before the peak end hour on Saturday.",
+      "confidence": "low",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Magic numbers and misleading variable names in layout/rendering code create clarity gaps that force developers to trace logic manually"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "logic_clarity": {
+      "add": [
+        {
+          "header": "Consistent guard clause pattern across segments",
+          "description": "All segment render() methods use early-return guard clauses when data is missing, returning fallback Block objects. This makes the happy path immediately visible.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Clean sequential fallback in terminal detection",
+          "description": "index.ts terminal width detection uses a clear cascade: stderr.columns -> parent TTY via ps/stty -> tput cols -> fallback 120. Each step is self-contained with try-catch.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No dead code paths or unreachable branches",
+          "description": "All conditional branches serve distinct purposes. No identical if/else branches, no code after unconditional returns, no always-true conditions detected.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

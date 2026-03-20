@@ -1,0 +1,127 @@
+{
+  "batch": "design_coherence",
+  "batch_index": 17,
+  "assessments": {"design_coherence": 72.5},
+  "dimension_notes": {
+    "design_coherence": {
+      "evidence": [
+        "engine.ts getActiveCampaign() was 88 lines mixing time arithmetic, state classification, and progress calculation — has been refactored into resolveWeekendState, resolvePeakState, resolveOffPeakState helpers, reducing the main function to ~28 lines",
+        "model.ts render() still uses 9+ local variables for manual 3-part gap distribution across effort/duration/version (lines 58-81)",
+        "layout.ts findOptimalAssignment() has high cyclomatic complexity from brute-force bin-packing with inline row-width computation, but this is a single coherent responsibility (combinatorial optimization)",
+        "effort.ts resolveEffort() has high cyclomatic complexity from two-source fallback logic with JSONL parsing, but the sources are semantically related (same concern: resolve effort level)",
+        "Segment pattern is consistent: each segment exports {id, priority, enabled, render} implementing the Segment interface — a clean, data-driven plugin pattern"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "design_coherence": {
+      "dimension_character": "The codebase applies a consistent segment plugin pattern and the campaign engine refactoring has improved separation of concerns. However, model.ts render() still embeds complex manual layout arithmetic with many local variables for gap distribution, and the layout optimizer's inline complexity, while single-purpose, makes modification difficult. The git segment cleanly separates data fetching from rendering.",
+      "score_rationale": "The engine.ts refactoring addresses the most severe mixed-responsibility issue, lifting the score above 70. model.ts gap distribution remains a concrete design problem with 9+ variables doing manual arithmetic that should be extracted. layout.ts complexity is acceptable as single-responsibility optimization. Held below 80 because model.ts line2 layout logic is genuinely hard to follow and modify safely."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "design_coherence",
+      "identifier": "model_gap_distribution",
+      "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution across effort/duration/version",
+      "related_files": ["src/segments/model.ts"],
+      "evidence": [
+        "Lines 58-81: variables spareWithDots, clamped, g, extra, g1, g2, g3, g4, remaining, leftGap, rightGap all compute spacing for 3 text items",
+        "Two code paths (dots vs plain spacing) with different gap arithmetic that are hard to verify visually"
+      ],
+      "suggestion": "Extract a function like spreadParts(parts: string[], targetWidth: number): string that encapsulates the dot-vs-space decision and gap arithmetic. This replaces ~24 lines of manual arithmetic with a single call.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "root_cause_cluster": "manual_layout_arithmetic"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "engine_complexity_concern",
+      "summary": "Design concern signal for engine.ts — resolved by extraction of timing state helpers",
+      "related_files": ["src/campaigns/engine.ts"],
+      "evidence": ["getActiveCampaign() was refactored from 88 lines to ~28 lines with 3 helper functions: resolveWeekendState, resolvePeakState, resolveOffPeakState"],
+      "suggestion": "No further action needed — the refactoring addresses the original concern.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "6058484bc35b2eed",
+      "reasoning": "The cyclomatic complexity has been reduced by extracting state resolution into focused helper functions. The remaining branches in getActiveCampaign() are necessary for campaign lifecycle (before start, after end, weekend, peak/off-peak)."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "effort_complexity_concern",
+      "summary": "Design concern signal for effort.ts — acceptable complexity for two-source fallback",
+      "related_files": ["src/effort.ts"],
+      "evidence": ["resolveEffort() has two sequential data sources (transcript JSONL, settings.json) with error handling — this is a single coherent responsibility"],
+      "suggestion": "No change needed. The function has one job: resolve effort from available sources in priority order.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "eafe5c4c9660842f",
+      "reasoning": "The complexity comes from two data sources with error handling, which is a single coherent responsibility. Extracting would fragment without reducing cognitive load."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "layout_complexity_concern",
+      "summary": "Design concern signal for layout.ts — acceptable complexity for bin-packing optimizer",
+      "related_files": ["src/layout.ts"],
+      "evidence": ["findOptimalAssignment() is a brute-force combinatorial optimizer — high branch count is inherent to the algorithm, not a design problem"],
+      "suggestion": "No change needed. This is algorithmic complexity with a single coherent purpose.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "bb6c6608cbf3357b",
+      "reasoning": "The cyclomatic complexity arises from a brute-force bin-packing algorithm. The branches are all part of a single optimization loop — extracting sub-functions would obscure the algorithm without reducing real complexity."
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "git_magic_number_concern",
+      "summary": "Design concern signal for git.ts magic number — the 5000ms cache TTL is domain-appropriate",
+      "related_files": ["src/segments/git.ts"],
+      "evidence": ["gitCache TTL of 5000ms (line 9) is a standard caching threshold for subprocess results"],
+      "suggestion": "Optionally extract to a named constant like GIT_CACHE_TTL_MS = 5000, but this is minor.",
+      "confidence": "high",
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "cc1dbfee1c85c533",
+      "reasoning": "The number 5000 is a cache TTL in milliseconds — its meaning is clear from context (now - gitCache.ts < 5000). Not a design problem."
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Manual layout arithmetic in model.ts is the remaining design coherence issue — engine.ts has been addressed"],
+    "likely_symptoms": ["engine_mixed_responsibilities and engine_cyclomatic_complexity were symptoms of the same root cause, now resolved"],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "design_coherence": {
+      "add": [
+        {
+          "header": "Engine refactored into focused helpers",
+          "description": "getActiveCampaign() now delegates to resolveWeekendState, resolvePeakState, and resolveOffPeakState, each handling a single timing state. This resolved the original mixed-responsibility issue.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Consistent segment plugin pattern",
+          "description": "All 5 segments implement the same Segment interface with focused render() methods. Each segment owns its own data fetching and formatting, creating clean boundaries.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Model segment gap arithmetic complexity",
+          "description": "model.ts render() uses 9+ local variables for 3-part gap distribution with two code paths (dots vs spaces). This is the primary remaining design coherence issue.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

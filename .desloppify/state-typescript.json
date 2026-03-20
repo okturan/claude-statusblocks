@@ -1,19 +1,19 @@
 {
   "version": 3,
   "created": "2026-03-20T17:37:17+00:00",
-  "last_scan": "2026-03-20T18:25:54+00:00",
-  "scan_count": 10,
-  "overall_score": 82.5,
+  "last_scan": "2026-03-20T18:51:03+00:00",
+  "scan_count": 12,
+  "overall_score": 83.9,
   "objective_score": 83.6,
-  "strict_score": 82.5,
+  "strict_score": 83.2,
   "verified_strict_score": 83.6,
   "stats": {
-    "total": 99,
-    "auto_resolved": 4,
+    "total": 120,
+    "auto_resolved": 7,
     "deferred": 0,
     "false_positive": 0,
-    "fixed": 43,
-    "open": 52,
+    "fixed": 68,
+    "open": 45,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -21,8 +21,8 @@
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 13,
-        "open": 8,
+        "fixed": 19,
+        "open": 6,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -30,16 +30,16 @@
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 9,
-        "open": 15,
+        "fixed": 24,
+        "open": 9,
         "triaged_out": 0,
         "wontfix": 0
       },
       "3": {
-        "auto_resolved": 4,
+        "auto_resolved": 7,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 1,
+        "fixed": 5,
         "open": 29,
         "triaged_out": 0,
         "wontfix": 0
@@ -49,7 +49,7 @@
         "deferred": 0,
         "false_positive": 0,
         "fixed": 20,
-        "open": 0,
+        "open": 1,
         "triaged_out": 0,
         "wontfix": 0
       }
@@ -143,14 +143,14 @@
       "file": "src/cli.ts",
       "tier": 3,
       "confidence": "medium",
-      "summary": "Orphaned file (91 LOC): zero importers, not an entry point",
+      "summary": "Orphaned file (92 LOC): zero importers, not an entry point",
       "detail": {
-        "loc": 91
+        "loc": 92
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -315,11 +315,11 @@
         "importer_count": 1,
         "loc_weight": 6.782329983125268
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: source file no longer exists",
       "first_seen": "2026-03-20T17:37:27+00:00",
       "last_seen": "2026-03-20T18:14:12+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:51:03+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -538,13 +538,13 @@
         "severity": "medium",
         "count": 1,
         "lines": [
-          49
+          95
         ]
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -574,7 +574,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -598,13 +598,13 @@
         "severity": "medium",
         "count": 1,
         "lines": [
-          73
+          74
         ]
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -628,14 +628,14 @@
         "severity": "medium",
         "count": 2,
         "lines": [
-          55,
-          56
+          56,
+          57
         ]
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -659,20 +659,20 @@
         "severity": "low",
         "count": 8,
         "lines": [
-          43,
-          65,
-          66,
-          67,
-          74,
-          77,
-          79,
-          112
+          40,
+          57,
+          59,
+          61,
+          83,
+          109,
+          110,
+          111
         ]
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -696,14 +696,14 @@
         "severity": "low",
         "count": 2,
         "lines": [
-          21,
-          22
+          22,
+          23
         ]
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -734,7 +734,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -764,7 +764,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -795,7 +795,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -828,7 +828,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -858,7 +858,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T17:37:27+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -900,7 +900,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -934,7 +934,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -968,7 +968,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1002,7 +1002,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1036,7 +1036,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1070,7 +1070,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1104,7 +1104,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1138,7 +1138,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1172,7 +1172,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1206,7 +1206,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1240,7 +1240,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1274,7 +1274,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1308,7 +1308,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1342,7 +1342,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1376,7 +1376,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1410,7 +1410,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1444,7 +1444,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1478,7 +1478,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1512,7 +1512,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1546,7 +1546,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-03-20T17:47:01+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-03-20T18:25:54+00:00",
+        "scan_verified_at": "2026-03-20T18:51:03+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -1561,11 +1561,11 @@
         "loc": 46,
         "sole_importer": "src/layout.ts"
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: source file no longer exists",
       "first_seen": "2026-03-20T17:46:51+00:00",
       "last_seen": "2026-03-20T18:25:54+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:51:03+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -1728,11 +1728,11 @@
         "reasoning": "",
         "summary_hash": "7c8f2125"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T17:47:01+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -1740,7 +1740,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::index_toplevel_catch_swallows_all": {
       "id": "review::.::holistic::error_consistency::index_toplevel_catch_swallows_all",
@@ -1854,11 +1860,11 @@
         "reasoning": "",
         "summary_hash": "a6f57022"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T17:47:01+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -1866,7 +1872,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::naming_quality::reset_countdown_misleading_verb": {
       "id": "review::.::holistic::naming_quality::reset_countdown_misleading_verb",
@@ -2099,11 +2111,11 @@
         "reasoning": "",
         "summary_hash": "b24af2e0"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T17:47:01+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2111,7 +2123,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::test_strategy::untested_campaign_engine": {
       "id": "review::.::holistic::test_strategy::untested_campaign_engine",
@@ -2136,11 +2154,11 @@
         "reasoning": "",
         "summary_hash": "1545537c"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T17:47:01+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2148,7 +2166,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::test_strategy::untested_colors_utility": {
       "id": "review::.::holistic::test_strategy::untested_colors_utility",
@@ -2172,11 +2196,11 @@
         "reasoning": "",
         "summary_hash": "02daa9c0"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T17:47:01+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2184,7 +2208,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::test_strategy::untested_layout_algorithm": {
       "id": "review::.::holistic::test_strategy::untested_layout_algorithm",
@@ -2711,11 +2741,11 @@
         "reasoning": "",
         "summary_hash": "352fb481"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2723,7 +2753,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::high_level_elegance::cli_help_missing_segments": {
       "id": "review::.::holistic::high_level_elegance::cli_help_missing_segments",
@@ -2793,11 +2829,11 @@
         "reasoning": "",
         "summary_hash": "ffb4608b"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2805,7 +2841,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::naming_quality::reset_countdown_misnomer": {
       "id": "review::.::holistic::naming_quality::reset_countdown_misnomer",
@@ -2829,11 +2871,11 @@
         "reasoning": "",
         "summary_hash": "9360646d"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2841,7 +2883,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::low_level_elegance::model_gap_distribution_complexity": {
       "id": "review::.::holistic::low_level_elegance::model_gap_distribution_complexity",
@@ -2865,11 +2913,11 @@
         "reasoning": "",
         "summary_hash": "0e53d674"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2877,7 +2925,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::low_level_elegance::engine_getactivecampaign_multi_concern": {
       "id": "review::.::holistic::low_level_elegance::engine_getactivecampaign_multi_concern",
@@ -2901,11 +2955,11 @@
         "reasoning": "",
         "summary_hash": "bf602f9c"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2913,7 +2967,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::mid_level_elegance::layout_row1_policy_in_orchestration": {
       "id": "review::.::holistic::mid_level_elegance::layout_row1_policy_in_orchestration",
@@ -2936,11 +2996,11 @@
         "reasoning": "",
         "summary_hash": "7b81892b"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2948,7 +3008,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::test_strategy::untested_layout_optimizer": {
       "id": "review::.::holistic::test_strategy::untested_layout_optimizer",
@@ -2972,11 +3038,11 @@
         "reasoning": "",
         "summary_hash": "76f2f1c4"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -2984,7 +3050,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::api_surface_coherence::allocwidth_ignored_by_most_segments": {
       "id": "review::.::holistic::api_surface_coherence::allocwidth_ignored_by_most_segments",
@@ -3014,11 +3086,11 @@
         "reasoning": "",
         "summary_hash": "503e729c"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3026,7 +3098,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::ai_generated_debt::cli_raw_ansi_escapes": {
       "id": "review::.::holistic::ai_generated_debt::cli_raw_ansi_escapes",
@@ -3049,11 +3127,11 @@
         "reasoning": "",
         "summary_hash": "bfa031f5"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3061,7 +3139,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::initialization_coupling::import_time_homedir_config": {
       "id": "review::.::holistic::initialization_coupling::import_time_homedir_config",
@@ -3086,11 +3170,11 @@
         "reasoning": "",
         "summary_hash": "295d3e2c"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3098,7 +3182,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::design_coherence::engine_mixed_responsibilities": {
       "id": "review::.::holistic::design_coherence::engine_mixed_responsibilities",
@@ -3121,11 +3211,11 @@
         "reasoning": "",
         "summary_hash": "73ea12e7"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3133,7 +3223,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::design_coherence::model_gap_distribution_complexity": {
       "id": "review::.::holistic::design_coherence::model_gap_distribution_complexity",
@@ -3156,11 +3252,11 @@
         "reasoning": "",
         "summary_hash": "66fa38c8"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3168,7 +3264,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::design_coherence::engine_design_concern": {
       "id": "review::.::holistic::design_coherence::engine_design_concern",
@@ -3191,11 +3293,11 @@
         "reasoning": "",
         "summary_hash": "44c1e689"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3203,7 +3305,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::contract_coherence::campaign_enabled_render_toctou": {
       "id": "review::.::holistic::contract_coherence::campaign_enabled_render_toctou",
@@ -3227,11 +3335,11 @@
         "reasoning": "",
         "summary_hash": "ae187959"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3239,7 +3347,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::logic_clarity::campaign_bar_dead_computation": {
       "id": "review::.::holistic::logic_clarity::campaign_bar_dead_computation",
@@ -3263,11 +3377,11 @@
         "reasoning": "",
         "summary_hash": "f5cee945"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3275,7 +3389,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::logic_clarity::layout_unexplained_row1_offset": {
       "id": "review::.::holistic::logic_clarity::layout_unexplained_row1_offset",
@@ -3300,11 +3420,11 @@
         "reasoning": "",
         "summary_hash": "80c3c385"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3312,7 +3432,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::logic_clarity::engine_weekend_negative_intermediate": {
       "id": "review::.::holistic::logic_clarity::engine_weekend_negative_intermediate",
@@ -3337,11 +3463,11 @@
         "reasoning": "",
         "summary_hash": "817b3ff2"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3349,7 +3475,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::type_safety::stdin_json_unvalidated_cast": {
       "id": "review::.::holistic::type_safety::stdin_json_unvalidated_cast",
@@ -3373,11 +3505,11 @@
         "reasoning": "",
         "summary_hash": "48a90af0"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3385,7 +3517,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::type_safety::env_theme_unvalidated_cast": {
       "id": "review::.::holistic::type_safety::env_theme_unvalidated_cast",
@@ -3409,11 +3547,11 @@
         "reasoning": "",
         "summary_hash": "f3870732"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "not reported in latest holistic re-import",
       "first_seen": "2026-03-20T18:11:31+00:00",
       "last_seen": "2026-03-20T18:11:31+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:50:43+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -3421,7 +3559,13 @@
       "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "agent_import",
+        "text": "not reported in latest holistic re-import",
+        "attested_at": "2026-03-20T18:50:43+00:00",
+        "scan_verified": false
+      }
     },
     "test_coverage::src/segments/campaign.ts::transitive_only": {
       "id": "test_coverage::src/segments/campaign.ts::transitive_only",
@@ -3436,11 +3580,11 @@
         "importer_count": 1,
         "loc_weight": 6.782329983125268
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: source file no longer exists",
       "first_seen": "2026-03-20T18:19:29+00:00",
       "last_seen": "2026-03-20T18:25:54+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-03-20T18:51:03+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -3467,7 +3611,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3476,7 +3620,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T18:25:54+00:00",
+      "suppressed_at": "2026-03-20T18:51:03+00:00",
       "suppression_pattern": "test_coverage::src/index.ts"
     },
     "test_coverage::src/campaigns/engine.ts::transitive_only": {
@@ -3523,7 +3667,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3532,7 +3676,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T18:25:54+00:00",
+      "suppressed_at": "2026-03-20T18:51:03+00:00",
       "suppression_pattern": "test_coverage::src/campaigns/data.ts"
     },
     "test_coverage::src/config.ts::untested_module": {
@@ -3569,17 +3713,17 @@
       "file": "src/cli.ts",
       "tier": 3,
       "confidence": "high",
-      "summary": "Untested module (91 LOC, 0 importers)",
+      "summary": "Untested module (92 LOC, 0 importers)",
       "detail": {
         "kind": "untested_module",
-        "loc": 91,
+        "loc": 92,
         "importer_count": 0,
-        "loc_weight": 9.539392014169456
+        "loc_weight": 9.591663046625438
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3588,7 +3732,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T18:25:54+00:00",
+      "suppressed_at": "2026-03-20T18:51:03+00:00",
       "suppression_pattern": "test_coverage::src/cli.ts"
     },
     "test_coverage::src/segments/git.ts::transitive_only": {
@@ -3607,7 +3751,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3631,12 +3775,12 @@
         "test_file": "src/layout.test.ts",
         "assertions": 8,
         "test_functions": 11,
-        "loc_weight": 13.379088160259652
+        "loc_weight": 13.416407864998739
       },
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:19:29+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3645,7 +3789,7 @@
       "lang": "typescript",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-03-20T18:25:54+00:00",
+      "suppressed_at": "2026-03-20T18:51:03+00:00",
       "suppression_pattern": "test_coverage::src/layout.ts"
     },
     "test_coverage::src/effort.ts::transitive_only": {
@@ -3853,7 +3997,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3890,7 +4034,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3920,7 +4064,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3950,7 +4094,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-03-20T18:21:58+00:00",
-      "last_seen": "2026-03-20T18:25:54+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3958,6 +4102,747 @@
       "origin": "scan",
       "lang": "typescript",
       "zone": "test",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::cross_module_architecture::layout_dual_responsibility": {
+      "id": "review::.::holistic::cross_module_architecture::layout_dual_responsibility",
+      "detector": "review",
+      "file": ".",
+      "tier": 3,
+      "confidence": "low",
+      "summary": "layout.ts hardcodes all segment imports -- adding a segment requires editing layout.ts",
+      "detail": {
+        "holistic": true,
+        "dimension": "cross_module_architecture",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "Lines 4-8 import all 5 segments individually; line 10 assembles them into ALL_SEGMENTS array. Any new segment requires adding both an import and an array entry here."
+        ],
+        "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern out of the layout algorithm.",
+        "reasoning": "",
+        "summary_hash": "08326065"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::high_level_elegance::claude_md_test_claim_stale": {
+      "id": "review::.::holistic::high_level_elegance::claude_md_test_claim_stale",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "CLAUDE.md states 'There are no tests or linters configured' but vitest and 6 test files exist",
+      "detail": {
+        "holistic": true,
+        "dimension": "high_level_elegance",
+        "related_files": [
+          "CLAUDE.md",
+          "package.json"
+        ],
+        "evidence": [
+          "CLAUDE.md commands section says 'There are no tests or linters configured.' but package.json has vitest ^4.1.0 in devDependencies, a 'test': 'vitest run' script, and 6 .test.ts files exist under src/"
+        ],
+        "suggestion": "Update the CLAUDE.md commands section: replace 'There are no tests or linters configured.' with '`npm test` -- run vitest unit tests' and note that no linter is configured.",
+        "reasoning": "",
+        "summary_hash": "d52826ee"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::error_consistency::bare_catch_rationale": {
+      "id": "review::.::holistic::error_consistency::bare_catch_rationale",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "Catch blocks inconsistently document their rationale -- some have comments, others are bare",
+      "detail": {
+        "holistic": true,
+        "dimension": "error_consistency",
+        "related_files": [
+          "src/index.ts",
+          "src/segments/git.ts"
+        ],
+        "evidence": [
+          "index.ts lines 28 and 33: catch { /* */ } -- no rationale for why TTY/tput failures are swallowed",
+          "git.ts line 26: catch { return null; } -- no rationale for why git command failures are swallowed",
+          "Meanwhile config.ts and effort.ts consistently document catch rationale: '/* no config file -- use defaults */', '/* skip malformed lines */', '/* file not readable */', '/* no settings */'"
+        ],
+        "suggestion": "Add brief rationale comments to the bare catches: index.ts line 28 should note '/* TTY detection fallback */', line 33 '/* tput fallback */', git.ts line 26 '/* not a git repo or git unavailable */'. This matches the pattern already established in config.ts and effort.ts.",
+        "reasoning": "",
+        "summary_hash": "24314a7e"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::naming_quality::reset_countdown_misleading": {
+      "id": "review::.::holistic::naming_quality::reset_countdown_misleading",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "resetCountdown sounds like an action (reset the countdown) rather than a formatter",
+      "detail": {
+        "holistic": true,
+        "dimension": "naming_quality",
+        "related_files": [
+          "src/segments/usage.ts"
+        ],
+        "evidence": [
+          "usage.ts line 4: function resetCountdown(epochSec: number): string -- reads as 'reset the countdown' but formats a countdown-until-reset string. The codebase has formatTokens (context.ts line 4) and formatCountdown (campaigns/engine.ts line 38) as established formatter naming conventions."
+        ],
+        "suggestion": "Rename to formatResetCountdown to match the codebase's format* naming convention for formatting functions, consistent with formatTokens and formatCountdown.",
+        "reasoning": "",
+        "summary_hash": "9360646d"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::low_level_elegance::model_line2_gap_arithmetic": {
+      "id": "review::.::holistic::low_level_elegance::model_line2_gap_arithmetic",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "model.ts 3-part line2 layout uses 12+ local variables for manual gap distribution",
+      "detail": {
+        "holistic": true,
+        "dimension": "low_level_elegance",
+        "related_files": [
+          "src/segments/model.ts"
+        ],
+        "evidence": [
+          "Lines 58-89: variables g, g1, g2, g3, g4, extra, clamped, spareWithDots, dotLen, eLen, dLen, vLen, contentWidth, remaining, leftGap, rightGap \u2014 all for distributing 3 styled text parts across a target width",
+          "Two branches (dot-separated vs space-separated) with duplicated gap computation patterns",
+          "The 4-way gap distribution (g1-g4) around 2 dot separators is particularly hard to follow \u2014 the remainder distribution across 4 positions uses positional indexing rather than a clear algorithm"
+        ],
+        "suggestion": "Extract a spreadParts(parts: string[], targetWidth: number, separator?: string): string helper that handles the gap distribution for N parts. This replaces ~30 lines with a single call and makes the dot-vs-space decision and gap arithmetic reusable and testable.",
+        "reasoning": "",
+        "summary_hash": "0e53d674"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::low_level_elegance::findoptimal_dense_brute_force": {
+      "id": "review::.::holistic::low_level_elegance::findoptimal_dense_brute_force",
+      "detector": "review",
+      "file": ".",
+      "tier": 3,
+      "confidence": "low",
+      "summary": "findOptimalAssignment uses dense brute-force iteration with single-letter variables across 55 lines",
+      "detail": {
+        "holistic": true,
+        "dimension": "low_level_elegance",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "Lines 73-128: 6 nested or sequential loops with single-letter variables (v, n, r, i) and reused pre-allocated arrays (rowOf, seen, rowRW)",
+          "Row-width computation (lines 96-102) is duplicated conceptually between findOptimalAssignment and materializeAssignment",
+          "The scoring formula 'score = -(numRows * 1e9) - (maxRW * 1e3)' encodes priorities in magic number magnitudes without explanation"
+        ],
+        "suggestion": "Add a brief inline comment explaining the scoring formula (minimize rows first, then minimize widest row). Consider extracting the row-width computation (lines 96-102) into a computeRowWidth(rowOf, widths, rowIndex) helper to reduce duplication with materializeAssignment and make the brute-force loop body cleaner.",
+        "reasoning": "",
+        "summary_hash": "5b88acc8"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::mid_level_elegance::row1_magic_offset_in_layout": {
+      "id": "review::.::holistic::mid_level_elegance::row1_magic_offset_in_layout",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "Layout embeds hardcoded row1 width reduction (maxRowWidth - 5) mixing policy with orchestration",
+      "detail": {
+        "holistic": true,
+        "dimension": "mid_level_elegance",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "Line 171: const row1MaxWidth = maxRowWidth - 5 \u2014 the 5-char offset accounts for Claude Code's notification badge overlapping the first row",
+          "Line 170 has a comment explaining the purpose, but the value is still a magic number inline rather than a named constant",
+          "INK_PADDING on line 12 already sets the precedent for naming Claude Code UI offsets as constants"
+        ],
+        "suggestion": "Extract the 5 as a named constant (e.g., NOTIFICATION_OVERLAP = 5) next to INK_PADDING on line 12, with a brief comment explaining that row 1 needs additional right margin for Claude Code's notification badge. Replace line 171 with: const row1MaxWidth = maxRowWidth - NOTIFICATION_OVERLAP;",
+        "reasoning": "",
+        "summary_hash": "7b81892b"
+      },
+      "status": "fixed",
+      "note": "Fixed: CLAUDE.md updated, resetCountdown renamed to formatResetTime, magic 5 extracted to ROW1_NOTIF_MARGIN constant",
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": "2026-03-20T18:51:41+00:00",
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Fixed: CLAUDE.md updated, resetCountdown renamed to formatResetTime, magic 5 extracted to ROW1_NOTIF_MARGIN constant and I am not gaming the score.",
+        "attested_at": "2026-03-20T18:51:41+00:00",
+        "scan_verified": false
+      }
+    },
+    "review::.::holistic::test_strategy::engine_test_superficial": {
+      "id": "review::.::holistic::test_strategy::engine_test_superficial",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "Campaign engine's timezone-aware date arithmetic has only 1 superficial shape-check test",
+      "detail": {
+        "holistic": true,
+        "dimension": "test_strategy",
+        "related_files": [
+          "src/campaigns/engine.test.ts",
+          "src/campaigns/engine.ts"
+        ],
+        "evidence": [
+          "engine.test.ts has 1 test: calls getActiveCampaign() and checks that result is null or has valid properties",
+          "No vi.useFakeTimers() usage to pin Date.now() and verify state transitions",
+          "Five distinct states (active-boosted, active-normal, upcoming, ended, weekend) with complex transition logic \u2014 none tested",
+          "Weekend progress calculation, countdown formatting, peak/off-peak detection \u2014 all untested",
+          "This is the highest cyclomatic complexity module in the codebase (flagged by mechanical scan)"
+        ],
+        "suggestion": "Write targeted tests using vi.useFakeTimers() to pin Date.now() at specific times: weekday peak hour (expect active-normal), weekday off-peak (expect active-boosted), Saturday (expect weekend), before campaign start (expect upcoming), after campaign end (expect null). Verify countdown strings and progress values for each state. Test resolveWeekendState, resolvePeakState, resolveOffPeakState individually by exporting them or testing through getActiveCampaign with controlled times.",
+        "reasoning": "",
+        "summary_hash": "d869779d"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::test_strategy::effort_tautological_tests": {
+      "id": "review::.::holistic::test_strategy::effort_tautological_tests",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "effort.test.ts has tautological assertions that accept any return value and never fail",
+      "detail": {
+        "holistic": true,
+        "dimension": "test_strategy",
+        "related_files": [
+          "src/effort.test.ts",
+          "src/effort.ts"
+        ],
+        "evidence": [
+          "Test 'returns null when no transcript and no settings match' (lines 5-11): accepts BOTH null AND valid effort levels \u2014 the test name says 'null' but the assertion says 'null or anything valid'",
+          "Test 'returns a valid effort level or null' (lines 13-19): literally asserts result is either null or in the valid set \u2014 this is a type check, not a behavior test",
+          "Neither test controls environment (no mocking of readFileSync, no temp transcript files), so results depend on the developer's actual ~/.claude/settings.json"
+        ],
+        "suggestion": "Mock readFileSync or use vi.spyOn to control file system reads. Test specific scenarios: (1) no transcript, no settings -> null, (2) transcript with effort line -> correct level, (3) settings with effortLevel -> correct level, (4) transcript takes priority over settings. Use temp files or mocks rather than relying on the developer's actual home directory.",
+        "reasoning": "",
+        "summary_hash": "8db1825f"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::test_strategy::no_findoptimal_unit_tests": {
+      "id": "review::.::holistic::test_strategy::no_findoptimal_unit_tests",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "Combinatorial layout assignment algorithm tested only indirectly through render()",
+      "detail": {
+        "holistic": true,
+        "dimension": "test_strategy",
+        "related_files": [
+          "src/layout.test.ts",
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "findOptimalAssignment is private and tested only through render() integration tests",
+          "Cannot verify specific edge cases: single block assignment, impossible-fit fallback, tie-breaking between equal-width assignments",
+          "The pyramid shape test in layout.test.ts validates output structure but not assignment correctness for specific width configurations"
+        ],
+        "suggestion": "Export findOptimalAssignment (or test through a thin wrapper) and add unit tests with known block widths: (1) single block returns [0], (2) two blocks fitting one row return same-row assignment, (3) blocks exceeding row width produce multi-row assignment, (4) assignment returns null when a block exceeds maxRowWidth alone. This enables testing the algorithm independently of segment rendering.",
+        "reasoning": "",
+        "summary_hash": "b823d1ee"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::api_surface_coherence::allocwidth_unused_by_most_segments": {
+      "id": "review::.::holistic::api_surface_coherence::allocwidth_unused_by_most_segments",
+      "detector": "review",
+      "file": ".",
+      "tier": 3,
+      "confidence": "low",
+      "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
+      "detail": {
+        "holistic": true,
+        "dimension": "api_surface_coherence",
+        "related_files": [
+          "src/types.ts",
+          "src/segments/model.ts",
+          "src/segments/context.ts",
+          "src/segments/promo.ts",
+          "src/segments/git.ts",
+          "src/segments/usage.ts"
+        ],
+        "evidence": [
+          "modelSegment.render() uses allocWidth for directory truncation budget (line 34: const dirBudget = Math.max(allocWidth - nameLen, 0))",
+          "contextSegment.render(data) does not declare allocWidth parameter at all",
+          "gitSegment.render(data) does not declare allocWidth parameter at all",
+          "promoSegment.render() does not declare allocWidth parameter at all",
+          "usageSegment.render(data) does not declare allocWidth parameter at all"
+        ],
+        "suggestion": "This is a pragmatic interface design for a 5-segment codebase \u2014 making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments are added that also ignore it, consider splitting into a base interface without allocWidth and a width-aware variant.",
+        "reasoning": "",
+        "summary_hash": "503e729c"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::design_coherence::model_gap_distribution": {
+      "id": "review::.::holistic::design_coherence::model_gap_distribution",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution across effort/duration/version",
+      "detail": {
+        "holistic": true,
+        "dimension": "design_coherence",
+        "related_files": [
+          "src/segments/model.ts"
+        ],
+        "evidence": [
+          "Lines 58-81: variables spareWithDots, clamped, g, extra, g1, g2, g3, g4, remaining, leftGap, rightGap all compute spacing for 3 text items",
+          "Two code paths (dots vs plain spacing) with different gap arithmetic that are hard to verify visually"
+        ],
+        "suggestion": "Extract a function like spreadParts(parts: string[], targetWidth: number): string that encapsulates the dot-vs-space decision and gap arithmetic. This replaces ~24 lines of manual arithmetic with a single call.",
+        "reasoning": "",
+        "summary_hash": "66fa38c8"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::contract_coherence::promo_double_call": {
+      "id": "review::.::holistic::contract_coherence::promo_double_call",
+      "detector": "review",
+      "file": ".",
+      "tier": 3,
+      "confidence": "low",
+      "summary": "promoSegment.enabled() and render() both call getActiveCampaign() independently, risking state divergence",
+      "detail": {
+        "holistic": true,
+        "dimension": "contract_coherence",
+        "related_files": [
+          "src/segments/promo.ts"
+        ],
+        "evidence": [
+          "enabled() on line 8 calls getActiveCampaign() to check non-null",
+          "render() on line 10 calls getActiveCampaign() again independently",
+          "If campaign transitions between calls (e.g., crosses end time), enabled() returns true but render() gets null",
+          "render() line 11 has a null guard that returns a fallback Block, making this safe but not tight"
+        ],
+        "suggestion": "Cache the campaign status in a closure-scoped variable: add a let cachedStatus: CampaignStatus | null = null above the segment, set it in enabled(), and read it in render(). Clear it after render() completes. This eliminates the double call without changing the public interface.",
+        "reasoning": "",
+        "summary_hash": "6bbdb95b"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::logic_clarity::promo_contentwidth_misleading": {
+      "id": "review::.::holistic::logic_clarity::promo_contentwidth_misleading",
+      "detector": "review",
+      "file": ".",
+      "tier": 1,
+      "confidence": "high",
+      "summary": "promo.ts render() computes contentWidth variable that misleadingly suggests rendering width but is only used for fallback separator sizing",
+      "detail": {
+        "holistic": true,
+        "dimension": "logic_clarity",
+        "related_files": [
+          "src/segments/promo.ts"
+        ],
+        "evidence": [
+          "Line 37: const contentWidth = Math.max(visibleLength(line1), visibleLength(line2)) \u2014 name suggests this is the content rendering width",
+          "Line 40: used only in the fallback: color('\u2500'.repeat(contentWidth), c.gray) \u2014 it sizes a separator line when line2 is empty",
+          "A developer reading 'contentWidth' would expect it to define the block's width, but it's only a separator sizing aid"
+        ],
+        "suggestion": "Rename contentWidth to separatorWidth or fallbackLineWidth to clarify its actual purpose \u2014 it computes the wider of the two content lines for separator sizing when line2 is empty.",
+        "reasoning": "",
+        "summary_hash": "e49f8ed5"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::logic_clarity::layout_row1_magic_offset": {
+      "id": "review::.::holistic::logic_clarity::layout_row1_magic_offset",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
+      "detail": {
+        "holistic": true,
+        "dimension": "logic_clarity",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "evidence": [
+          "Line 12: const INK_PADDING = 4; // Claude Code's outer paddingX: 2 on each side",
+          "Line 171: const row1MaxWidth = maxRowWidth - 5; // Row 1 gets extra right margin for notification panel",
+          "The comment says 'notification panel' but doesn't explain why 5 specifically, or how it relates to INK_PADDING's 4"
+        ],
+        "suggestion": "Extract the 5 as a named constant (e.g., NOTIFICATION_OVERLAP = 5) next to INK_PADDING with a comment explaining that Claude Code's notification badge overlaps only the first row's right edge by approximately 5 characters beyond the general INK_PADDING.",
+        "reasoning": "",
+        "summary_hash": "80c3c385"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::logic_clarity::weekend_negative_intermediate": {
+      "id": "review::.::holistic::logic_clarity::weekend_negative_intermediate",
+      "detector": "review",
+      "file": ".",
+      "tier": 3,
+      "confidence": "low",
+      "summary": "Weekend progress calculation produces a negative intermediate value before clamping",
+      "detail": {
+        "holistic": true,
+        "dimension": "logic_clarity",
+        "related_files": [
+          "src/campaigns/engine.ts"
+        ],
+        "evidence": [
+          "Line 61 in resolveWeekendState: secsSinceFriPeak = daysSinceFri * 86400 + (currentSecs - peakEndSecs)",
+          "On Saturday before the original peak end time, currentSecs < peakEndSecs produces a negative term",
+          "Line 62: Math.max(0, ...) clamps it safely, but a reader must trace through to verify correctness"
+        ],
+        "suggestion": "Add a brief comment above line 61 explaining that secsSinceFriPeak measures total seconds since Friday's peak window ended, and the Math.max(0, ...) clamp handles the edge case where the current time of day is before the peak end hour on Saturday.",
+        "reasoning": "",
+        "summary_hash": "817b3ff2"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::type_safety::stdin_unsafe_cast": {
+      "id": "review::.::holistic::type_safety::stdin_unsafe_cast",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
+      "detail": {
+        "holistic": true,
+        "dimension": "type_safety",
+        "related_files": [
+          "src/index.ts"
+        ],
+        "evidence": [
+          "Line 14: const data = JSON.parse(input) as StatusLineData \u2014 no runtime check that the parsed object has model, context_window, workspace, etc.",
+          "If Claude Code changes its JSON shape or sends malformed data, the error surfaces deep in segment rendering, not at the parse boundary",
+          "The outer catch (line 38) would catch the crash but the error message would be unhelpful (e.g., 'Cannot read properties of undefined')"
+        ],
+        "suggestion": "Add minimal runtime guards after parsing: if (!data?.model?.display_name || !data?.context_window || !data?.workspace?.current_dir) throw new Error('Invalid statusline data: missing required fields'). This catches shape mismatches at the boundary with a clear error message.",
+        "reasoning": "",
+        "summary_hash": "48a90af0"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "review::.::holistic::type_safety::config_unsafe_cast": {
+      "id": "review::.::holistic::type_safety::config_unsafe_cast",
+      "detector": "review",
+      "file": ".",
+      "tier": 2,
+      "confidence": "medium",
+      "summary": "Config file JSON.parse result cast to StatusBlocksConfig without shape validation",
+      "detail": {
+        "holistic": true,
+        "dimension": "type_safety",
+        "related_files": [
+          "src/config.ts"
+        ],
+        "evidence": [
+          "Line 16: config = parsed as StatusBlocksConfig \u2014 only checks typeof parsed === 'object', not that segments is string[] or theme is a valid union member",
+          "A malformed config file (e.g., {\"segments\": 42}) would pass the object check but cause runtime errors later",
+          "Contrast with the theme env var check on line 20 which properly validates with VALID_THEMES.has()"
+        ],
+        "suggestion": "Add minimal shape validation: check that parsed.segments is undefined or an array of strings, and parsed.theme is undefined or in VALID_THEMES. This matches the validation already done for the env var theme.",
+        "reasoning": "",
+        "summary_hash": "ab8e4d65"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:50:43+00:00",
+      "last_seen": "2026-03-20T18:50:43+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "review_defect",
+      "issue_kind": "review_defect",
+      "origin": "review_import",
+      "lang": "typescript",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "single_use::src/segments/promo.ts": {
+      "id": "single_use::src/segments/promo.ts",
+      "detector": "single_use",
+      "file": "src/segments/promo.ts",
+      "tier": 3,
+      "confidence": "medium",
+      "summary": "Single-use (46 LOC): only imported by src/layout.ts",
+      "detail": {
+        "loc": 46,
+        "sole_importer": "src/layout.ts"
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:51:03+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "mechanical_defect",
+      "issue_kind": "mechanical_defect",
+      "origin": "scan",
+      "lang": "typescript",
+      "zone": "production",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "test_coverage::src/segments/promo.ts::transitive_only": {
+      "id": "test_coverage::src/segments/promo.ts::transitive_only",
+      "detector": "test_coverage",
+      "file": "src/segments/promo.ts",
+      "tier": 3,
+      "confidence": "medium",
+      "summary": "No direct tests (46 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "detail": {
+        "kind": "transitive_only",
+        "loc": 46,
+        "importer_count": 1,
+        "loc_weight": 6.782329983125268
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:51:03+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "mechanical_defect",
+      "issue_kind": "mechanical_defect",
+      "origin": "scan",
+      "lang": "typescript",
+      "zone": "production",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "stale_exclude::coverage::coverage": {
+      "id": "stale_exclude::coverage::coverage",
+      "detector": "stale_exclude",
+      "file": "coverage",
+      "tier": 4,
+      "confidence": "low",
+      "summary": "Excluded directory 'coverage' has 0 references from scanned code \u2014 may be stale",
+      "detail": {
+        "directory": "coverage",
+        "references": 0
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-03-20T18:51:03+00:00",
+      "last_seen": "2026-03-20T18:51:03+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "work_item_kind": "mechanical_defect",
+      "issue_kind": "mechanical_defect",
+      "origin": "scan",
+      "lang": "typescript",
       "suppressed": false,
       "suppressed_at": null,
       "suppression_pattern": null
@@ -3980,7 +4865,7 @@
         }
       },
       "warnings": [],
-      "updated_at": "2026-03-20T18:25:54+00:00"
+      "updated_at": "2026-03-20T18:51:03+00:00"
     }
   },
   "score_confidence": {
@@ -3993,17 +4878,19 @@
     "source": "scan"
   },
   "subjective_integrity": {
-    "status": "pass",
+    "status": "warn",
     "target_score": 95.0,
-    "matched_count": 0,
-    "matched_dimensions": [],
+    "matched_count": 1,
+    "matched_dimensions": [
+      "abstraction_fitness"
+    ],
     "reset_dimensions": []
   },
   "subjective_assessments": {
     "abstraction_fitness": {
-      "score": 91.3,
+      "score": 95.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00",
+      "assessed_at": "2026-03-20T18:50:43+00:00",
       "components": [
         "Abstraction Leverage",
         "Indirection Cost",
@@ -4013,120 +4900,111 @@
         "Type Discipline"
       ],
       "component_scores": {
-        "Abstraction Leverage": 93.0,
-        "Indirection Cost": 95.0,
-        "Interface Honesty": 94.0,
-        "Delegation Density": 97.0,
-        "Definition Directness": 92.0,
-        "Type Discipline": 90.0
+        "Abstraction Leverage": 95.0,
+        "Indirection Cost": 97.0,
+        "Interface Honesty": 96.0,
+        "Delegation Density": 100.0,
+        "Definition Directness": 95.0,
+        "Type Discipline": 95.0
       }
     },
     "ai_generated_debt": {
-      "score": 90.5,
+      "score": 91.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "api_surface_coherence": {
-      "score": 88.2,
+      "score": 84.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "authorization_consistency": {
       "score": 100,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "contract_coherence": {
-      "score": 88.2,
+      "score": 83.5,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "convention_outlier": {
-      "score": 84.0,
-      "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
-    },
-    "cross_module_architecture": {
-      "score": 82.0,
-      "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
-    },
-    "dependency_health": {
-      "score": 96.0,
-      "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
-    },
-    "design_coherence": {
-      "score": 74.5,
-      "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "mechanical_issues_changed",
-      "stale_since": "2026-03-20T18:19:29+00:00"
-    },
-    "error_consistency": {
-      "score": 78.0,
-      "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "mechanical_issues_changed",
-      "stale_since": "2026-03-20T18:19:29+00:00"
-    },
-    "high_level_elegance": {
-      "score": 88.5,
-      "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-03-20T18:33:31+00:00"
-    },
-    "incomplete_migration": {
       "score": 93.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
+    },
+    "cross_module_architecture": {
+      "score": 88.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T18:50:43+00:00"
+    },
+    "dependency_health": {
+      "score": 97.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T18:50:43+00:00"
+    },
+    "design_coherence": {
+      "score": 72.5,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T18:50:43+00:00"
+    },
+    "error_consistency": {
+      "score": 82.0,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T18:50:43+00:00"
+    },
+    "high_level_elegance": {
+      "score": 87.5,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T18:50:43+00:00"
+    },
+    "incomplete_migration": {
+      "score": 100,
+      "source": "holistic",
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "initialization_coupling": {
-      "score": 79.5,
+      "score": 91.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "logic_clarity": {
       "score": 78.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "mechanical_issues_changed",
-      "stale_since": "2026-03-20T18:19:29+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "low_level_elegance": {
-      "score": 78.5,
+      "score": 80.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "mid_level_elegance": {
-      "score": 78.5,
+      "score": 87.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00",
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-03-20T18:51:41+00:00"
     },
     "naming_quality": {
-      "score": 82.5,
+      "score": 88.5,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "package_organization": {
-      "score": 91.0,
+      "score": 92.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "test_strategy": {
-      "score": 5.0,
+      "score": 55.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     },
     "type_safety": {
-      "score": 76.3,
+      "score": 74.0,
       "source": "holistic",
-      "assessed_at": "2026-03-20T18:11:31+00:00"
+      "assessed_at": "2026-03-20T18:50:43+00:00"
     }
   },
   "scan_history": [
@@ -5419,13 +6297,271 @@
           "strict": 76.3
         }
       }
+    },
+    {
+      "timestamp": "2026-03-20T18:50:43+00:00",
+      "lang": "typescript",
+      "strict_score": 83.9,
+      "verified_strict_score": 83.6,
+      "objective_score": 83.6,
+      "overall_score": 83.9,
+      "open": 70,
+      "diff_new": 18,
+      "diff_resolved": 20,
+      "ignored": 0,
+      "raw_issues": 18,
+      "suppressed_pct": 0.0,
+      "ignore_patterns": 0,
+      "subjective_integrity": {
+        "status": "disabled",
+        "matched_count": 0,
+        "reset_count": 0,
+        "target_score": null
+      },
+      "score_confidence": {
+        "status": "full",
+        "confidence": 1.0,
+        "detector_count": 0,
+        "dimension_count": 0
+      },
+      "dimension_scores": {
+        "Code quality": {
+          "score": 91.8,
+          "strict": 91.8
+        },
+        "Security": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "File health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Duplication": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Test health": {
+          "score": 64.2,
+          "strict": 64.2
+        },
+        "Abstraction fit": {
+          "score": 95.0,
+          "strict": 95.0
+        },
+        "AI generated debt": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "API coherence": {
+          "score": 84.0,
+          "strict": 84.0
+        },
+        "Auth consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Contracts": {
+          "score": 83.5,
+          "strict": 83.5
+        },
+        "Convention drift": {
+          "score": 93.0,
+          "strict": 93.0
+        },
+        "Cross-module arch": {
+          "score": 88.0,
+          "strict": 88.0
+        },
+        "Dep health": {
+          "score": 97.0,
+          "strict": 97.0
+        },
+        "Design coherence": {
+          "score": 72.5,
+          "strict": 72.5
+        },
+        "Error consistency": {
+          "score": 82.0,
+          "strict": 82.0
+        },
+        "High elegance": {
+          "score": 87.5,
+          "strict": 87.5
+        },
+        "Stale migration": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Init coupling": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "Logic clarity": {
+          "score": 78.0,
+          "strict": 78.0
+        },
+        "Low elegance": {
+          "score": 80.0,
+          "strict": 80.0
+        },
+        "Mid elegance": {
+          "score": 87.0,
+          "strict": 87.0
+        },
+        "Naming quality": {
+          "score": 88.5,
+          "strict": 88.5
+        },
+        "Structure nav": {
+          "score": 92.0,
+          "strict": 92.0
+        },
+        "Test strategy": {
+          "score": 55.0,
+          "strict": 55.0
+        },
+        "Type safety": {
+          "score": 74.0,
+          "strict": 74.0
+        }
+      }
+    },
+    {
+      "timestamp": "2026-03-20T18:51:03+00:00",
+      "lang": "typescript",
+      "strict_score": 83.2,
+      "verified_strict_score": 83.6,
+      "objective_score": 83.6,
+      "overall_score": 83.9,
+      "open": 46,
+      "diff_new": 3,
+      "diff_resolved": 23,
+      "ignored": 4,
+      "raw_issues": 24,
+      "suppressed_pct": 16.7,
+      "ignore_patterns": 12,
+      "subjective_integrity": {
+        "status": "warn",
+        "matched_count": 1,
+        "reset_count": 0,
+        "target_score": 95.0
+      },
+      "score_confidence": {
+        "status": "full",
+        "confidence": 1.0,
+        "detector_count": 0,
+        "dimension_count": 0
+      },
+      "dimension_scores": {
+        "Code quality": {
+          "score": 91.6,
+          "strict": 91.6
+        },
+        "Security": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "File health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Duplication": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Test health": {
+          "score": 63.8,
+          "strict": 57.2
+        },
+        "Abstraction fit": {
+          "score": 95.0,
+          "strict": 95.0
+        },
+        "AI generated debt": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "API coherence": {
+          "score": 84.0,
+          "strict": 84.0
+        },
+        "Auth consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Contracts": {
+          "score": 83.5,
+          "strict": 83.5
+        },
+        "Convention drift": {
+          "score": 93.0,
+          "strict": 93.0
+        },
+        "Cross-module arch": {
+          "score": 88.0,
+          "strict": 88.0
+        },
+        "Dep health": {
+          "score": 97.0,
+          "strict": 97.0
+        },
+        "Design coherence": {
+          "score": 72.5,
+          "strict": 72.5
+        },
+        "Error consistency": {
+          "score": 82.0,
+          "strict": 82.0
+        },
+        "High elegance": {
+          "score": 87.5,
+          "strict": 87.5
+        },
+        "Stale migration": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Init coupling": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "Logic clarity": {
+          "score": 78.0,
+          "strict": 78.0
+        },
+        "Low elegance": {
+          "score": 80.0,
+          "strict": 80.0
+        },
+        "Mid elegance": {
+          "score": 87.0,
+          "strict": 87.0
+        },
+        "Naming quality": {
+          "score": 88.5,
+          "strict": 88.5
+        },
+        "Structure nav": {
+          "score": 92.0,
+          "strict": 92.0
+        },
+        "Test strategy": {
+          "score": 55.0,
+          "strict": 55.0
+        },
+        "Type safety": {
+          "score": 74.0,
+          "strict": 74.0
+        }
+      }
     }
   ],
   "review_cache": {
     "detectors": {
       "boilerplate": {
         "version": 1,
-        "fingerprint": "e35a85017cb8ba5eee831aa9d728e71651d0fb48",
+        "fingerprint": "fadea9c465d7fe5976939687c92f8beef4ebae42",
         "entries": [
           {
             "id": "fd7d626bfe08facc",
@@ -6997,7 +8133,7 @@
       },
       "security": {
         "version": 1,
-        "fingerprint": "1f736936de970cc1d42e05c6895fe2c1b1877100",
+        "fingerprint": "6fb32171e00d44c8efe40f5a2eff81a4f43c6e1c",
         "entries": [],
         "files_scanned": 14,
         "coverage": null
@@ -7006,40 +8142,52 @@
         "version": 1,
         "threshold": 0.9,
         "functions": {
-          "src/campaigns/engine.ts:getTimeInTz:13:29": {
+          "src/campaigns/engine.ts:getTimeInTz:11:27": {
             "body_hash": "856b06fc187001465755fbcaee7f3e88",
             "loc": 17
           },
-          "src/campaigns/engine.ts:isWeekend:31:33": {
+          "src/campaigns/engine.ts:isWeekend:29:31": {
             "body_hash": "3154a27f1e928406a19f2b40a16c09c4",
             "loc": 3
           },
-          "src/campaigns/engine.ts:getDowNum:36:39": {
+          "src/campaigns/engine.ts:getDowNum:33:36": {
             "body_hash": "d9fe74b984b9dabdec33bb4c7aa4c36f",
             "loc": 4
           },
-          "src/campaigns/engine.ts:formatCountdown:41:47": {
+          "src/campaigns/engine.ts:formatCountdown:38:44": {
             "body_hash": "f11cb686c33f6bccf337efee2a069b25",
             "loc": 7
           },
-          "src/campaigns/engine.ts:getActiveCampaign:49:137": {
-            "body_hash": "be5c815bac8963e488792380392a0193",
-            "loc": 89
+          "src/campaigns/engine.ts:resolveWeekendState:53:65": {
+            "body_hash": "d453cba36cb1c6e04fadb59a568bebd3",
+            "loc": 13
           },
-          "src/cli.ts:settingsPath:10:12": {
+          "src/campaigns/engine.ts:resolvePeakState:67:72": {
+            "body_hash": "a435eb264e7b30ef1fe741b78ce77a4b",
+            "loc": 6
+          },
+          "src/campaigns/engine.ts:resolveOffPeakState:74:93": {
+            "body_hash": "38c18f410fb5f42eacdee683a1308075",
+            "loc": 20
+          },
+          "src/campaigns/engine.ts:getActiveCampaign:95:123": {
+            "body_hash": "182255a8490c506fca1ee5c391d62c8c",
+            "loc": 29
+          },
+          "src/cli.ts:settingsPath:11:13": {
             "body_hash": "0bb9d21389d45951190502b000017149",
             "loc": 3
           },
-          "src/cli.ts:preview:28:41": {
+          "src/cli.ts:preview:29:42": {
             "body_hash": "e53e9af465863a71e41fa07b5158a02f",
             "loc": 14
           },
-          "src/cli.ts:init:43:59": {
+          "src/cli.ts:init:44:60": {
             "body_hash": "a8f55e2786bf768d63199e907bd9f1d3",
             "loc": 17
           },
-          "src/cli.ts:help:61:81": {
-            "body_hash": "4e54fa6af8f490820026c75bd30d9869",
+          "src/cli.ts:help:62:82": {
+            "body_hash": "6e3f80c09094de50e9dc07df2a99d54d",
             "loc": 21
           },
           "src/colors.ts:color:23:25": {
@@ -7066,28 +8214,28 @@
             "body_hash": "a5c294a9922f53ed9fa1d221bfc3064b",
             "loc": 44
           },
-          "src/layout.ts:getSegmentOrder:14:16": {
+          "src/layout.ts:getSegmentOrder:15:17": {
             "body_hash": "bdea230de6886a08194ff1b6d0c2bc11",
             "loc": 3
           },
-          "src/layout.ts:boxify:23:39": {
+          "src/layout.ts:boxify:24:40": {
             "body_hash": "6b046d401b5e65cfd0130dccab953f3b",
             "loc": 17
           },
-          "src/layout.ts:renderRow:42:65": {
+          "src/layout.ts:renderRow:43:66": {
             "body_hash": "3d3dcfef9614c34684fbd2b2c0a022f1",
             "loc": 24
           },
-          "src/layout.ts:findOptimalAssignment:73:128": {
+          "src/layout.ts:findOptimalAssignment:74:129": {
             "body_hash": "e8391e30a8dce7e0608e3095d32f8fbf",
             "loc": 56
           },
-          "src/layout.ts:materializeAssignment:131:154": {
+          "src/layout.ts:materializeAssignment:132:155": {
             "body_hash": "6175cf57862512a213837fe5fbf9fc07",
             "loc": 24
           },
-          "src/layout.ts:render:156:179": {
-            "body_hash": "c9d3b775966c96ac951cf97c46a7159c",
+          "src/layout.ts:render:157:180": {
+            "body_hash": "04b9c1c83c721edb35187c30279c6d1b",
             "loc": 24
           },
           "src/segments/context.ts:formatTokens:4:8": {
@@ -7102,8 +8250,8 @@
             "body_hash": "ab29f7c01a88dd319f69d65956e29ca5",
             "loc": 6
           },
-          "src/segments/usage.ts:resetCountdown:4:14": {
-            "body_hash": "0ff75a608c819e16be1ee423458178a2",
+          "src/segments/usage.ts:formatResetTime:4:14": {
+            "body_hash": "0b9d2521fbb429ba2f16f3aec4ee6c53",
             "loc": 11
           },
           "src/segments/usage.ts:miniBar:16:21": {
@@ -7116,9 +8264,9 @@
     },
     "files": {},
     "holistic": {
-      "reviewed_at": "2026-03-20T18:11:31+00:00",
+      "reviewed_at": "2026-03-20T18:50:43+00:00",
       "file_count_at_review": 14,
-      "issue_count": 25,
+      "issue_count": 18,
       "reviewed_files_count": 0,
       "full_sweep_included": false
     }
@@ -7153,7 +8301,7 @@
       "deprecated": 0,
       "structural": 14,
       "flat_dirs": 3,
-      "props": 0,
+      "props": 1,
       "single_use": 0,
       "coupling": 0,
       "cycles": 14,
@@ -7161,29 +8309,29 @@
       "patterns": 1,
       "naming": 3,
       "facade": 14,
-      "test_coverage": 103,
-      "smells": 17,
+      "test_coverage": 102,
+      "smells": 15,
       "react": 0,
       "security": 14,
       "subjective_review": 20,
       "boilerplate_duplication": 0,
-      "dupes": 26,
+      "dupes": 29,
       "stale_wontfix": 0
     }
   },
   "codebase_metrics": {
     "typescript": {
       "total_files": 20,
-      "total_loc": 1324,
+      "total_loc": 1379,
       "total_directories": 3
     }
   },
   "dimension_scores": {
     "Code quality": {
-      "score": 91.8,
-      "strict": 91.8,
-      "verified_strict_score": 91.8,
-      "checks": 80,
+      "score": 91.6,
+      "strict": 91.6,
+      "verified_strict_score": 91.6,
+      "checks": 79,
       "failing": 13,
       "tier": 3,
       "detectors": {
@@ -7200,8 +8348,8 @@
           "weighted_failures": 1.0
         },
         "smells": {
-          "potential": 17,
-          "pass_rate": 0.7117647058823531,
+          "potential": 15,
+          "pass_rate": 0.6733333333333335,
           "failing": 11,
           "weighted_failures": 4.8999999999999995
         },
@@ -7225,6 +8373,12 @@
         },
         "facade": {
           "potential": 14,
+          "pass_rate": 1.0,
+          "failing": 0,
+          "weighted_failures": 0.0
+        },
+        "props": {
+          "potential": 1,
           "pass_rate": 1.0,
           "failing": 0,
           "weighted_failures": 0.0
@@ -7279,12 +8433,12 @@
       "score": 100.0,
       "strict": 100.0,
       "verified_strict_score": 100.0,
-      "checks": 26,
+      "checks": 29,
       "failing": 0,
       "tier": 3,
       "detectors": {
         "dupes": {
-          "potential": 26,
+          "potential": 29,
           "pass_rate": 1.0,
           "failing": 0,
           "weighted_failures": 0.0
@@ -7292,35 +8446,35 @@
       }
     },
     "Test health": {
-      "score": 64.2,
-      "strict": 64.2,
-      "verified_strict_score": 64.2,
-      "checks": 103,
-      "failing": 7,
+      "score": 63.8,
+      "strict": 57.2,
+      "verified_strict_score": 63.8,
+      "checks": 102,
+      "failing": 6,
       "tier": 4,
       "detectors": {
         "test_coverage": {
-          "potential": 103,
-          "pass_rate": 0.6419134268531487,
-          "failing": 7,
+          "potential": 102,
+          "pass_rate": 0.6384027741752384,
+          "failing": 6,
           "weighted_failures": 36.88291703412568
         }
       }
     },
     "Abstraction fit": {
-      "score": 91.3,
-      "strict": 91.3,
-      "verified_strict_score": 91.3,
+      "score": 95.0,
+      "strict": 95.0,
+      "verified_strict_score": 95.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.913,
+          "pass_rate": 0.95,
           "failing": 0,
-          "weighted_failures": 0.87,
-          "assessment_score": 91.3,
+          "weighted_failures": 0.5,
+          "assessment_score": 95.0,
           "placeholder": false,
           "dimension_key": "abstraction_fitness",
           "configured_weight": 8.0,
@@ -7333,30 +8487,30 @@
             "Type Discipline"
           ],
           "component_scores": {
-            "Abstraction Leverage": 93.0,
-            "Indirection Cost": 95.0,
-            "Interface Honesty": 94.0,
-            "Delegation Density": 97.0,
-            "Definition Directness": 92.0,
-            "Type Discipline": 90.0
+            "Abstraction Leverage": 95.0,
+            "Indirection Cost": 97.0,
+            "Interface Honesty": 96.0,
+            "Delegation Density": 100.0,
+            "Definition Directness": 95.0,
+            "Type Discipline": 95.0
           }
         }
       }
     },
     "AI generated debt": {
-      "score": 90.5,
-      "strict": 90.5,
-      "verified_strict_score": 90.5,
+      "score": 91.0,
+      "strict": 91.0,
+      "verified_strict_score": 91.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.905,
-          "failing": 1,
-          "weighted_failures": 0.95,
-          "assessment_score": 90.5,
+          "pass_rate": 0.91,
+          "failing": 0,
+          "weighted_failures": 0.9,
+          "assessment_score": 91.0,
           "placeholder": false,
           "dimension_key": "ai_generated_debt",
           "configured_weight": 1.0,
@@ -7365,19 +8519,19 @@
       }
     },
     "API coherence": {
-      "score": 88.2,
-      "strict": 88.2,
-      "verified_strict_score": 88.2,
+      "score": 84.0,
+      "strict": 84.0,
+      "verified_strict_score": 84.0,
       "checks": 10,
       "failing": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.882,
+          "pass_rate": 0.84,
           "failing": 1,
-          "weighted_failures": 1.18,
-          "assessment_score": 88.2,
+          "weighted_failures": 1.6,
+          "assessment_score": 84.0,
           "placeholder": false,
           "dimension_key": "api_surface_coherence",
           "configured_weight": 1.0,
@@ -7407,19 +8561,19 @@
       }
     },
     "Contracts": {
-      "score": 88.2,
-      "strict": 88.2,
-      "verified_strict_score": 88.2,
+      "score": 83.5,
+      "strict": 83.5,
+      "verified_strict_score": 83.5,
       "checks": 10,
       "failing": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.882,
+          "pass_rate": 0.835,
           "failing": 1,
-          "weighted_failures": 1.18,
-          "assessment_score": 88.2,
+          "weighted_failures": 1.65,
+          "assessment_score": 83.5,
           "placeholder": false,
           "dimension_key": "contract_coherence",
           "configured_weight": 12.0,
@@ -7428,132 +8582,6 @@
       }
     },
     "Convention drift": {
-      "score": 84.0,
-      "strict": 84.0,
-      "verified_strict_score": 84.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.84,
-          "failing": 1,
-          "weighted_failures": 1.6,
-          "assessment_score": 84.0,
-          "placeholder": false,
-          "dimension_key": "convention_outlier",
-          "configured_weight": 1.0,
-          "components": []
-        }
-      }
-    },
-    "Cross-module arch": {
-      "score": 82.0,
-      "strict": 82.0,
-      "verified_strict_score": 82.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.82,
-          "failing": 1,
-          "weighted_failures": 1.8,
-          "assessment_score": 82.0,
-          "placeholder": false,
-          "dimension_key": "cross_module_architecture",
-          "configured_weight": 1.0,
-          "components": []
-        }
-      }
-    },
-    "Dep health": {
-      "score": 96.0,
-      "strict": 96.0,
-      "verified_strict_score": 96.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.96,
-          "failing": 0,
-          "weighted_failures": 0.4,
-          "assessment_score": 96.0,
-          "placeholder": false,
-          "dimension_key": "dependency_health",
-          "configured_weight": 1.0,
-          "components": []
-        }
-      }
-    },
-    "Design coherence": {
-      "score": 74.5,
-      "strict": 74.5,
-      "verified_strict_score": 74.5,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.745,
-          "failing": 3,
-          "weighted_failures": 2.55,
-          "assessment_score": 74.5,
-          "placeholder": false,
-          "dimension_key": "design_coherence",
-          "configured_weight": 10.0,
-          "components": []
-        }
-      }
-    },
-    "Error consistency": {
-      "score": 78.0,
-      "strict": 78.0,
-      "verified_strict_score": 78.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.78,
-          "failing": 1,
-          "weighted_failures": 2.2,
-          "assessment_score": 78.0,
-          "placeholder": false,
-          "dimension_key": "error_consistency",
-          "configured_weight": 3.0,
-          "components": []
-        }
-      }
-    },
-    "High elegance": {
-      "score": 88.5,
-      "strict": 88.5,
-      "verified_strict_score": 88.5,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.885,
-          "failing": 0,
-          "weighted_failures": 1.15,
-          "assessment_score": 88.5,
-          "placeholder": false,
-          "dimension_key": "high_level_elegance",
-          "configured_weight": 22.0,
-          "components": []
-        }
-      }
-    },
-    "Stale migration": {
       "score": 93.0,
       "strict": 93.0,
       "verified_strict_score": 93.0,
@@ -7568,6 +8596,132 @@
           "weighted_failures": 0.7,
           "assessment_score": 93.0,
           "placeholder": false,
+          "dimension_key": "convention_outlier",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Cross-module arch": {
+      "score": 88.0,
+      "strict": 88.0,
+      "verified_strict_score": 88.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.88,
+          "failing": 1,
+          "weighted_failures": 1.2,
+          "assessment_score": 88.0,
+          "placeholder": false,
+          "dimension_key": "cross_module_architecture",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Dep health": {
+      "score": 97.0,
+      "strict": 97.0,
+      "verified_strict_score": 97.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.97,
+          "failing": 0,
+          "weighted_failures": 0.3,
+          "assessment_score": 97.0,
+          "placeholder": false,
+          "dimension_key": "dependency_health",
+          "configured_weight": 1.0,
+          "components": []
+        }
+      }
+    },
+    "Design coherence": {
+      "score": 72.5,
+      "strict": 72.5,
+      "verified_strict_score": 72.5,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.725,
+          "failing": 1,
+          "weighted_failures": 2.75,
+          "assessment_score": 72.5,
+          "placeholder": false,
+          "dimension_key": "design_coherence",
+          "configured_weight": 10.0,
+          "components": []
+        }
+      }
+    },
+    "Error consistency": {
+      "score": 82.0,
+      "strict": 82.0,
+      "verified_strict_score": 82.0,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.82,
+          "failing": 1,
+          "weighted_failures": 1.8,
+          "assessment_score": 82.0,
+          "placeholder": false,
+          "dimension_key": "error_consistency",
+          "configured_weight": 3.0,
+          "components": []
+        }
+      }
+    },
+    "High elegance": {
+      "score": 87.5,
+      "strict": 87.5,
+      "verified_strict_score": 87.5,
+      "checks": 10,
+      "failing": 1,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 0.875,
+          "failing": 1,
+          "weighted_failures": 1.25,
+          "assessment_score": 87.5,
+          "placeholder": false,
+          "dimension_key": "high_level_elegance",
+          "configured_weight": 22.0,
+          "components": []
+        }
+      }
+    },
+    "Stale migration": {
+      "score": 100.0,
+      "strict": 100.0,
+      "verified_strict_score": 100.0,
+      "checks": 10,
+      "failing": 0,
+      "tier": 4,
+      "detectors": {
+        "subjective_assessment": {
+          "potential": 10,
+          "pass_rate": 1.0,
+          "failing": 0,
+          "weighted_failures": 0.0,
+          "assessment_score": 100.0,
+          "placeholder": false,
           "dimension_key": "incomplete_migration",
           "configured_weight": 1.0,
           "components": []
@@ -7575,19 +8729,19 @@
       }
     },
     "Init coupling": {
-      "score": 79.5,
-      "strict": 79.5,
-      "verified_strict_score": 79.5,
+      "score": 91.0,
+      "strict": 91.0,
+      "verified_strict_score": 91.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.795,
-          "failing": 1,
-          "weighted_failures": 2.05,
-          "assessment_score": 79.5,
+          "pass_rate": 0.91,
+          "failing": 0,
+          "weighted_failures": 0.9,
+          "assessment_score": 91.0,
           "placeholder": false,
           "dimension_key": "initialization_coupling",
           "configured_weight": 1.0,
@@ -7617,19 +8771,19 @@
       }
     },
     "Low elegance": {
-      "score": 78.5,
-      "strict": 78.5,
-      "verified_strict_score": 78.5,
+      "score": 80.0,
+      "strict": 80.0,
+      "verified_strict_score": 80.0,
       "checks": 10,
       "failing": 2,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.785,
+          "pass_rate": 0.8,
           "failing": 2,
-          "weighted_failures": 2.15,
-          "assessment_score": 78.5,
+          "weighted_failures": 2.0,
+          "assessment_score": 80.0,
           "placeholder": false,
           "dimension_key": "low_level_elegance",
           "configured_weight": 12.0,
@@ -7638,19 +8792,19 @@
       }
     },
     "Mid elegance": {
-      "score": 78.5,
-      "strict": 78.5,
-      "verified_strict_score": 78.5,
+      "score": 87.0,
+      "strict": 87.0,
+      "verified_strict_score": 87.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.785,
-          "failing": 1,
-          "weighted_failures": 2.15,
-          "assessment_score": 78.5,
+          "pass_rate": 0.87,
+          "failing": 0,
+          "weighted_failures": 1.3,
+          "assessment_score": 87.0,
           "placeholder": false,
           "dimension_key": "mid_level_elegance",
           "configured_weight": 22.0,
@@ -7659,19 +8813,19 @@
       }
     },
     "Naming quality": {
-      "score": 82.5,
-      "strict": 82.5,
-      "verified_strict_score": 82.5,
+      "score": 88.5,
+      "strict": 88.5,
+      "verified_strict_score": 88.5,
       "checks": 10,
-      "failing": 2,
+      "failing": 1,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.825,
-          "failing": 2,
-          "weighted_failures": 1.75,
-          "assessment_score": 82.5,
+          "pass_rate": 0.885,
+          "failing": 1,
+          "weighted_failures": 1.15,
+          "assessment_score": 88.5,
           "placeholder": false,
           "dimension_key": "naming_quality",
           "configured_weight": 2.0,
@@ -7680,19 +8834,19 @@
       }
     },
     "Structure nav": {
-      "score": 91.0,
-      "strict": 91.0,
-      "verified_strict_score": 91.0,
+      "score": 92.0,
+      "strict": 92.0,
+      "verified_strict_score": 92.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.91,
+          "pass_rate": 0.92,
           "failing": 0,
-          "weighted_failures": 0.9,
-          "assessment_score": 91.0,
+          "weighted_failures": 0.8,
+          "assessment_score": 92.0,
           "placeholder": false,
           "dimension_key": "package_organization",
           "configured_weight": 5.0,
@@ -7701,19 +8855,19 @@
       }
     },
     "Test strategy": {
-      "score": 5.0,
-      "strict": 5.0,
-      "verified_strict_score": 5.0,
+      "score": 55.0,
+      "strict": 55.0,
+      "verified_strict_score": 55.0,
       "checks": 10,
-      "failing": 4,
+      "failing": 3,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.05,
-          "failing": 4,
-          "weighted_failures": 9.5,
-          "assessment_score": 5.0,
+          "pass_rate": 0.55,
+          "failing": 3,
+          "weighted_failures": 4.5,
+          "assessment_score": 55.0,
           "placeholder": false,
           "dimension_key": "test_strategy",
           "configured_weight": 1.0,
@@ -7722,19 +8876,19 @@
       }
     },
     "Type safety": {
-      "score": 76.3,
-      "strict": 76.3,
-      "verified_strict_score": 76.3,
+      "score": 74.0,
+      "strict": 74.0,
+      "verified_strict_score": 74.0,
       "checks": 10,
       "failing": 2,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
-          "pass_rate": 0.763,
+          "pass_rate": 0.74,
           "failing": 2,
-          "weighted_failures": 2.37,
-          "assessment_score": 76.3,
+          "weighted_failures": 2.6,
+          "assessment_score": 74.0,
           "placeholder": false,
           "dimension_key": "type_safety",
           "configured_weight": 12.0,
@@ -7746,12 +8900,13 @@
   "reminder_history": {
     "auto_fixers_available": 3,
     "dry_run_first": 3,
-    "report_scores": 8,
+    "report_scores": 9,
     "feedback_nudge": 3,
     "review_issues_pending": 3,
     "stagnant_nudge": 4,
     "zone_classification": 3,
-    "review_not_run": 1
+    "review_not_run": 2,
+    "wontfix_growing": 1
   },
   "concern_dismissals": {
     "6dd8d52fb6d185d2": {
@@ -7773,6 +8928,43 @@
         "orphaned::src/cli.ts",
         "smells::src/cli.ts::console_error_no_throw",
         "smells::src/cli.ts::magic_number"
+      ]
+    },
+    "6058484bc35b2eed": {
+      "dismissed_at": "2026-03-20T18:50:43+00:00",
+      "reasoning": "The cyclomatic complexity has been reduced by extracting state resolution into focused helper functions. The remaining branches in getActiveCampaign() are necessary for campaign lifecycle (before start, after end, weekend, peak/off-peak).",
+      "concern_type": "",
+      "concern_file": "",
+      "source_issue_ids": [
+        "smells::src/campaigns/engine.ts::high_cyclomatic_complexity",
+        "smells::src/campaigns/engine.ts::magic_number"
+      ]
+    },
+    "eafe5c4c9660842f": {
+      "dismissed_at": "2026-03-20T18:50:43+00:00",
+      "reasoning": "The complexity comes from two data sources with error handling, which is a single coherent responsibility. Extracting would fragment without reducing cognitive load.",
+      "concern_type": "",
+      "concern_file": "",
+      "source_issue_ids": [
+        "smells::src/effort.ts::high_cyclomatic_complexity"
+      ]
+    },
+    "bb6c6608cbf3357b": {
+      "dismissed_at": "2026-03-20T18:50:43+00:00",
+      "reasoning": "The cyclomatic complexity arises from a brute-force bin-packing algorithm. The branches are all part of a single optimization loop \u2014 extracting sub-functions would obscure the algorithm without reducing real complexity.",
+      "concern_type": "",
+      "concern_file": "",
+      "source_issue_ids": [
+        "smells::src/layout.ts::high_cyclomatic_complexity"
+      ]
+    },
+    "cc1dbfee1c85c533": {
+      "dismissed_at": "2026-03-20T18:50:43+00:00",
+      "reasoning": "The number 5000 is a cache TTL in milliseconds \u2014 its meaning is clear from context (now - gitCache.ts < 5000). Not a design problem.",
+      "concern_type": "",
+      "concern_file": "",
+      "source_issue_ids": [
+        "smells::src/segments/git.ts::magic_number"
       ]
     }
   },
@@ -7802,6 +8994,19 @@
       "attest": "",
       "import_file": "/Users/okan/code/claude-tools/claude-statusblocks/.desloppify/subagents/runs/20260320_180633/holistic_issues_merged.json",
       "packet_sha256": "c3f5720fecacf0d147ba35c66ac51cc74d813c99996348550b4562671d7ef408"
+    },
+    {
+      "timestamp": "2026-03-20T18:50:43+00:00",
+      "mode": "trusted_internal",
+      "trusted": true,
+      "reason": "trusted import-run replay from 20260320_184655",
+      "override_used": false,
+      "attested_external": false,
+      "provisional": false,
+      "provisional_count": 0,
+      "attest": "",
+      "import_file": "/Users/okan/code/claude-tools/claude-statusblocks/.desloppify/subagents/runs/20260320_184655/holistic_issues_merged.json",
+      "packet_sha256": "a37f0324a57a5400747aec3f38ea6c172f6986e0638a6bf323999ee764d70f9e"
     }
   ],
   "attestation_log": [

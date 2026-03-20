@@ -1,0 +1,96 @@
+{
+  "batch": "type_safety",
+  "batch_index": 20,
+  "assessments": {"type_safety": 74.0},
+  "dimension_notes": {
+    "type_safety": {
+      "evidence": [
+        "index.ts line 14: JSON.parse(input) as StatusLineData — casts external stdin data without any runtime validation, trusting that Claude Code always sends valid JSON matching the interface",
+        "config.ts line 16: parsed as StatusBlocksConfig — casts parsed JSON without runtime shape validation",
+        "config.ts line 20: envTheme validation has been added (VALID_THEMES.has(envTheme)) before the cast — this previously flagged issue is partially resolved",
+        "effort.ts line 35: match[1]!.toLowerCase() as EffortLevel — casts regex match group to union type; safe because the regex only matches 'low|medium|high|max'",
+        "effort.ts line 49: settings.effortLevel as EffortLevel — casts after includes() validation, which is correct",
+        "types.ts defines clear interfaces with appropriate use of optional fields (rate_limits?, cwd?, transcript_path?)",
+        "StatusLineData uses null unions (used_percentage: number | null) appropriately for fields that may be absent",
+        "No type: ignore comments anywhere in the codebase",
+        "All public functions have return type annotations or TypeScript inference covers them"
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "type_safety": {
+      "dimension_character": "Type definitions are well-structured with appropriate use of optional fields and null unions. The Segment/Block/Campaign interfaces provide clear contracts. However, the codebase has two trust boundary violations where external data (stdin JSON, config file JSON) is cast to typed interfaces without runtime validation. These are the primary type safety gap — if the input shape changes or is malformed, the error would manifest as a runtime crash deep in rendering code rather than a clear validation error at the boundary.",
+      "score_rationale": "The stdin JSON.parse-as-StatusLineData cast is a genuine type safety gap at the most critical boundary (the primary data input). The config file cast is lower risk but follows the same unsafe pattern. The env var theme validation (VALID_THEMES set check) shows the codebase can do runtime validation — it just does not apply it consistently at all boundaries. Well-typed internals and clean interface definitions pull the score above 70, but the unvalidated trust boundary keeps it below 80."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "type_safety",
+      "identifier": "stdin_unsafe_cast",
+      "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
+      "related_files": ["src/index.ts"],
+      "evidence": [
+        "Line 14: const data = JSON.parse(input) as StatusLineData — no runtime check that the parsed object has model, context_window, workspace, etc.",
+        "If Claude Code changes its JSON shape or sends malformed data, the error surfaces deep in segment rendering, not at the parse boundary",
+        "The outer catch (line 38) would catch the crash but the error message would be unhelpful (e.g., 'Cannot read properties of undefined')"
+      ],
+      "suggestion": "Add minimal runtime guards after parsing: if (!data?.model?.display_name || !data?.context_window || !data?.workspace?.current_dir) throw new Error('Invalid statusline data: missing required fields'). This catches shape mismatches at the boundary with a clear error message.",
+      "confidence": "medium",
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "type_safety",
+      "identifier": "config_unsafe_cast",
+      "summary": "Config file JSON.parse result cast to StatusBlocksConfig without shape validation",
+      "related_files": ["src/config.ts"],
+      "evidence": [
+        "Line 16: config = parsed as StatusBlocksConfig — only checks typeof parsed === 'object', not that segments is string[] or theme is a valid union member",
+        "A malformed config file (e.g., {\"segments\": 42}) would pass the object check but cause runtime errors later",
+        "Contrast with the theme env var check on line 20 which properly validates with VALID_THEMES.has()"
+      ],
+      "suggestion": "Add minimal shape validation: check that parsed.segments is undefined or an array of strings, and parsed.theme is undefined or in VALID_THEMES. This matches the validation already done for the env var theme.",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["External data boundaries (stdin, config file) lack runtime validation — the codebase relies on TypeScript's compile-time types to describe shapes that are only known at runtime"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "type_safety": {
+      "add": [
+        {
+          "header": "Well-structured type definitions",
+          "description": "StatusLineData, Block, Segment, Campaign, and StatusBlocksConfig interfaces use appropriate optional fields, null unions, and nested types. No overly broad 'any' usage in type definitions.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Theme env var validation added",
+          "description": "config.ts now validates CLAUDE_STATUSBLOCKS_THEME against VALID_THEMES set before casting. This partially resolves the previously flagged unsafe cast issue — the env var path is now safe, but the config file path still lacks validation.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No type:ignore comments in codebase",
+          "description": "The codebase avoids type:ignore entirely. All type assertions use 'as' casts, and where they appear, they are either validated (effort regex, theme set check) or at known trust boundaries (stdin, config file).",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Unvalidated external data boundaries",
+          "description": "Both stdin JSON (index.ts) and config file JSON (config.ts) use 'as' casts without runtime shape validation. This is the primary type safety gap — errors from malformed input surface deep in rendering code rather than at the parse boundary.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

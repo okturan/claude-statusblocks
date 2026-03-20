@@ -1,0 +1,84 @@
+{
+  "batch": "api_surface_coherence",
+  "batch_index": 11,
+  "assessments": {
+    "api_surface_coherence": 84.0
+  },
+  "dimension_notes": {
+    "api_surface_coherence": {
+      "evidence": [
+        "All 5 segments implement the same Segment interface consistently: id, priority, enabled(data), render(data, availWidth)",
+        "render() returns Block with consistent shape {id, priority, width, lines} across all segments",
+        "Public API surface is minimal: layout.ts exports only render(), config.ts exports only loadConfig(), each segment file exports exactly one segment object",
+        "allocWidth parameter in render() is only used by modelSegment (for directory truncation budget), other 4 segments ignore it — the interface promises width-awareness but only 1 of 5 segments delivers",
+        "All segment render methods are synchronous, no mixed sync/async — consistent API shape",
+        "No public function exceeds 5 parameters; render() has exactly 2 (data, availWidth), layout's render() has 3 (data, termWidth, config)"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The allocWidth parameter is accepted but ignored by 4 of 5 segment implementations, creating a minor interface honesty gap. However, for a 5-segment codebase this is pragmatic and adding optionality would be worse."
+    }
+  },
+  "dimension_judgment": {
+    "api_surface_coherence": {
+      "dimension_character": "The API surface is small, consistent, and predictable. All segments follow the same Segment interface with uniform render/enabled signatures, all public exports are named exports with one export per module, and there is no mixed sync/async. The only friction point is the allocWidth parameter that 4 of 5 segments ignore, but this is a minor interface honesty gap that does not confuse callers since layout.ts is the sole consumer.",
+      "score_rationale": "A developer seeing one segment can predict the shape of all others — consistent parameter ordering, return types, and naming. The unused allocWidth parameter prevents a 90+ score, but it does not create real confusion since the codebase has a single call site. This places the codebase solidly above the 80 anchor (recurring friction) but below 90 (only minor friction), reflecting an overall coherent API surface with one isolated rough edge."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "api_surface_coherence",
+      "identifier": "allocwidth_unused_by_most_segments",
+      "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
+      "related_files": [
+        "src/types.ts",
+        "src/segments/model.ts",
+        "src/segments/context.ts",
+        "src/segments/promo.ts",
+        "src/segments/git.ts",
+        "src/segments/usage.ts"
+      ],
+      "evidence": [
+        "modelSegment.render() uses allocWidth for directory truncation budget (line 34: const dirBudget = Math.max(allocWidth - nameLen, 0))",
+        "contextSegment.render(data) does not declare allocWidth parameter at all",
+        "gitSegment.render(data) does not declare allocWidth parameter at all",
+        "promoSegment.render() does not declare allocWidth parameter at all",
+        "usageSegment.render(data) does not declare allocWidth parameter at all"
+      ],
+      "suggestion": "This is a pragmatic interface design for a 5-segment codebase — making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments are added that also ignore it, consider splitting into a base interface without allocWidth and a width-aware variant.",
+      "confidence": "low",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": ["allocwidth_unused_by_most_segments — for a 5-segment codebase, the unused parameter is pragmatic interface overhead, not a real defect"]
+  },
+  "context_updates": {
+    "api_surface_coherence": {
+      "add": [
+        {
+          "header": "Consistent Segment interface across all modules",
+          "description": "All 5 segments implement the same Segment interface with identical render/enabled signatures and uniform Block return shape. A developer seeing one segment can predict all others.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Single named export per segment module",
+          "description": "Each segment file exports exactly one const implementing Segment. This makes the public surface minimal and predictable — no overloaded exports or mixed patterns.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "All APIs synchronous with no mixed patterns",
+          "description": "Every public function across the codebase is synchronous. There is no mixed sync/async in any module's public API, eliminating a common coherence failure mode.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

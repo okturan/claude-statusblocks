@@ -1,0 +1,61 @@
+{
+  "batch": "initialization_coupling",
+  "batch_index": 16,
+  "assessments": {"initialization_coupling": 82.0},
+  "dimension_notes": {
+    "initialization_coupling": {
+      "evidence": [
+        "config.ts computes homedir() inside loadConfig() at call time, not at import time — no stale snapshot for config path",
+        "cli.ts wraps settingsPath() in a function rather than a module-level constant, avoiding import-time homedir() bake",
+        "effort.ts reads CLAUDE_CONFIG_DIR and homedir() inside resolveEffort() at call time, not import time",
+        "git.ts gitCache is a module-level mutable singleton but is only populated on first call — no import-time I/O",
+        "effort.ts cache is module-level mutable but lazy-populated — no import-time side effects",
+        "campaigns/data.ts exports a static array constant — no import-time computation beyond object literals",
+        "All segment modules export plain objects with no import-time side effects",
+        "No circular dependencies detected in the import graph"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Previously flagged CONFIG_PATH/SETTINGS_PATH issue has been fixed (config.ts now calls homedir() inside loadConfig, cli.ts uses settingsPath() function). However, effort.ts EFFORT_RE regex and CACHE_TTL are module-level constants computed at import time — these are benign (pure values) but the module-level cache singleton pattern, while lazy, still couples test isolation to import ordering if tests share module state."
+    }
+  },
+  "dimension_judgment": {
+    "initialization_coupling": {
+      "dimension_character": "The codebase has minimal import-time side effects. All I/O (file reads, process spawns, env var reads) happens at call time within functions, not at module scope. Module-level state consists of lazy caches (gitCache, effort cache) and pure constant values (regex, arrays), which is appropriate for a CLI tool that runs as a short-lived process.",
+      "score_rationale": "Scores above 80 because the previously flagged CONFIG_PATH/SETTINGS_PATH import-time bake has been fixed — homedir() is now called inside functions. The module-level caches (gitCache, effort cache) are lazy and appropriate for this tool's lifecycle. Held below 90 because the module-level mutable singletons, while not causing production issues in a short-lived CLI, create test isolation concerns if the codebase grows tests that share module state across test cases."
+    }
+  },
+  "issues": [],
+  "retrospective": {
+    "root_causes": ["The previously flagged CONFIG_PATH/SETTINGS_PATH issue appears to have been resolved — config.ts now computes the path inside loadConfig() and cli.ts uses a settingsPath() function"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "initialization_coupling": {
+      "add": [
+        {
+          "header": "All I/O deferred to call time",
+          "description": "File reads (config, transcript, settings), process spawns (git, tty detection), and env var reads all happen inside function bodies, not at module scope. This eliminates boot-order fragility.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Module-level caches are lazy singletons",
+          "description": "gitCache and effort cache are module-level mutable variables but are only populated on first function call, not at import time. Appropriate for a short-lived CLI process but would need isolation if test coverage grows.",
+          "settled": true,
+          "positive": false
+        },
+        {
+          "header": "No circular init dependencies",
+          "description": "Import graph flows cleanly: index.ts -> layout.ts -> segments/* -> colors.ts/types.ts/engine.ts. No conditional or lazy imports needed to break cycles.",
+          "settled": true,
+          "positive": true
+        }
+      ],
+      "settle": [],
+      "remove": []
+    }
+  }
+}

@@ -11,7 +11,12 @@ process.stdin.setEncoding('utf8');
 process.stdin.on('data', (chunk: string) => { input += chunk; });
 process.stdin.on('end', () => {
   try {
-    const data = JSON.parse(input) as StatusLineData;
+    const parsed = JSON.parse(input);
+    if (!parsed || typeof parsed !== 'object' || !parsed.model || !parsed.context_window) {
+      process.stdout.write('\n');
+      return;
+    }
+    const data = parsed as StatusLineData;
     const config = loadConfig();
     // Detect terminal width — stty on parent's TTY, then tput, then fallback
     let termWidth = process.stderr.columns || process.stdout.columns || 0;
@@ -25,12 +30,12 @@ process.stdin.on('end', () => {
             encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'], shell: '/bin/sh'
           }).trim(), 10) || 0;
         }
-      } catch { /* */ }
+      } catch { /* TTY detection failed — try fallback */ }
     }
     if (!termWidth) {
       try {
         termWidth = parseInt(execSync('tput cols', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim(), 10) || 0;
-      } catch { /* */ }
+      } catch { /* tput unavailable — use default */ }
     }
     if (!termWidth) { termWidth = 120; }
     const output = render(data, termWidth, config);

@@ -1,0 +1,75 @@
+{
+  "batch": "cross_module_architecture",
+  "batch_index": 1,
+  "assessments": {"cross_module_architecture": 88.0},
+  "dimension_notes": {
+    "cross_module_architecture": {
+      "evidence": [
+        "Clean three-layer dependency direction: src/segments/ imports from src/ (types, colors, config, effort) and src/campaigns/; src/campaigns/ imports from src/ (types); src/ does not import from campaigns. No reverse imports.",
+        "Coupling matrix confirms unidirectional flow: segments->src (11 edges), src->segments (5 edges via layout.ts segment imports only), campaigns->src (2 edges for types), segments->campaigns (1 edge for promo segment). The src->segments edges are concentrated in layout.ts which is the composition root.",
+        "layout.ts hardcodes all 5 segment imports -- this is the only hub module. With 5 segments this is pragmatic; blast radius is limited to adding one import line per new segment.",
+        "No shared mutable state between modules except git.ts module-level cache (gitCache) and effort.ts module-level cache, both scoped to their own modules and not exported.",
+        "No circular dependencies detected in the import graph.",
+        "types.ts (13 importers) and colors.ts (10 importers) are high fan-in but are pure leaf modules (types has zero imports, colors has zero local imports). They serve as stable foundations, not god modules with behavior."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "layout.ts serves as both composition root and layout algorithm, coupling segment registration to rendering logic. The bidirectional coupling between src/ and src/segments/ (layout imports segments, segments import from src/) is architecturally sound but means layout.ts is a change bottleneck for any segment addition."
+    }
+  },
+  "dimension_judgment": {
+    "cross_module_architecture": {
+      "dimension_character": "The dependency graph is clean and intentional for a ~960 LOC codebase. Dependencies flow unidirectionally from segments toward shared foundations (types, colors), with layout.ts as the single composition point. There are no cycles, no shared mutable state crossing boundaries, and no compatibility shims. The only architectural friction is that layout.ts doubles as both segment registry and layout engine, but at 5 segments this is proportionate.",
+      "score_rationale": "Strong boundary discipline with clear layer separation earns a score well above the 80 anchor. The dependency graph is easy to trace and predictable -- a developer can confidently add or modify segments knowing exactly which files are affected. The hardcoded segment imports in layout.ts prevent a higher score but the existing issue already acknowledges this is pragmatic at current scale. No cycles, no god modules with behavior, no cross-module mutable state."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "layout_dual_responsibility",
+      "summary": "layout.ts hardcodes all segment imports -- adding a segment requires editing layout.ts",
+      "related_files": ["src/layout.ts"],
+      "evidence": ["Lines 4-8 import all 5 segments individually; line 10 assembles them into ALL_SEGMENTS array. Any new segment requires adding both an import and an array entry here."],
+      "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern out of the layout algorithm.",
+      "confidence": "low",
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Small codebase with clean manual wiring -- the only architectural concern is the single composition point in layout.ts"],
+    "likely_symptoms": [],
+    "possible_false_positives": ["layout_dual_responsibility is borderline at current scale -- 5 segments with direct imports is arguably the simplest correct approach"]
+  },
+  "context_updates": {
+    "cross_module_architecture": {
+      "add": [
+        {
+          "header": "Clean unidirectional dependency flow",
+          "description": "Dependencies flow from segments toward foundations (types.ts, colors.ts) with no reverse imports. layout.ts is the only file that imports segments, serving as the composition root. No cycles exist.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "High fan-in modules are pure leaves",
+          "description": "types.ts (13 importers) and colors.ts (10 importers) have zero local imports themselves -- they are stable foundations, not behavior-heavy god modules. Changes to them are rare and intentional.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No cross-module mutable state",
+          "description": "Module-level caches in git.ts and effort.ts are scoped to their own modules and not exported. No shared mutable state coordinates behavior across module boundaries.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Campaigns subsystem cleanly isolated",
+          "description": "The campaigns/ directory only imports types.ts from src/ and is only consumed by the promo segment. It has no knowledge of layout, config, or other segments -- a well-bounded subsystem.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

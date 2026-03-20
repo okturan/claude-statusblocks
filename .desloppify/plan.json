@@ -1,32 +1,25 @@
 {
   "version": 8,
   "created": "2026-03-20T17:37:28+00:00",
-  "updated": "2026-03-20T18:33:47+00:00",
+  "updated": "2026-03-20T18:51:42+00:00",
   "queue_order": [
-    "review::.::holistic::convention_outlier::campaign_promo_naming_split",
-    "review::.::holistic::naming_quality::campaign_promo_vocabulary_split",
-    "review::.::holistic::test_strategy::no_test_framework",
-    "review::.::holistic::test_strategy::untested_campaign_engine",
-    "review::.::holistic::test_strategy::untested_colors_utility",
-    "review::.::holistic::ai_generated_debt::cli_raw_ansi_escapes",
-    "review::.::holistic::api_surface_coherence::allocwidth_ignored_by_most_segments",
-    "review::.::holistic::contract_coherence::campaign_enabled_render_toctou",
-    "review::.::holistic::cross_module_architecture::hardcoded_segment_registration",
-    "review::.::holistic::design_coherence::engine_design_concern",
-    "review::.::holistic::design_coherence::engine_mixed_responsibilities",
-    "review::.::holistic::design_coherence::model_gap_distribution_complexity",
-    "review::.::holistic::error_consistency::undocumented_catch_blocks",
-    "review::.::holistic::initialization_coupling::import_time_homedir_config",
-    "review::.::holistic::logic_clarity::campaign_bar_dead_computation",
-    "review::.::holistic::logic_clarity::engine_weekend_negative_intermediate",
-    "review::.::holistic::logic_clarity::layout_unexplained_row1_offset",
-    "review::.::holistic::low_level_elegance::engine_getactivecampaign_multi_concern",
-    "review::.::holistic::low_level_elegance::model_gap_distribution_complexity",
-    "review::.::holistic::mid_level_elegance::layout_row1_policy_in_orchestration",
-    "review::.::holistic::naming_quality::reset_countdown_misnomer",
-    "review::.::holistic::test_strategy::untested_layout_optimizer",
-    "review::.::holistic::type_safety::env_theme_unvalidated_cast",
-    "review::.::holistic::type_safety::stdin_json_unvalidated_cast"
+    "review::.::holistic::api_surface_coherence::allocwidth_unused_by_most_segments",
+    "review::.::holistic::contract_coherence::promo_double_call",
+    "review::.::holistic::cross_module_architecture::layout_dual_responsibility",
+    "review::.::holistic::design_coherence::model_gap_distribution",
+    "review::.::holistic::error_consistency::bare_catch_rationale",
+    "review::.::holistic::high_level_elegance::claude_md_test_claim_stale",
+    "review::.::holistic::logic_clarity::layout_row1_magic_offset",
+    "review::.::holistic::logic_clarity::promo_contentwidth_misleading",
+    "review::.::holistic::logic_clarity::weekend_negative_intermediate",
+    "review::.::holistic::low_level_elegance::findoptimal_dense_brute_force",
+    "review::.::holistic::low_level_elegance::model_line2_gap_arithmetic",
+    "review::.::holistic::naming_quality::reset_countdown_misleading",
+    "review::.::holistic::test_strategy::effort_tautological_tests",
+    "review::.::holistic::test_strategy::engine_test_superficial",
+    "review::.::holistic::test_strategy::no_findoptimal_unit_tests",
+    "review::.::holistic::type_safety::config_unsafe_cast",
+    "review::.::holistic::type_safety::stdin_unsafe_cast"
   ],
   "deferred": [],
   "skipped": {},
@@ -65,8 +58,8 @@
     "test_coverage::src/segments/campaign.ts": {
       "issue_id": "test_coverage::src/segments/campaign.ts",
       "created_at": "2026-03-20T17:37:28+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-03-20T17:37:28+00:00"
+      "cluster": null,
+      "updated_at": "2026-03-20T18:51:03+00:00"
     },
     "test_coverage::src/effort.ts": {
       "issue_id": "test_coverage::src/effort.ts",
@@ -241,7 +234,6 @@
         "test_coverage::src/segments/model.ts",
         "test_coverage::src/cli.ts",
         "test_coverage::src/colors.ts",
-        "test_coverage::src/segments/campaign.ts",
         "test_coverage::src/effort.ts",
         "test_coverage::src/segments/git.ts",
         "test_coverage::src/segments/usage.ts",
@@ -296,18 +288,24 @@
       "execution_policy": "planned_only"
     }
   },
-  "superseded": {},
-  "promoted_ids": [],
-  "plan_start_scores": {
-    "strict": 82.5,
-    "overall": 82.5,
-    "objective": 83.5,
-    "verified": 83.5
+  "superseded": {
+    "test_coverage::src/segments/campaign.ts": {
+      "original_id": "test_coverage::src/segments/campaign.ts",
+      "original_detector": "test_coverage",
+      "original_file": "src/segments/campaign.ts",
+      "original_summary": "Untested module (46 LOC, 1 importers) \u2014 no test files found",
+      "status": "superseded",
+      "superseded_at": "2026-03-20T18:51:03+00:00",
+      "remapped_to": null,
+      "candidates": []
+    }
   },
+  "promoted_ids": [],
+  "plan_start_scores": {},
   "refresh_state": {
     "lifecycle_phase": "review_initial",
-    "subjective_review_completed_at_scan_count": 5,
-    "postflight_scan_completed_at_scan_count": 10
+    "subjective_review_completed_at_scan_count": 11,
+    "postflight_scan_completed_at_scan_count": 12
   },
   "execution_log": [
     {
@@ -919,6 +917,214 @@
       "actor": "user",
       "note": "Added VALID_THEMES set and validation check before casting env var theme in config.ts loadConfig()",
       "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T18:50:43+00:00",
+      "action": "review_import_sync",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "trigger": "review_import",
+        "new_ids": [
+          "review::.::holistic::api_surface_coherence::allocwidth_unused_by_most_segments",
+          "review::.::holistic::contract_coherence::promo_double_call",
+          "review::.::holistic::cross_module_architecture::layout_dual_responsibility",
+          "review::.::holistic::design_coherence::model_gap_distribution",
+          "review::.::holistic::error_consistency::bare_catch_rationale",
+          "review::.::holistic::high_level_elegance::claude_md_test_claim_stale",
+          "review::.::holistic::logic_clarity::layout_row1_magic_offset",
+          "review::.::holistic::logic_clarity::promo_contentwidth_misleading",
+          "review::.::holistic::logic_clarity::weekend_negative_intermediate",
+          "review::.::holistic::low_level_elegance::findoptimal_dense_brute_force",
+          "review::.::holistic::low_level_elegance::model_line2_gap_arithmetic",
+          "review::.::holistic::mid_level_elegance::row1_magic_offset_in_layout",
+          "review::.::holistic::naming_quality::reset_countdown_misleading",
+          "review::.::holistic::test_strategy::effort_tautological_tests",
+          "review::.::holistic::test_strategy::engine_test_superficial",
+          "review::.::holistic::test_strategy::no_findoptimal_unit_tests",
+          "review::.::holistic::type_safety::config_unsafe_cast",
+          "review::.::holistic::type_safety::stdin_unsafe_cast"
+        ],
+        "added_to_queue": [
+          "review::.::holistic::api_surface_coherence::allocwidth_unused_by_most_segments",
+          "review::.::holistic::contract_coherence::promo_double_call",
+          "review::.::holistic::cross_module_architecture::layout_dual_responsibility",
+          "review::.::holistic::design_coherence::model_gap_distribution",
+          "review::.::holistic::error_consistency::bare_catch_rationale",
+          "review::.::holistic::high_level_elegance::claude_md_test_claim_stale",
+          "review::.::holistic::logic_clarity::layout_row1_magic_offset",
+          "review::.::holistic::logic_clarity::promo_contentwidth_misleading",
+          "review::.::holistic::logic_clarity::weekend_negative_intermediate",
+          "review::.::holistic::low_level_elegance::findoptimal_dense_brute_force",
+          "review::.::holistic::low_level_elegance::model_line2_gap_arithmetic",
+          "review::.::holistic::mid_level_elegance::row1_magic_offset_in_layout",
+          "review::.::holistic::naming_quality::reset_countdown_misleading",
+          "review::.::holistic::test_strategy::effort_tautological_tests",
+          "review::.::holistic::test_strategy::engine_test_superficial",
+          "review::.::holistic::test_strategy::no_findoptimal_unit_tests",
+          "review::.::holistic::type_safety::config_unsafe_cast",
+          "review::.::holistic::type_safety::stdin_unsafe_cast"
+        ],
+        "workflow_injected_ids": [],
+        "triage_injected": false,
+        "triage_injected_ids": [],
+        "triage_deferred": false,
+        "diff_new": 18,
+        "diff_reopened": 0,
+        "diff_auto_resolved": 44,
+        "stale_pruned_from_queue": [
+          "review::.::holistic::ai_generated_debt::cli_raw_ansi_escapes",
+          "review::.::holistic::api_surface_coherence::allocwidth_ignored_by_most_segments",
+          "review::.::holistic::contract_coherence::campaign_enabled_render_toctou",
+          "review::.::holistic::convention_outlier::campaign_promo_naming_split",
+          "review::.::holistic::cross_module_architecture::hardcoded_segment_registration",
+          "review::.::holistic::design_coherence::engine_design_concern",
+          "review::.::holistic::design_coherence::engine_mixed_responsibilities",
+          "review::.::holistic::design_coherence::model_gap_distribution_complexity",
+          "review::.::holistic::error_consistency::undocumented_catch_blocks",
+          "review::.::holistic::initialization_coupling::import_time_homedir_config",
+          "review::.::holistic::logic_clarity::campaign_bar_dead_computation",
+          "review::.::holistic::logic_clarity::engine_weekend_negative_intermediate",
+          "review::.::holistic::logic_clarity::layout_unexplained_row1_offset",
+          "review::.::holistic::low_level_elegance::engine_getactivecampaign_multi_concern",
+          "review::.::holistic::low_level_elegance::model_gap_distribution_complexity",
+          "review::.::holistic::mid_level_elegance::layout_row1_policy_in_orchestration",
+          "review::.::holistic::naming_quality::campaign_promo_vocabulary_split",
+          "review::.::holistic::naming_quality::reset_countdown_misnomer",
+          "review::.::holistic::test_strategy::no_test_framework",
+          "review::.::holistic::test_strategy::untested_campaign_engine",
+          "review::.::holistic::test_strategy::untested_colors_utility",
+          "review::.::holistic::test_strategy::untested_layout_optimizer",
+          "review::.::holistic::type_safety::env_theme_unvalidated_cast",
+          "review::.::holistic::type_safety::stdin_json_unvalidated_cast"
+        ],
+        "covered_subjective_pruned_from_queue": [],
+        "covered_subjective": [
+          "subjective::abstraction_fitness",
+          "subjective::ai_generated_debt",
+          "subjective::api_surface_coherence",
+          "subjective::authorization_consistency",
+          "subjective::contract_coherence",
+          "subjective::convention_outlier",
+          "subjective::cross_module_architecture",
+          "subjective::dependency_health",
+          "subjective::design_coherence",
+          "subjective::error_consistency",
+          "subjective::high_level_elegance",
+          "subjective::incomplete_migration",
+          "subjective::initialization_coupling",
+          "subjective::logic_clarity",
+          "subjective::low_level_elegance",
+          "subjective::mid_level_elegance",
+          "subjective::naming_quality",
+          "subjective::package_organization",
+          "subjective::test_strategy",
+          "subjective::type_safety"
+        ],
+        "stale_sync_injected": [],
+        "stale_sync_pruned": [],
+        "auto_cluster_changes": 0,
+        "import_scores_injected": [],
+        "import_scores_pruned": [],
+        "sync_status": "synced",
+        "sync_message": null
+      }
+    },
+    {
+      "timestamp": "2026-03-20T18:51:03+00:00",
+      "action": "reconcile",
+      "issue_ids": [
+        "test_coverage::src/segments/campaign.ts"
+      ],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 1,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-20T18:51:03+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T18:51:03+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 12
+      }
+    },
+    {
+      "timestamp": "2026-03-20T18:51:38+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::claude_md_stale_no_tests"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Fixed: CLAUDE.md updated, resetCountdown renamed to formatResetTime, magic 5 extracted to ROW1_NOTIF_MARGIN constant",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T18:51:40+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::naming_quality::resetcountdown_misnomer"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Fixed: CLAUDE.md updated, resetCountdown renamed to formatResetTime, magic 5 extracted to ROW1_NOTIF_MARGIN constant",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T18:51:41+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::mid_level_elegance::row1_magic_offset"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Fixed: CLAUDE.md updated, resetCountdown renamed to formatResetTime, magic 5 extracted to ROW1_NOTIF_MARGIN constant",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-03-20T18:51:41+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::mid_level_elegance::row1_magic_offset_in_layout"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Fixed: CLAUDE.md updated, resetCountdown renamed to formatResetTime, magic 5 extracted to ROW1_NOTIF_MARGIN constant",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually Fixed: CLAUDE.md updated, resetCountdown renamed to formatResetTime, magic 5 extracted to ROW1_NOTIF_MARGIN constant and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-03-20T18:51:42+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::logic_clarity::layout_unexplained_offset"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Fixed: CLAUDE.md updated, resetCountdown renamed to formatResetTime, magic 5 extracted to ROW1_NOTIF_MARGIN constant",
+      "detail": {}
     }
   ],
   "epic_triage_meta": {},
@@ -928,7 +1134,8 @@
     "review::.::holistic::contract_coherence::block_priority_mismatch",
     "review::.::holistic::ai_generated_debt::stale_iteration_comments_campaign",
     "review::.::holistic::api_surface_coherence::dead_truncate_export",
-    "review::.::holistic::high_level_elegance::cli_help_missing_segments"
+    "review::.::holistic::high_level_elegance::cli_help_missing_segments",
+    "review::.::holistic::mid_level_elegance::row1_magic_offset_in_layout"
   ],
   "commit_tracking_branch": null,
   "scan_count_at_plan_start": 10

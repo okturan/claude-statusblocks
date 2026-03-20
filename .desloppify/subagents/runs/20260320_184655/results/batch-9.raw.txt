@@ -1,0 +1,79 @@
+{
+  "batch": "mid_level_elegance",
+  "batch_index": 9,
+  "assessments": {"mid_level_elegance": 87.0},
+  "dimension_notes": {
+    "mid_level_elegance": {
+      "evidence": [
+        "layout.ts render() reads as a clear pipeline: filter segments -> render blocks -> compute widths -> find assignment -> materialize rows -> renderRow -> join. No tangled back-and-forth.",
+        "Segment boundary is minimal and explicit: segments receive (data: StatusLineData, allocWidth: number) and return Block. No shared mutable state or side channels.",
+        "Config loading is a single function (loadConfig) consumed by both entry points (index.ts, cli.ts) — data translation happens in one place.",
+        "Error propagation at the index.ts top-level boundary is predictable: catch all -> stderr diagnostic -> blank stdout.",
+        "layout.ts line 171: row1MaxWidth = maxRowWidth - 5 embeds a Claude Code notification panel detail as an inline magic number in the layout algorithm body.",
+        "promo.ts calls getActiveCampaign() in both enabled() and render() — redundant boundary crossing though guarded by null check in render()"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The hardcoded row1 width reduction (maxRowWidth - 5) mixes a UI-specific policy detail into the layout orchestration body. While commented, it would be cleaner as a named constant alongside INK_PADDING."
+    }
+  },
+  "dimension_judgment": {
+    "mid_level_elegance": {
+      "dimension_character": "Handoffs across module boundaries in this codebase are clean and predictable. The layout pipeline composes segment rendering, row assignment, and box drawing in a linear flow without tangled callbacks or glue code. The Segment interface boundary is minimal (2 inputs, 1 structured output), config is loaded once and passed through, and error propagation follows a single pattern. The only friction is a hardcoded width offset that mixes a Claude Code UI detail into the layout algorithm body.",
+      "score_rationale": "The codebase lands solidly above the 80 anchor and approaches 90. A developer tracing data flow across modules would find boundaries explicit and unsurprising at every major seam. The row1 width magic number is the only point where a developer would encounter an unexplained policy detail mixed into orchestration logic. The seam design is otherwise strong — composition reads top-down, boundaries are typed, and there are no ad-hoc mappers."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "row1_magic_offset_in_layout",
+      "summary": "Layout embeds hardcoded row1 width reduction (maxRowWidth - 5) mixing policy with orchestration",
+      "related_files": ["src/layout.ts"],
+      "evidence": [
+        "Line 171: const row1MaxWidth = maxRowWidth - 5 — the 5-char offset accounts for Claude Code's notification badge overlapping the first row",
+        "Line 170 has a comment explaining the purpose, but the value is still a magic number inline rather than a named constant",
+        "INK_PADDING on line 12 already sets the precedent for naming Claude Code UI offsets as constants"
+      ],
+      "suggestion": "Extract the 5 as a named constant (e.g., NOTIFICATION_OVERLAP = 5) next to INK_PADDING on line 12, with a brief comment explaining that row 1 needs additional right margin for Claude Code's notification badge. Replace line 171 with: const row1MaxWidth = maxRowWidth - NOTIFICATION_OVERLAP;",
+      "confidence": "medium",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "mid_level_elegance": {
+      "add": [
+        {
+          "header": "Layout pipeline reads as linear composition",
+          "description": "render() flows top-down through filter -> render -> assign -> materialize -> renderRow with no back-and-forth callbacks or tangled state. A developer can trace the entire data flow in one pass through the function.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Segment boundary is minimal and typed",
+          "description": "Segments receive (StatusLineData, allocWidth) and return Block — two inputs, one structured output, no shared mutable state or side channels. This makes adding new segments predictable.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Config loaded once at entry point boundary",
+          "description": "Both index.ts and cli.ts call loadConfig() once and pass the result to render(). Config is not loaded lazily or re-read at segment level, keeping the configuration boundary clean.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Error propagation follows single pattern at entry",
+          "description": "index.ts uses a top-level try/catch that writes diagnostics to stderr and blank output to stdout. All segment-level failures are contained within this boundary.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "batch": "contract_coherence",
+  "batch_index": 18,
+  "assessments": {"contract_coherence": 83.5},
+  "dimension_notes": {
+    "contract_coherence": {
+      "evidence": [
+        "Segment interface (types.ts) is consistently honored by all 5 implementations: each returns Block with correct id and priority matching the segment's declaration",
+        "getActiveCampaign() return type CampaignStatus | null matches all code paths: returns null when no campaign matches, returns CampaignStatus for all other branches",
+        "promoSegment.enabled() and render() both call getActiveCampaign() independently — if campaign state changes between calls (microsecond window), enabled() could return true while render() gets null; render() has a null guard (line 11) that handles this safely",
+        "loadConfig() return type StatusBlocksConfig matches all paths: returns empty object on parse failure, populated object on success",
+        "resolveEffort() return type EffortLevel | null correctly covers all paths including cache hits and both source fallbacks",
+        "getGitInfo() return type typeof gitCache correctly includes null for the catch path",
+        "All segment render() methods return Block with consistent {id, priority, width, lines} shape",
+        "formatCountdown() in engine.ts returns '' for non-positive values, matching its documented contract"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "promoSegment double-calls getActiveCampaign() creating a theoretical state divergence window. While the null guard makes this safe in practice, the contract would be tighter if the result were cached for the enabled/render lifecycle."
+    }
+  },
+  "dimension_judgment": {
+    "contract_coherence": {
+      "dimension_character": "Function contracts are generally honest across the codebase. Return types match all code paths, the Segment interface is consistently implemented, and error handling follows predictable patterns (return null or empty defaults). The one notable contract smell is promoSegment calling getActiveCampaign() twice independently, creating a narrow window where enabled() and render() could observe different campaign state.",
+      "score_rationale": "Scores above 80 because return types are accurate, the Segment interface contract is honored by all implementations, and error contracts (null returns, try-catch fallbacks) are consistent. The promoSegment double-call is a real contract weakness but has low practical impact due to the null guard in render(). A developer would generally find that functions do what their signatures promise."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "contract_coherence",
+      "identifier": "promo_double_call",
+      "summary": "promoSegment.enabled() and render() both call getActiveCampaign() independently, risking state divergence",
+      "related_files": ["src/segments/promo.ts"],
+      "evidence": [
+        "enabled() on line 8 calls getActiveCampaign() to check non-null",
+        "render() on line 10 calls getActiveCampaign() again independently",
+        "If campaign transitions between calls (e.g., crosses end time), enabled() returns true but render() gets null",
+        "render() line 11 has a null guard that returns a fallback Block, making this safe but not tight"
+      ],
+      "suggestion": "Cache the campaign status in a closure-scoped variable: add a let cachedStatus: CampaignStatus | null = null above the segment, set it in enabled(), and read it in render(). Clear it after render() completes. This eliminates the double call without changing the public interface.",
+      "confidence": "low",
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["The enabled/render two-phase lifecycle on Segment creates a natural opportunity for state divergence when the check and the render query the same external state independently"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "contract_coherence": {
+      "add": [
+        {
+          "header": "Return types match all code paths",
+          "description": "Functions consistently declare accurate return types. getActiveCampaign() returns CampaignStatus | null covering all branches. resolveEffort() returns EffortLevel | null. No paths return values outside their declared types.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Segment interface consistently implemented",
+          "description": "All 5 segments correctly implement the Segment interface: id matches, priority matches, render() returns Block, enabled() returns boolean. No contract violations in the plugin pattern.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Error contracts use null returns consistently",
+          "description": "Functions that can fail return null (getActiveCampaign, getGitInfo, resolveEffort) or fall back to defaults (loadConfig). No functions promise to throw but silently return null, or vice versa.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

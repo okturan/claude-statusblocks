@@ -1,0 +1,78 @@
+{
+  "batch": "abstraction_fitness",
+  "batch_index": 6,
+  "assessments": {"abstraction_fitness": 95.0},
+  "dimension_notes": {
+    "abstraction_fitness": {
+      "evidence": [
+        "Segment interface has 5 direct implementations (context, model, git, promo, usage) — genuine polymorphic usage",
+        "types.ts (13 importers) defines StatusLineData, Block, Segment, Campaign, StatusBlocksConfig — all consumed by multiple modules",
+        "No pass-through wrappers or delegation chains — functions call collaborators directly (layout->segments, promo->engine)",
+        "TimingContext interface in engine.ts groups 4 related time values consumed by 3 state resolver functions (resolveWeekendState, resolvePeakState, resolveOffPeakState)",
+        "Zero wrapper_rate (0.0), zero one_impl_interface_count, zero delegation_heavy_class_count per mechanical scan",
+        "RowGroup type alias in layout.ts is module-private and used by both materializeAssignment and renderRow — appropriate local abstraction",
+        "No generic helper abstractions with single concrete type usage"
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "CampaignStatus has a single producer (getActiveCampaign) though it represents a genuine domain contract. The single-use segment pattern could be seen as ceremony in a 5-segment codebase, but is justified by the polymorphic Segment interface.",
+      "sub_axes": {
+        "abstraction_leverage": 95.0,
+        "indirection_cost": 97.0,
+        "interface_honesty": 96.0,
+        "delegation_density": 100.0,
+        "definition_directness": 95.0,
+        "type_discipline": 95.0
+      }
+    }
+  },
+  "dimension_judgment": {
+    "abstraction_fitness": {
+      "dimension_character": "A developer navigating this codebase finds every abstraction layer earning its keep. The Segment interface genuinely enables polymorphic composition across 5 implementations, types.ts defines data shapes consumed across 13 importers, and helper types like TimingContext and RowGroup are scoped precisely to where they add clarity. There are no pass-through wrappers, no single-implementation interfaces pretending to be abstractions, and no wide option bags threading through multiple layers.",
+      "score_rationale": "The codebase scores near the exemplary end because every interface and type has concrete multi-consumer justification, and mechanical analysis confirms zero wrappers, zero delegation-heavy classes, and zero facade modules. The only friction is minor: CampaignStatus has a single producer, and each segment file has a single importer — but both reflect the intended leaf-node composition architecture rather than unnecessary indirection."
+    }
+  },
+  "issues": [],
+  "retrospective": {
+    "root_causes": [],
+    "likely_symptoms": [],
+    "possible_false_positives": ["single_use signals on segment files — these are expected leaf nodes in a composition architecture, not unnecessary modules"]
+  },
+  "context_updates": {
+    "abstraction_fitness": {
+      "add": [
+        {
+          "header": "Segment interface with five genuine implementations",
+          "description": "The Segment interface is implemented by all 5 segments (context, model, git, promo, usage) — this is real polymorphism consumed by layout.ts for flexible composition, not ceremony.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No wrapper or delegation chains anywhere",
+          "description": "All function calls are direct — layout calls segment.render(), promo calls getActiveCampaign(), index calls render(). There are zero pass-through wrappers or forwarding functions in the codebase.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Types serve as multi-consumer domain contracts",
+          "description": "StatusLineData (13 importers), Block (used by all segments and layout), Campaign (used by data.ts and engine.ts) — each type has genuine cross-module usage justifying its existence as a shared interface.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "TimingContext groups related time values for state resolvers",
+          "description": "The TimingContext interface in engine.ts bundles currentSecs, peakStartSecs, peakEndSecs, and dow for consumption by three state resolver functions, keeping function signatures clean without adding unnecessary indirection.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Segment files are single-use by design",
+          "description": "Each segment module is imported only by layout.ts — this is the expected leaf-node pattern in a composition architecture, not a sign of unnecessary indirection. The single_use mechanical signal is a false positive here.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

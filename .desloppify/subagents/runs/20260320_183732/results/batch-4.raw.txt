@@ -1,0 +1,72 @@
+{
+  "batch": "error_consistency",
+  "batch_index": 4,
+  "assessments": {"error_consistency": 82.0},
+  "dimension_notes": {
+    "error_consistency": {
+      "evidence": [
+        "Two error strategies are used: try-catch at I/O boundaries (index.ts, config.ts, effort.ts, cli.ts, git.ts) and return-null for optional data retrieval (git.ts getGitInfo, campaigns/engine.ts getActiveCampaign). This is an intentional two-layer pattern.",
+        "Top-level error boundary in index.ts catches all errors, writes to stderr with [claude-statusblocks] prefix, and outputs a blank line to stdout. This is correct for a status line tool -- never crash, always output something.",
+        "config.ts catch has clear rationale: '/* no config file -- use defaults */'. effort.ts has 3 catches all with rationale comments ('skip malformed lines', 'file not readable', 'no settings').",
+        "index.ts inner catches at lines 28 and 33 have bare '/* */' without rationale. git.ts catch at line 26 returns null with no comment.",
+        "cli.ts init() catch uses console.error + process.exit(1) -- appropriate for interactive CLI commands.",
+        "Error context is not lost at any boundary -- outer catch in index.ts preserves error message. No catch-and-rethrow patterns exist."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "error_consistency": {
+      "dimension_character": "The codebase uses a coherent two-layer error strategy: try-catch at I/O boundaries and return-null for optional data retrieval. The top-level error boundary is well-designed for a status line tool. The main inconsistency is that some catch blocks document their rationale clearly (config.ts, effort.ts) while others use bare empty catches (index.ts inner catches, git.ts), making it harder for a developer to know whether error swallowing is intentional or an oversight.",
+      "score_rationale": "Above the 80 anchor because the overall strategy is coherent and the top-level boundary is correct. The bare catch blocks are a minor inconsistency that does not materially confuse developers about error propagation -- a developer can infer the intent from context (TTY detection fallback, git command failure). However, the inconsistency between commented and bare catches across sibling patterns prevents a higher score."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "error_consistency",
+      "identifier": "bare_catch_rationale",
+      "summary": "Catch blocks inconsistently document their rationale -- some have comments, others are bare",
+      "related_files": ["src/index.ts", "src/segments/git.ts"],
+      "evidence": [
+        "index.ts lines 28 and 33: catch { /* */ } -- no rationale for why TTY/tput failures are swallowed",
+        "git.ts line 26: catch { return null; } -- no rationale for why git command failures are swallowed",
+        "Meanwhile config.ts and effort.ts consistently document catch rationale: '/* no config file -- use defaults */', '/* skip malformed lines */', '/* file not readable */', '/* no settings */'"
+      ],
+      "suggestion": "Add brief rationale comments to the bare catches: index.ts line 28 should note '/* TTY detection fallback */', line 33 '/* tput fallback */', git.ts line 26 '/* not a git repo or git unavailable */'. This matches the pattern already established in config.ts and effort.ts.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Catch blocks were written at different times; earlier ones omitted rationale comments while later ones (effort.ts, config.ts) adopted a comment convention that was not backfilled"],
+    "likely_symptoms": [],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "error_consistency": {
+      "add": [
+        {
+          "header": "Coherent two-layer error strategy",
+          "description": "I/O boundaries use try-catch (file reads, subprocess calls, JSON parse); optional data retrieval returns null (git info, campaign status). This is intentional layering, not inconsistency.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Top-level never-crash error boundary",
+          "description": "index.ts wraps all processing in a single outer try-catch that writes errors to stderr and outputs a blank line to stdout. For a status line tool piped by Claude Code, this is the correct behavior -- a crash would disrupt the host application.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Error context preserved at boundaries",
+          "description": "No catch-and-rethrow patterns exist. The outer boundary preserves the original error message. Inner catches either return null (expected absence) or swallow terminal-detection failures where the fallback is hardcoded.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    }
+  }
+}

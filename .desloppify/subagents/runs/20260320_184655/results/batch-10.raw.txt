@@ -1,0 +1,119 @@
+{
+  "batch": "test_strategy",
+  "batch_index": 10,
+  "assessments": {"test_strategy": 55.0},
+  "dimension_notes": {
+    "test_strategy": {
+      "evidence": [
+        "6 test files with 112 tests, all passing — vitest framework established with v8 coverage",
+        "colors.test.ts: 13 tests covering color(), visibleLength(), padRight() with ANSI edge cases — solid coverage of the most-imported utility",
+        "layout.test.ts: 6 tests validating end-to-end render behavior including row wrapping and pyramid shape",
+        "segments.test.ts: 12 tests covering context, model, and usage segments — validates id, priority, line count, width consistency",
+        "config.test.ts: 4 tests with proper env var cleanup — validates segment override, theme validation, invalid theme rejection",
+        "engine.test.ts: 1 superficial test — calls getActiveCampaign() and checks return shape without controlling time, not testing any state transitions",
+        "effort.test.ts: 3 tautological tests — 'returns null when no transcript' accepts both null AND valid values, never fails",
+        "No tests for git segment (execSync calls) or promo segment (getActiveCampaign integration)",
+        "findOptimalAssignment not tested directly — only covered indirectly through render()"
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high"
+    }
+  },
+  "dimension_judgment": {
+    "test_strategy": {
+      "dimension_character": "The codebase has made significant progress from zero tests to 6 test files with 112 passing tests, establishing vitest and covering the most critical utility (colors.ts) thoroughly. However, the test quality is uneven — engine.test.ts and effort.test.ts contain superficial or tautological assertions that provide false confidence without actually validating behavior. Critical time-dependent logic (campaign state transitions, weekend detection, peak/off-peak classification) has no meaningful test coverage, and the combinatorial bin-packing algorithm is only tested indirectly.",
+      "score_rationale": "Despite the framework being in place and some modules well-tested (colors, config, layout integration, segments), the codebase lands around 55 because a developer modifying the campaign engine or effort resolver cannot trust that tests will catch regressions. The campaign engine contains the most complex logic in the codebase (timezone arithmetic, state machines, countdown computation) yet has only 1 superficial test. Effort tests are tautological. These gaps represent meaningful risk in the most logic-dense areas."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "test_strategy",
+      "identifier": "engine_test_superficial",
+      "summary": "Campaign engine's timezone-aware date arithmetic has only 1 superficial shape-check test",
+      "related_files": ["src/campaigns/engine.test.ts", "src/campaigns/engine.ts"],
+      "evidence": [
+        "engine.test.ts has 1 test: calls getActiveCampaign() and checks that result is null or has valid properties",
+        "No vi.useFakeTimers() usage to pin Date.now() and verify state transitions",
+        "Five distinct states (active-boosted, active-normal, upcoming, ended, weekend) with complex transition logic — none tested",
+        "Weekend progress calculation, countdown formatting, peak/off-peak detection — all untested",
+        "This is the highest cyclomatic complexity module in the codebase (flagged by mechanical scan)"
+      ],
+      "suggestion": "Write targeted tests using vi.useFakeTimers() to pin Date.now() at specific times: weekday peak hour (expect active-normal), weekday off-peak (expect active-boosted), Saturday (expect weekend), before campaign start (expect upcoming), after campaign end (expect null). Verify countdown strings and progress values for each state. Test resolveWeekendState, resolvePeakState, resolveOffPeakState individually by exporting them or testing through getActiveCampaign with controlled times.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "effort_tautological_tests",
+      "summary": "effort.test.ts has tautological assertions that accept any return value and never fail",
+      "related_files": ["src/effort.test.ts", "src/effort.ts"],
+      "evidence": [
+        "Test 'returns null when no transcript and no settings match' (lines 5-11): accepts BOTH null AND valid effort levels — the test name says 'null' but the assertion says 'null or anything valid'",
+        "Test 'returns a valid effort level or null' (lines 13-19): literally asserts result is either null or in the valid set — this is a type check, not a behavior test",
+        "Neither test controls environment (no mocking of readFileSync, no temp transcript files), so results depend on the developer's actual ~/.claude/settings.json"
+      ],
+      "suggestion": "Mock readFileSync or use vi.spyOn to control file system reads. Test specific scenarios: (1) no transcript, no settings -> null, (2) transcript with effort line -> correct level, (3) settings with effortLevel -> correct level, (4) transcript takes priority over settings. Use temp files or mocks rather than relying on the developer's actual home directory.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "no_findoptimal_unit_tests",
+      "summary": "Combinatorial layout assignment algorithm tested only indirectly through render()",
+      "related_files": ["src/layout.test.ts", "src/layout.ts"],
+      "evidence": [
+        "findOptimalAssignment is private and tested only through render() integration tests",
+        "Cannot verify specific edge cases: single block assignment, impossible-fit fallback, tie-breaking between equal-width assignments",
+        "The pyramid shape test in layout.test.ts validates output structure but not assignment correctness for specific width configurations"
+      ],
+      "suggestion": "Export findOptimalAssignment (or test through a thin wrapper) and add unit tests with known block widths: (1) single block returns [0], (2) two blocks fitting one row return same-row assignment, (3) blocks exceeding row width produce multi-row assignment, (4) assignment returns null when a block exceeds maxRowWidth alone. This enables testing the algorithm independently of segment rendering.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "retrospective": {
+    "root_causes": ["Initial test pass focused on establishing framework and covering easy-to-test pure functions, leaving complex time-dependent and file-system-dependent logic with placeholder tests"],
+    "likely_symptoms": ["effort_tautological_tests is a symptom of testing without mocking infrastructure — tests were written to pass in any environment rather than validate specific behavior"],
+    "possible_false_positives": []
+  },
+  "context_updates": {
+    "test_strategy": {
+      "add": [
+        {
+          "header": "Vitest framework established with coverage",
+          "description": "vitest v4.1.0 configured with @vitest/coverage-v8, 6 test files with 112 passing tests. The test infrastructure is mature and ready for more coverage.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "ANSI utilities thoroughly tested",
+          "description": "colors.test.ts covers color wrapping, ANSI stripping, padRight truncation, zero-width, nested styles, and empty string edge cases — the most-imported utility (10 importers) has solid test coverage.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Layout integration tests validate end-to-end behavior",
+          "description": "layout.test.ts tests empty segments, single/multiple segments, width constraints, row wrapping at narrow widths, and pyramid shape — covering the primary rendering pipeline.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Campaign engine tests are superficial placeholders",
+          "description": "engine.test.ts has 1 test that calls getActiveCampaign() and checks return shape without controlling time. The most complex module in the codebase (5 states, timezone arithmetic, countdown math) has no behavior-validating tests.",
+          "settled": true,
+          "positive": false
+        },
+        {
+          "header": "Effort tests are tautological",
+          "description": "effort.test.ts tests accept both null and valid returns, making them impossible to fail. Tests depend on developer's actual ~/.claude/settings.json rather than controlling inputs via mocks.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  }
+}

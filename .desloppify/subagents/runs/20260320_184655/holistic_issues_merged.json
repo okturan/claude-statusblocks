@@ -1,0 +1,1371 @@
+{
+  "assessments": {
+    "abstraction_fitness": {
+      "score": 95.0,
+      "components": [
+        "Abstraction Leverage",
+        "Indirection Cost",
+        "Interface Honesty",
+        "Delegation Density",
+        "Definition Directness",
+        "Type Discipline"
+      ],
+      "component_scores": {
+        "Abstraction Leverage": 95.0,
+        "Indirection Cost": 97.0,
+        "Interface Honesty": 96.0,
+        "Delegation Density": 100.0,
+        "Definition Directness": 95.0,
+        "Type Discipline": 95.0
+      }
+    },
+    "ai_generated_debt": 91.0,
+    "api_surface_coherence": 84.0,
+    "authorization_consistency": 100.0,
+    "contract_coherence": 83.5,
+    "convention_outlier": 93.0,
+    "cross_module_architecture": 88.0,
+    "dependency_health": 97.0,
+    "design_coherence": 72.5,
+    "error_consistency": 82.0,
+    "high_level_elegance": 87.5,
+    "incomplete_migration": 100.0,
+    "initialization_coupling": 91.0,
+    "logic_clarity": 78.0,
+    "low_level_elegance": 80.0,
+    "mid_level_elegance": 87.0,
+    "naming_quality": 88.5,
+    "package_organization": 92.0,
+    "test_strategy": 55.0,
+    "type_safety": 74.0
+  },
+  "dimension_notes": {
+    "cross_module_architecture": {
+      "evidence": [
+        "Clean three-layer dependency direction: src/segments/ imports from src/ (types, colors, config, effort) and src/campaigns/; src/campaigns/ imports from src/ (types); src/ does not import from campaigns. No reverse imports.",
+        "Coupling matrix confirms unidirectional flow: segments->src (11 edges), src->segments (5 edges via layout.ts segment imports only), campaigns->src (2 edges for types), segments->campaigns (1 edge for promo segment). The src->segments edges are concentrated in layout.ts which is the composition root.",
+        "layout.ts hardcodes all 5 segment imports -- this is the only hub module. With 5 segments this is pragmatic; blast radius is limited to adding one import line per new segment.",
+        "No shared mutable state between modules except git.ts module-level cache (gitCache) and effort.ts module-level cache, both scoped to their own modules and not exported.",
+        "No circular dependencies detected in the import graph.",
+        "types.ts (13 importers) and colors.ts (10 importers) are high fan-in but are pure leaf modules (types has zero imports, colors has zero local imports). They serve as stable foundations, not god modules with behavior."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "layout.ts serves as both composition root and layout algorithm, coupling segment registration to rendering logic. The bidirectional coupling between src/ and src/segments/ (layout imports segments, segments import from src/) is architecturally sound but means layout.ts is a change bottleneck for any segment addition."
+    },
+    "high_level_elegance": {
+      "evidence": [
+        "Top-level src/ files map directly to domain capabilities: index.ts (entry/stdin parser), layout.ts (flexbox renderer), config.ts (user config), cli.ts (CLI subcommands), types.ts (shared types), colors.ts (ANSI utilities), effort.ts (effort level detection).",
+        "src/segments/ cleanly separates each rendering unit (context, model, git, promo, usage) with consistent structure: each file exports a single Segment implementation.",
+        "src/campaigns/ isolates the promotional rate engine (data.ts for definitions, engine.ts for time logic) -- well-bounded subsystem.",
+        "CLI entry point (cli.ts) is the bin target, delegates to index.ts for piped input via dynamic import. Clean separation of interactive vs piped modes.",
+        "CLAUDE.md documents architecture accurately for data flow, segments, campaigns, layout, and config. However, it states 'There are no tests or linters configured' while vitest is present with 6 test files.",
+        "Both previously flagged issues (CLI help missing segments, dead progress bar logic) are confirmed fixed."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "CLAUDE.md states 'There are no tests or linters configured' but vitest is configured with 6 test files -- this documentation drift means a new developer would have an incorrect mental model of the project's testing posture."
+    },
+    "convention_outlier": {
+      "evidence": [
+        "All exports are named exports (no default exports anywhere). Consistent across all files.",
+        "All function/variable names use camelCase consistently. All types/interfaces use PascalCase. No convention drift detected.",
+        "All 5 segment files follow identical structure: single named export const <name>Segment: Segment with id, priority, enabled(), and render().",
+        "Previously open issue 'Campaign segment uses id promo while file is campaign.ts' is now resolved: file is promo.ts, export is promoSegment, id is 'promo' -- all aligned.",
+        "Previously fixed issue '3 of 5 segments return Block.priority values that differ from their Segment.priority definitions' confirmed resolved -- all segments return consistent priority values matching their definition.",
+        "Campaign subsystem (data.ts, engine.ts) follows the same export pattern as the rest of src/.",
+        "Module patterns confirmed: src/ uses named_export (4 modules), segments/ uses named_export (5 modules) -- no mixed patterns."
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "No material convention outliers found. The minor gap preventing a perfect score is that truncate() in colors.ts is the only non-exported function that follows the same naming pattern as exported functions -- it was previously flagged as a dead export and is now correctly private, but this is a non-issue."
+    },
+    "error_consistency": {
+      "evidence": [
+        "Two error strategies are used: try-catch at I/O boundaries (index.ts, config.ts, effort.ts, cli.ts, git.ts) and return-null for optional data retrieval (git.ts getGitInfo, campaigns/engine.ts getActiveCampaign). This is an intentional two-layer pattern.",
+        "Top-level error boundary in index.ts catches all errors, writes to stderr with [claude-statusblocks] prefix, and outputs a blank line to stdout. This is correct for a status line tool -- never crash, always output something.",
+        "config.ts catch has clear rationale: '/* no config file -- use defaults */'. effort.ts has 3 catches all with rationale comments ('skip malformed lines', 'file not readable', 'no settings').",
+        "index.ts inner catches at lines 28 and 33 have bare '/* */' without rationale. git.ts catch at line 26 returns null with no comment.",
+        "cli.ts init() catch uses console.error + process.exit(1) -- appropriate for interactive CLI commands.",
+        "Error context is not lost at any boundary -- outer catch in index.ts preserves error message. No catch-and-rethrow patterns exist."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": ""
+    },
+    "naming_quality": {
+      "evidence": [
+        "Function names are generally precise and domain-aligned: formatTokens, visibleLength, padRight, tildeDir, getGitInfo, getActiveCampaign, resolveEffort, loadConfig, miniBar, boxify, renderRow.",
+        "Segment names (contextSegment, modelSegment, gitSegment, promoSegment, usageSegment) directly communicate what each segment renders.",
+        "Campaign engine names are domain-precise: getTimeInTz, isWeekend, getDowNum, formatCountdown, resolveWeekendState, resolvePeakState, resolveOffPeakState.",
+        "Previously open issue 'campaignSegment export uses id promo creating name/identity mismatch' is now resolved: file is promo.ts, export is promoSegment, id is 'promo'.",
+        "resetCountdown in usage.ts still exists: reads as 'reset the countdown' (imperative action) but actually formats a time-until-reset string. The codebase has formatTokens and formatCountdown as formatter naming precedents.",
+        "No generic verbs (process, handle, do, run, manage) found in any function names.",
+        "Type names are clear: StatusLineData, Block, Segment, Campaign, StatusBlocksConfig, CampaignStatus, EffortLevel, TimingContext, RowGroup."
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "resetCountdown in usage.ts reads as an imperative action rather than a formatter, diverging from the codebase's formatX convention (formatTokens, formatCountdown). Single local issue."
+    },
+    "abstraction_fitness": {
+      "evidence": [
+        "Segment interface has 5 direct implementations (context, model, git, promo, usage) \u2014 genuine polymorphic usage",
+        "types.ts (13 importers) defines StatusLineData, Block, Segment, Campaign, StatusBlocksConfig \u2014 all consumed by multiple modules",
+        "No pass-through wrappers or delegation chains \u2014 functions call collaborators directly (layout->segments, promo->engine)",
+        "TimingContext interface in engine.ts groups 4 related time values consumed by 3 state resolver functions (resolveWeekendState, resolvePeakState, resolveOffPeakState)",
+        "Zero wrapper_rate (0.0), zero one_impl_interface_count, zero delegation_heavy_class_count per mechanical scan",
+        "RowGroup type alias in layout.ts is module-private and used by both materializeAssignment and renderRow \u2014 appropriate local abstraction",
+        "No generic helper abstractions with single concrete type usage"
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "CampaignStatus has a single producer (getActiveCampaign) though it represents a genuine domain contract. The single-use segment pattern could be seen as ceremony in a 5-segment codebase, but is justified by the polymorphic Segment interface.",
+      "sub_axes": {
+        "abstraction_leverage": 95.0,
+        "indirection_cost": 97.0,
+        "interface_honesty": 96.0,
+        "delegation_density": 100.0,
+        "definition_directness": 95.0,
+        "type_discipline": 95.0
+      }
+    },
+    "dependency_health": {
+      "evidence": [
+        "Zero production dependencies \u2014 package.json has no 'dependencies' field at all",
+        "All runtime functionality uses only Node.js built-in modules: fs, path, os, child_process, and Intl (global)",
+        "devDependencies are minimal and purposeful: typescript (build), vitest + @vitest/coverage-v8 (test), @types/node (type definitions)",
+        "No duplicate libraries for the same purpose \u2014 ANSI handling, date math, and file I/O all use hand-rolled or built-in solutions",
+        "No circular dependency cycles \u2014 import graph flows cleanly: index.ts -> layout.ts -> segments/* -> types.ts/colors.ts, campaigns/ -> types.ts",
+        "holistic_context.dependencies is empty object, confirming no dependency issues detected mechanically"
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The codebase currently re-implements ANSI string operations (visibleLength, padRight, truncate) that libraries like strip-ansi handle, but for a 60-LOC colors.ts module this is pragmatic and avoids a dependency. No actual deficiency \u2014 this is a philosophical ceiling."
+    },
+    "low_level_elegance": {
+      "evidence": [
+        "model.ts lines 58-89: 3-part line2 layout uses 12+ local variables (g, g1-g4, extra, clamped, spareWithDots, dotLen, eLen, dLen, vLen, contentWidth, remaining, leftGap, rightGap) for gap arithmetic \u2014 dense but functional",
+        "layout.ts findOptimalAssignment (lines 73-128): brute-force bin-packing with 6 nested loops, single-letter variables (v, n, r, i), and reused arrays (rowOf, seen, rowRW) \u2014 functional but hard to follow",
+        "engine.ts has been well-refactored: getActiveCampaign delegates to resolveWeekendState/resolvePeakState/resolveOffPeakState \u2014 each ~10-15 lines with clear responsibility",
+        "All 5 segments follow a consistent render pattern: compute data -> style lines -> compute width -> return Block",
+        "colors.ts truncate handles ANSI edge cases (mid-sequence cuts, trailing resets) precisely in 19 lines",
+        "effort.ts resolveEffort reads two sources with clear fallback chain (transcript -> settings) and TTL-based caching",
+        "git.ts getGitInfo is direct: cache check, 4 git commands, parse results, cache and return"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "model.ts line2 gap arithmetic is a local complexity hotspot \u2014 12+ variables for distributing 3 text parts across a line. findOptimalAssignment uses dense brute-force iteration that is correct but opaque without study."
+    },
+    "mid_level_elegance": {
+      "evidence": [
+        "layout.ts render() reads as a clear pipeline: filter segments -> render blocks -> compute widths -> find assignment -> materialize rows -> renderRow -> join. No tangled back-and-forth.",
+        "Segment boundary is minimal and explicit: segments receive (data: StatusLineData, allocWidth: number) and return Block. No shared mutable state or side channels.",
+        "Config loading is a single function (loadConfig) consumed by both entry points (index.ts, cli.ts) \u2014 data translation happens in one place.",
+        "Error propagation at the index.ts top-level boundary is predictable: catch all -> stderr diagnostic -> blank stdout.",
+        "layout.ts line 171: row1MaxWidth = maxRowWidth - 5 embeds a Claude Code notification panel detail as an inline magic number in the layout algorithm body.",
+        "promo.ts calls getActiveCampaign() in both enabled() and render() \u2014 redundant boundary crossing though guarded by null check in render()"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The hardcoded row1 width reduction (maxRowWidth - 5) mixes a UI-specific policy detail into the layout orchestration body. While commented, it would be cleaner as a named constant alongside INK_PADDING."
+    },
+    "test_strategy": {
+      "evidence": [
+        "6 test files with 112 tests, all passing \u2014 vitest framework established with v8 coverage",
+        "colors.test.ts: 13 tests covering color(), visibleLength(), padRight() with ANSI edge cases \u2014 solid coverage of the most-imported utility",
+        "layout.test.ts: 6 tests validating end-to-end render behavior including row wrapping and pyramid shape",
+        "segments.test.ts: 12 tests covering context, model, and usage segments \u2014 validates id, priority, line count, width consistency",
+        "config.test.ts: 4 tests with proper env var cleanup \u2014 validates segment override, theme validation, invalid theme rejection",
+        "engine.test.ts: 1 superficial test \u2014 calls getActiveCampaign() and checks return shape without controlling time, not testing any state transitions",
+        "effort.test.ts: 3 tautological tests \u2014 'returns null when no transcript' accepts both null AND valid values, never fails",
+        "No tests for git segment (execSync calls) or promo segment (getActiveCampaign integration)",
+        "findOptimalAssignment not tested directly \u2014 only covered indirectly through render()"
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": ""
+    },
+    "api_surface_coherence": {
+      "evidence": [
+        "All 5 segments implement the same Segment interface consistently: id, priority, enabled(data), render(data, availWidth)",
+        "render() returns Block with consistent shape {id, priority, width, lines} across all segments",
+        "Public API surface is minimal: layout.ts exports only render(), config.ts exports only loadConfig(), each segment file exports exactly one segment object",
+        "allocWidth parameter in render() is only used by modelSegment (for directory truncation budget), other 4 segments ignore it \u2014 the interface promises width-awareness but only 1 of 5 segments delivers",
+        "All segment render methods are synchronous, no mixed sync/async \u2014 consistent API shape",
+        "No public function exceeds 5 parameters; render() has exactly 2 (data, availWidth), layout's render() has 3 (data, termWidth, config)"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The allocWidth parameter is accepted but ignored by 4 of 5 segment implementations, creating a minor interface honesty gap. However, for a 5-segment codebase this is pragmatic and adding optionality would be worse."
+    },
+    "authorization_consistency": {
+      "evidence": [
+        "This is a CLI status-line renderer that reads JSON from stdin and writes ANSI-formatted text to stdout \u2014 it has no routes, endpoints, authentication, or authorization boundaries",
+        "No user authentication, no session management, no permission checks exist anywhere in the codebase",
+        "File reads are limited to user's own config (~/.claude-statusblocks.json) and settings (~/.claude/settings.json) \u2014 standard dotfile access, not a trust boundary",
+        "The tool runs in the user's own process space as a Claude Code subprocess, inheriting the parent process's permissions",
+        "No network calls, no API endpoints, no service roles, no RLS patterns"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": ""
+    },
+    "ai_generated_debt": {
+      "evidence": [
+        "Comment ratio is 4.9% (codebase_avg_comment_ratio: 0.049) \u2014 very lean, no docstring bloat",
+        "Comments are structural ('Line 1:', 'Line 2:', 'Source 1:', 'Source 2:') providing navigation within render functions, not restating code",
+        "No debug logging anywhere \u2014 zero console.log/debug statements in production code",
+        "No pass-through wrapper functions \u2014 every function adds meaningful logic",
+        "No generic names (handleData, processItem, doOperation) \u2014 domain terms used throughout (formatTokens, tildeDir, resetCountdown, miniBar, getActiveCampaign)",
+        "No defensive overengineering \u2014 null checks are at genuine boundaries (stdin JSON parse, git subprocess, config file read)",
+        "cli.ts previously used raw ANSI escape strings instead of the project's own color() utility \u2014 this has been fixed; cli.ts now imports {color, c} from './colors.js'",
+        "The 'Line 1:/Line 2:' comments in segments could be considered mildly restating since the code immediately below constructs the respective line, but they serve as useful section markers within multi-part render methods"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Minor structural comments ('// Line 1:', '// Line 2:') in segment render methods are mildly restating but serve as useful section dividers. No other AI-debt patterns detected."
+    },
+    "incomplete_migration": {
+      "evidence": [
+        "All 14 source files are TypeScript (.ts) \u2014 no mixed JS/TS, no incomplete TypeScript migration",
+        "Zero TODO, FIXME, HACK, deprecated, legacy, or 'remove after' markers anywhere in the codebase",
+        "No compatibility shims \u2014 the codebase uses a single, consistent approach for each concern: one HTTP client pattern (none needed \u2014 CLI tool), one date library (native Intl.DateTimeFormat), one testing framework (vitest)",
+        "No old+new API coexistence: all segments use the same Segment interface, all colors use the same c/color API, all config reads use the same loadConfig pattern",
+        "ESM-only throughout (\"type\": \"module\" in package.json, all imports use .js extensions) \u2014 no mixed CJS/ESM",
+        "The blind packet's migration_signals section is empty, confirming no mechanical signals detected"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": ""
+    },
+    "package_organization": {
+      "evidence": [
+        "14 total production files across 3 directories \u2014 this is a small project where the skip rule 'Small projects (<20 files) where flat structure is appropriate' applies",
+        "src/ (7 files, avg fan_in 4.4): core utilities and entry points \u2014 types.ts (13 importers), colors.ts (10 importers), layout.ts (3), config.ts (3) are genuinely core with high fan-in",
+        "src/segments/ (5 files, avg fan_in 1.6): each file is one segment implementation \u2014 clear purpose-driven grouping",
+        "src/campaigns/ (2 files, avg fan_in 1.5): campaign data and engine \u2014 cohesive domain subdirectory",
+        "Coupling matrix is tree-like: segments/ imports from src/ (11 edges), src/ imports from segments/ (5 edges via layout.ts), campaigns/ imports from src/ (2 edges), segments/ imports from campaigns/ (1 edge). No circular directory-level dependencies",
+        "effort.ts (fan_in 2, fan_out 0 from src/) sits in src/ root and is only imported by segments/model.ts \u2014 could arguably live in segments/ or a helpers/ dir, but at this project size the current placement is fine",
+        "cli.ts is flagged as orphaned (0 importers, 91 LOC) but is the bin entry point via package.json \u2014 this is correct placement, not a straggler",
+        "Directory names clearly reflect responsibilities: segments/ contains segment implementations, campaigns/ contains campaign logic"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "effort.ts in src/ root has fan_in of 2 and is only imported by segments/model.ts, which is a minor import-affinity mismatch (100% of its importers are in segments/). However, effort resolution is a cross-cutting concern that could be needed by other modules, and at this project size the placement is pragmatic."
+    },
+    "initialization_coupling": {
+      "evidence": [
+        "config.ts resolves homedir() inside loadConfig() at call time (line 14), not module scope \u2014 the previously flagged CONFIG_PATH import-time baking has been fixed",
+        "cli.ts now uses a settingsPath() function (lines 11-13) that computes the path at call time, resolving the SETTINGS_PATH import-time baking issue",
+        "effort.ts reads process.env.CLAUDE_CONFIG_DIR and homedir() inside resolveEffort() at call time (line 46), establishing the correct pattern",
+        "All file I/O (readFileSync, writeFileSync, execSync) happens inside function bodies, never at module scope",
+        "Module-private caches (gitCache in git.ts:5, cache in effort.ts:9) have TTL expiry and no cross-module ordering dependencies",
+        "cli.ts uses dynamic import('./index.js') on line 91 to lazy-load the stdin handler, avoiding unnecessary module loading for CLI subcommands"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "cli.ts MOCK_DATA (lines 15-27) bakes Date.now() and process.cwd() at import time rather than inside preview(); while cosmetically acceptable for mock data, this is a minor deviation from the otherwise consistent pattern of deferring dynamic values to call time"
+    },
+    "design_coherence": {
+      "evidence": [
+        "engine.ts getActiveCampaign() was 88 lines mixing time arithmetic, state classification, and progress calculation \u2014 has been refactored into resolveWeekendState, resolvePeakState, resolveOffPeakState helpers, reducing the main function to ~28 lines",
+        "model.ts render() still uses 9+ local variables for manual 3-part gap distribution across effort/duration/version (lines 58-81)",
+        "layout.ts findOptimalAssignment() has high cyclomatic complexity from brute-force bin-packing with inline row-width computation, but this is a single coherent responsibility (combinatorial optimization)",
+        "effort.ts resolveEffort() has high cyclomatic complexity from two-source fallback logic with JSONL parsing, but the sources are semantically related (same concern: resolve effort level)",
+        "Segment pattern is consistent: each segment exports {id, priority, enabled, render} implementing the Segment interface \u2014 a clean, data-driven plugin pattern"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": ""
+    },
+    "contract_coherence": {
+      "evidence": [
+        "Segment interface (types.ts) is consistently honored by all 5 implementations: each returns Block with correct id and priority matching the segment's declaration",
+        "getActiveCampaign() return type CampaignStatus | null matches all code paths: returns null when no campaign matches, returns CampaignStatus for all other branches",
+        "promoSegment.enabled() and render() both call getActiveCampaign() independently \u2014 if campaign state changes between calls (microsecond window), enabled() could return true while render() gets null; render() has a null guard (line 11) that handles this safely",
+        "loadConfig() return type StatusBlocksConfig matches all paths: returns empty object on parse failure, populated object on success",
+        "resolveEffort() return type EffortLevel | null correctly covers all paths including cache hits and both source fallbacks",
+        "getGitInfo() return type typeof gitCache correctly includes null for the catch path",
+        "All segment render() methods return Block with consistent {id, priority, width, lines} shape",
+        "formatCountdown() in engine.ts returns '' for non-positive values, matching its documented contract"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": "promoSegment double-calls getActiveCampaign() creating a theoretical state divergence window. While the null guard makes this safe in practice, the contract would be tighter if the result were cached for the enabled/render lifecycle."
+    },
+    "logic_clarity": {
+      "evidence": [
+        "promo.ts render() computes contentWidth (line 37, formerly barWidth) that suggests a progress bar but is only used for fallback separator sizing \u2014 still present",
+        "layout.ts line 171 applies row1MaxWidth = maxRowWidth - 5 with a comment 'extra right margin for Claude Code's notification panel' but the magic number 5 is unexplained relative to INK_PADDING",
+        "engine.ts weekend progress: secsSinceFriPeak = daysSinceFri * 86400 + (currentSecs - peakEndSecs) can produce negative intermediate when currentSecs < peakEndSecs on Saturday before peak end time, but Math.max(0, ...) clamps it",
+        "effort.ts resolveEffort() control flow is clear: try transcript first, fall back to settings, cache result",
+        "index.ts terminal width detection cascade uses clear sequential fallbacks with early exits",
+        "layout.ts findOptimalAssignment() enumeration logic is dense but correct \u2014 branches are all necessary for the algorithm",
+        "All segments use consistent guard clause patterns (return fallback Block if data is missing)"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": ""
+    },
+    "type_safety": {
+      "evidence": [
+        "index.ts line 14: JSON.parse(input) as StatusLineData \u2014 casts external stdin data without any runtime validation, trusting that Claude Code always sends valid JSON matching the interface",
+        "config.ts line 16: parsed as StatusBlocksConfig \u2014 casts parsed JSON without runtime shape validation",
+        "config.ts line 20: envTheme validation has been added (VALID_THEMES.has(envTheme)) before the cast \u2014 this previously flagged issue is partially resolved",
+        "effort.ts line 35: match[1]!.toLowerCase() as EffortLevel \u2014 casts regex match group to union type; safe because the regex only matches 'low|medium|high|max'",
+        "effort.ts line 49: settings.effortLevel as EffortLevel \u2014 casts after includes() validation, which is correct",
+        "types.ts defines clear interfaces with appropriate use of optional fields (rate_limits?, cwd?, transcript_path?)",
+        "StatusLineData uses null unions (used_percentage: number | null) appropriately for fields that may be absent",
+        "No type: ignore comments anywhere in the codebase",
+        "All public functions have return type annotations or TypeScript inference covers them"
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit",
+      "confidence": "high",
+      "issues_preventing_higher_score": ""
+    }
+  },
+  "dimension_judgment": {
+    "cross_module_architecture": {
+      "dimension_character": "The dependency graph is clean and intentional for a ~960 LOC codebase. Dependencies flow unidirectionally from segments toward shared foundations (types, colors), with layout.ts as the single composition point. There are no cycles, no shared mutable state crossing boundaries, and no compatibility shims. The only architectural friction is that layout.ts doubles as both segment registry and layout engine, but at 5 segments this is proportionate.",
+      "score_rationale": "Strong boundary discipline with clear layer separation earns a score well above the 80 anchor. The dependency graph is easy to trace and predictable -- a developer can confidently add or modify segments knowing exactly which files are affected. The hardcoded segment imports in layout.ts prevent a higher score but the existing issue already acknowledges this is pragmatic at current scale. No cycles, no god modules with behavior, no cross-module mutable state."
+    },
+    "high_level_elegance": {
+      "dimension_character": "The codebase has excellent top-level decomposition for a ~960 LOC project. Each file and directory maps to a clear domain capability, ownership boundaries are predictable, and a new engineer can quickly understand why each piece exists. The segment pattern is consistent and well-contained. The only notable gap is a documentation drift where CLAUDE.md incorrectly claims no tests exist.",
+      "score_rationale": "Strong decomposition and consistent patterns push this above the 80 anchor. A developer can explain the structure to a teammate and predict where to find or put code. The CLAUDE.md documentation drift is the main friction -- it would mislead a new contributor about testing posture -- but it is a single-edit fix that does not indicate deeper structural problems. This places the score solidly in the 85-90 range."
+    },
+    "convention_outlier": {
+      "dimension_character": "Conventions are applied with high consistency across the entire codebase. camelCase for functions/variables, PascalCase for types, named exports everywhere, and an identical segment pattern across all 5 implementations. A developer seeing one area can confidently predict the patterns in every other area. The previously flagged naming mismatch (campaign.ts/campaignSegment with id 'promo') has been resolved.",
+      "score_rationale": "Near-exemplary convention consistency pushes this well above the 90 anchor. A developer can see a pattern in one segment and trust it holds in all others. No naming convention drift, no mixed export patterns, no style islands. The only reason this is not 95+ is the small codebase size (14 files) means convention consistency has not been stress-tested at scale, but the patterns in place are deliberate and uniform."
+    },
+    "error_consistency": {
+      "dimension_character": "The codebase uses a coherent two-layer error strategy: try-catch at I/O boundaries and return-null for optional data retrieval. The top-level error boundary is well-designed for a status line tool. The main inconsistency is that some catch blocks document their rationale clearly (config.ts, effort.ts) while others use bare empty catches (index.ts inner catches, git.ts), making it harder for a developer to know whether error swallowing is intentional or an oversight.",
+      "score_rationale": "Above the 80 anchor because the overall strategy is coherent and the top-level boundary is correct. The bare catch blocks are a minor inconsistency that does not materially confuse developers about error propagation -- a developer can infer the intent from context (TTY detection fallback, git command failure). However, the inconsistency between commented and bare catches across sibling patterns prevents a higher score."
+    },
+    "naming_quality": {
+      "dimension_character": "Names throughout the codebase are precise and domain-aligned. A developer can read function names and correctly predict behavior without checking implementations. The naming vocabulary is consistent -- format* for formatters, get* for data retrieval, resolve* for computed derivations, is* for predicates. The only naming issue is resetCountdown which reads as an action rather than a formatter, violating the codebase's own formatX convention.",
+      "score_rationale": "Strong naming quality pushes well above the 80 anchor. A developer rarely needs to check implementations to understand what a function does. The single naming defect (resetCountdown) is isolated to one private helper in usage.ts and does not create cascading confusion. This places the score in the high 80s -- a few points below exemplary because the naming friction, while isolated, directly contradicts an established codebase convention."
+    },
+    "abstraction_fitness": {
+      "dimension_character": "A developer navigating this codebase finds every abstraction layer earning its keep. The Segment interface genuinely enables polymorphic composition across 5 implementations, types.ts defines data shapes consumed across 13 importers, and helper types like TimingContext and RowGroup are scoped precisely to where they add clarity. There are no pass-through wrappers, no single-implementation interfaces pretending to be abstractions, and no wide option bags threading through multiple layers.",
+      "score_rationale": "The codebase scores near the exemplary end because every interface and type has concrete multi-consumer justification, and mechanical analysis confirms zero wrappers, zero delegation-heavy classes, and zero facade modules. The only friction is minor: CampaignStatus has a single producer, and each segment file has a single importer \u2014 but both reflect the intended leaf-node composition architecture rather than unnecessary indirection."
+    },
+    "dependency_health": {
+      "dimension_character": "A developer working in this codebase encounters zero production dependency management burden. Every runtime capability \u2014 ANSI color handling, terminal width detection, git status parsing, timezone-aware date arithmetic \u2014 is built from Node.js primitives. The devDependency set is minimal and modern (TypeScript 5.7, Vitest 4.1). There are no unused, duplicate, or heavyweight dependencies to worry about.",
+      "score_rationale": "This approaches the exemplary anchor. Zero production dependencies means zero supply chain risk, zero version conflicts, and zero bloat. The only reason to withhold a perfect score is philosophical: the hand-rolled ANSI utilities could theoretically be replaced by established libraries, but at 60 LOC the DIY approach is the simpler choice for this codebase size."
+    },
+    "low_level_elegance": {
+      "dimension_character": "Most functions in this codebase are direct and well-proportioned \u2014 segment render functions follow a consistent 20-30 line pattern, engine.ts state resolvers are cleanly extracted, and utility functions like truncate and formatCountdown are precise. Two local hotspots break the pattern: model.ts line2 gap distribution packs dense arithmetic into ~30 lines with 12+ temporary variables, and findOptimalAssignment uses a brute-force algorithm with deeply nested loops and single-letter loop variables that requires careful study to understand.",
+      "score_rationale": "The codebase lands at the 80 anchor \u2014 solid but uneven. A developer would find most functions clean and intention-revealing, but would hit recurring friction in model.ts (gap distribution) and layout.ts (bin-packing). These are not architectural issues but local craft issues that a developer modifying these specific functions would need to carefully trace. The rest of the codebase (segments, engine state resolvers, colors, effort) demonstrates clean, proportionate implementation."
+    },
+    "mid_level_elegance": {
+      "dimension_character": "Handoffs across module boundaries in this codebase are clean and predictable. The layout pipeline composes segment rendering, row assignment, and box drawing in a linear flow without tangled callbacks or glue code. The Segment interface boundary is minimal (2 inputs, 1 structured output), config is loaded once and passed through, and error propagation follows a single pattern. The only friction is a hardcoded width offset that mixes a Claude Code UI detail into the layout algorithm body.",
+      "score_rationale": "The codebase lands solidly above the 80 anchor and approaches 90. A developer tracing data flow across modules would find boundaries explicit and unsurprising at every major seam. The row1 width magic number is the only point where a developer would encounter an unexplained policy detail mixed into orchestration logic. The seam design is otherwise strong \u2014 composition reads top-down, boundaries are typed, and there are no ad-hoc mappers."
+    },
+    "test_strategy": {
+      "dimension_character": "The codebase has made significant progress from zero tests to 6 test files with 112 passing tests, establishing vitest and covering the most critical utility (colors.ts) thoroughly. However, the test quality is uneven \u2014 engine.test.ts and effort.test.ts contain superficial or tautological assertions that provide false confidence without actually validating behavior. Critical time-dependent logic (campaign state transitions, weekend detection, peak/off-peak classification) has no meaningful test coverage, and the combinatorial bin-packing algorithm is only tested indirectly.",
+      "score_rationale": "Despite the framework being in place and some modules well-tested (colors, config, layout integration, segments), the codebase lands around 55 because a developer modifying the campaign engine or effort resolver cannot trust that tests will catch regressions. The campaign engine contains the most complex logic in the codebase (timezone arithmetic, state machines, countdown computation) yet has only 1 superficial test. Effort tests are tautological. These gaps represent meaningful risk in the most logic-dense areas."
+    },
+    "api_surface_coherence": {
+      "dimension_character": "The API surface is small, consistent, and predictable. All segments follow the same Segment interface with uniform render/enabled signatures, all public exports are named exports with one export per module, and there is no mixed sync/async. The only friction point is the allocWidth parameter that 4 of 5 segments ignore, but this is a minor interface honesty gap that does not confuse callers since layout.ts is the sole consumer.",
+      "score_rationale": "A developer seeing one segment can predict the shape of all others \u2014 consistent parameter ordering, return types, and naming. The unused allocWidth parameter prevents a 90+ score, but it does not create real confusion since the codebase has a single call site. This places the codebase solidly above the 80 anchor (recurring friction) but below 90 (only minor friction), reflecting an overall coherent API surface with one isolated rough edge."
+    },
+    "authorization_consistency": {
+      "dimension_character": "This dimension is not applicable to this codebase. claude-statusblocks is a pure CLI rendering tool with no authentication, authorization, routes, endpoints, or trust boundaries. It reads a JSON blob from stdin and writes formatted text to stdout, with the only file access being the user's own dotfiles.",
+      "score_rationale": "The codebase has no authorization concerns by design \u2014 it is a local CLI tool with no network surface, no user-facing API, and no multi-tenant boundaries. A score of 100 reflects that there is nothing to get wrong and nothing is gotten wrong. This is exemplary in the sense that the tool correctly avoids introducing unnecessary auth complexity."
+    },
+    "ai_generated_debt": {
+      "dimension_character": "The codebase is remarkably free of AI-generated debt patterns. Comments are sparse and purposeful \u2014 either explaining WHY (e.g., 'Claude Code's outer paddingX: 2 on each side', 'Strip (1M context) etc. from display name') or providing structural navigation ('Line 1:', 'Source 1:'). There are no restating comments, no docstring bloat, no debug logging, no pass-through wrappers, and no generic naming. The previously flagged issue (cli.ts raw ANSI escapes) has been resolved.",
+      "score_rationale": "A developer's attention is spent on logic, not noise \u2014 matching the 90+ anchor. The only minor friction is the 'Line 1:/Line 2:' comment pattern in segment render methods, which is mildly structural but still useful for quick navigation. The resolved cli.ts ANSI issue no longer drags the score down. This places the codebase at 91, reflecting strong purpose-driven code with minimal ceremony."
+    },
+    "incomplete_migration": {
+      "dimension_character": "This codebase shows no signs of incomplete migration. It is pure TypeScript with ESM-only modules, uses a single consistent approach for each concern, and contains zero migration-related markers or deprecated symbols. There are no compatibility shims, no old/new API coexistence, and no stale migration TODOs.",
+      "score_rationale": "Migrations are complete by design \u2014 this is a young, focused codebase that was built with modern TypeScript/ESM from the start. A developer would never encounter confusion about which pattern to follow or extend. This is exemplary at 100, as there is genuinely nothing to improve."
+    },
+    "package_organization": {
+      "dimension_character": "The directory layout is clean and navigable for a 14-file project. Three directories (src/, segments/, campaigns/) reflect clear ownership boundaries. A developer can predict where to find things: segment implementations go in segments/, campaign logic goes in campaigns/, and core utilities (types, colors, layout, config) live at the src/ root with high fan-in justifying their placement. The coupling matrix shows a healthy tree-like dependency direction with no circular imports.",
+      "score_rationale": "A developer can navigate by structure alone \u2014 the 90+ anchor is met. Directory names are unambiguous, fan-in data confirms root files are genuinely core, and the coupling matrix is clean. The only minor note is effort.ts having a slight import-affinity toward segments/, but this is a 56-line file in a 14-file project where the overhead of reorganization would exceed the benefit. Score of 92 reflects strong organization with a minor placement question that does not cause real friction."
+    },
+    "initialization_coupling": {
+      "dimension_character": "A developer can import any module in this codebase without worrying about boot-order dependencies or import-time side effects. All file I/O, environment variable reads, and home directory path resolutions happen at call time inside function bodies. The previously identified issue of baked CONFIG_PATH and SETTINGS_PATH constants at module scope has been resolved \u2014 both now follow the call-time resolution pattern established by effort.ts.",
+      "score_rationale": "This dimension is strong with no material boot-order fragility remaining. The prior defect (import-time homedir baking) has been fixed, and the codebase now consistently defers all dynamic computations to call time. Module-private caches use TTL and create no cross-module ordering dependencies. The only minor rough edge is MOCK_DATA baking Date.now() at import time, which is cosmetically acceptable for preview data. This places the codebase solidly in the 90+ range per the anchor: a developer would trust what they see with only minor friction."
+    },
+    "design_coherence": {
+      "dimension_character": "The codebase applies a consistent segment plugin pattern and the campaign engine refactoring has improved separation of concerns. However, model.ts render() still embeds complex manual layout arithmetic with many local variables for gap distribution, and the layout optimizer's inline complexity, while single-purpose, makes modification difficult. The git segment cleanly separates data fetching from rendering.",
+      "score_rationale": "The engine.ts refactoring addresses the most severe mixed-responsibility issue, lifting the score above 70. model.ts gap distribution remains a concrete design problem with 9+ variables doing manual arithmetic that should be extracted. layout.ts complexity is acceptable as single-responsibility optimization. Held below 80 because model.ts line2 layout logic is genuinely hard to follow and modify safely."
+    },
+    "contract_coherence": {
+      "dimension_character": "Function contracts are generally honest across the codebase. Return types match all code paths, the Segment interface is consistently implemented, and error handling follows predictable patterns (return null or empty defaults). The one notable contract smell is promoSegment calling getActiveCampaign() twice independently, creating a narrow window where enabled() and render() could observe different campaign state.",
+      "score_rationale": "Scores above 80 because return types are accurate, the Segment interface contract is honored by all implementations, and error contracts (null returns, try-catch fallbacks) are consistent. The promoSegment double-call is a real contract weakness but has low practical impact due to the null guard in render(). A developer would generally find that functions do what their signatures promise."
+    },
+    "logic_clarity": {
+      "dimension_character": "Control flow is generally direct with clear sequential fallback patterns. The codebase uses guard clauses consistently and avoids deep nesting. However, several naming and magic number issues make certain logic paths misleading: contentWidth in promo.ts suggests rendering width rather than separator sizing, the magic 5 in layout.ts row1 margin lacks explanation relative to INK_PADDING, and the weekend progress calculation's negative intermediate is non-obvious without a comment.",
+      "score_rationale": "Three previously flagged issues remain open: the misleading contentWidth variable in promo.ts, the unexplained 5-char offset in layout.ts, and the weekend progress negative intermediate. These are all real clarity issues where a developer would need to pause and trace logic to understand intent. The codebase otherwise uses clean sequential patterns that are easy to follow, keeping it above 70 but below 80."
+    },
+    "type_safety": {
+      "dimension_character": "Type definitions are well-structured with appropriate use of optional fields and null unions. The Segment/Block/Campaign interfaces provide clear contracts. However, the codebase has two trust boundary violations where external data (stdin JSON, config file JSON) is cast to typed interfaces without runtime validation. These are the primary type safety gap \u2014 if the input shape changes or is malformed, the error would manifest as a runtime crash deep in rendering code rather than a clear validation error at the boundary.",
+      "score_rationale": "The stdin JSON.parse-as-StatusLineData cast is a genuine type safety gap at the most critical boundary (the primary data input). The config file cast is lower risk but follows the same unsafe pattern. The env var theme validation (VALID_THEMES set check) shows the codebase can do runtime validation \u2014 it just does not apply it consistently at all boundaries. Well-typed internals and clean interface definitions pull the score above 70, but the unvalidated trust boundary keeps it below 80."
+    }
+  },
+  "issues": [
+    {
+      "dimension": "cross_module_architecture",
+      "identifier": "layout_dual_responsibility",
+      "summary": "layout.ts hardcodes all segment imports -- adding a segment requires editing layout.ts",
+      "confidence": "low",
+      "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern out of the layout algorithm.",
+      "related_files": [
+        "src/layout.ts"
+      ],
+      "evidence": [
+        "Lines 4-8 import all 5 segments individually; line 10 assembles them into ALL_SEGMENTS array. Any new segment requires adding both an import and an array entry here."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "multi_file_refactor"
+    },
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "claude_md_test_claim_stale",
+      "summary": "CLAUDE.md states 'There are no tests or linters configured' but vitest and 6 test files exist",
+      "confidence": "high",
+      "suggestion": "Update the CLAUDE.md commands section: replace 'There are no tests or linters configured.' with '`npm test` -- run vitest unit tests' and note that no linter is configured.",
+      "related_files": [
+        "CLAUDE.md",
+        "package.json"
+      ],
+      "evidence": [
+        "CLAUDE.md commands section says 'There are no tests or linters configured.' but package.json has vitest ^4.1.0 in devDependencies, a 'test': 'vitest run' script, and 6 .test.ts files exist under src/"
+      ],
+      "impact_scope": "codebase",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "bare_catch_rationale",
+      "summary": "Catch blocks inconsistently document their rationale -- some have comments, others are bare",
+      "confidence": "medium",
+      "suggestion": "Add brief rationale comments to the bare catches: index.ts line 28 should note '/* TTY detection fallback */', line 33 '/* tput fallback */', git.ts line 26 '/* not a git repo or git unavailable */'. This matches the pattern already established in config.ts and effort.ts.",
+      "related_files": [
+        "src/index.ts",
+        "src/segments/git.ts"
+      ],
+      "evidence": [
+        "index.ts lines 28 and 33: catch { /* */ } -- no rationale for why TTY/tput failures are swallowed",
+        "git.ts line 26: catch { return null; } -- no rationale for why git command failures are swallowed",
+        "Meanwhile config.ts and effort.ts consistently document catch rationale: '/* no config file -- use defaults */', '/* skip malformed lines */', '/* file not readable */', '/* no settings */'"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "reset_countdown_misleading",
+      "summary": "resetCountdown sounds like an action (reset the countdown) rather than a formatter",
+      "confidence": "medium",
+      "suggestion": "Rename to formatResetCountdown to match the codebase's format* naming convention for formatting functions, consistent with formatTokens and formatCountdown.",
+      "related_files": [
+        "src/segments/usage.ts"
+      ],
+      "evidence": [
+        "usage.ts line 4: function resetCountdown(epochSec: number): string -- reads as 'reset the countdown' but formats a countdown-until-reset string. The codebase has formatTokens (context.ts line 4) and formatCountdown (campaigns/engine.ts line 38) as established formatter naming conventions."
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "model_line2_gap_arithmetic",
+      "summary": "model.ts 3-part line2 layout uses 12+ local variables for manual gap distribution",
+      "confidence": "medium",
+      "suggestion": "Extract a spreadParts(parts: string[], targetWidth: number, separator?: string): string helper that handles the gap distribution for N parts. This replaces ~30 lines with a single call and makes the dot-vs-space decision and gap arithmetic reusable and testable.",
+      "related_files": [
+        "src/segments/model.ts"
+      ],
+      "evidence": [
+        "Lines 58-89: variables g, g1, g2, g3, g4, extra, clamped, spareWithDots, dotLen, eLen, dLen, vLen, contentWidth, remaining, leftGap, rightGap \u2014 all for distributing 3 styled text parts across a target width",
+        "Two branches (dot-separated vs space-separated) with duplicated gap computation patterns",
+        "The 4-way gap distribution (g1-g4) around 2 dot separators is particularly hard to follow \u2014 the remainder distribution across 4 positions uses positional indexing rather than a clear algorithm"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "findoptimal_dense_brute_force",
+      "summary": "findOptimalAssignment uses dense brute-force iteration with single-letter variables across 55 lines",
+      "confidence": "low",
+      "suggestion": "Add a brief inline comment explaining the scoring formula (minimize rows first, then minimize widest row). Consider extracting the row-width computation (lines 96-102) into a computeRowWidth(rowOf, widths, rowIndex) helper to reduce duplication with materializeAssignment and make the brute-force loop body cleaner.",
+      "related_files": [
+        "src/layout.ts"
+      ],
+      "evidence": [
+        "Lines 73-128: 6 nested or sequential loops with single-letter variables (v, n, r, i) and reused pre-allocated arrays (rowOf, seen, rowRW)",
+        "Row-width computation (lines 96-102) is duplicated conceptually between findOptimalAssignment and materializeAssignment",
+        "The scoring formula 'score = -(numRows * 1e9) - (maxRW * 1e3)' encodes priorities in magic number magnitudes without explanation"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "row1_magic_offset_in_layout",
+      "summary": "Layout embeds hardcoded row1 width reduction (maxRowWidth - 5) mixing policy with orchestration",
+      "confidence": "medium",
+      "suggestion": "Extract the 5 as a named constant (e.g., NOTIFICATION_OVERLAP = 5) next to INK_PADDING on line 12, with a brief comment explaining that row 1 needs additional right margin for Claude Code's notification badge. Replace line 171 with: const row1MaxWidth = maxRowWidth - NOTIFICATION_OVERLAP;",
+      "related_files": [
+        "src/layout.ts"
+      ],
+      "evidence": [
+        "Line 171: const row1MaxWidth = maxRowWidth - 5 \u2014 the 5-char offset accounts for Claude Code's notification badge overlapping the first row",
+        "Line 170 has a comment explaining the purpose, but the value is still a magic number inline rather than a named constant",
+        "INK_PADDING on line 12 already sets the precedent for naming Claude Code UI offsets as constants"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "engine_test_superficial",
+      "summary": "Campaign engine's timezone-aware date arithmetic has only 1 superficial shape-check test",
+      "confidence": "high",
+      "suggestion": "Write targeted tests using vi.useFakeTimers() to pin Date.now() at specific times: weekday peak hour (expect active-normal), weekday off-peak (expect active-boosted), Saturday (expect weekend), before campaign start (expect upcoming), after campaign end (expect null). Verify countdown strings and progress values for each state. Test resolveWeekendState, resolvePeakState, resolveOffPeakState individually by exporting them or testing through getActiveCampaign with controlled times.",
+      "related_files": [
+        "src/campaigns/engine.test.ts",
+        "src/campaigns/engine.ts"
+      ],
+      "evidence": [
+        "engine.test.ts has 1 test: calls getActiveCampaign() and checks that result is null or has valid properties",
+        "No vi.useFakeTimers() usage to pin Date.now() and verify state transitions",
+        "Five distinct states (active-boosted, active-normal, upcoming, ended, weekend) with complex transition logic \u2014 none tested",
+        "Weekend progress calculation, countdown formatting, peak/off-peak detection \u2014 all untested",
+        "This is the highest cyclomatic complexity module in the codebase (flagged by mechanical scan)"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "effort_tautological_tests",
+      "summary": "effort.test.ts has tautological assertions that accept any return value and never fail",
+      "confidence": "high",
+      "suggestion": "Mock readFileSync or use vi.spyOn to control file system reads. Test specific scenarios: (1) no transcript, no settings -> null, (2) transcript with effort line -> correct level, (3) settings with effortLevel -> correct level, (4) transcript takes priority over settings. Use temp files or mocks rather than relying on the developer's actual home directory.",
+      "related_files": [
+        "src/effort.test.ts",
+        "src/effort.ts"
+      ],
+      "evidence": [
+        "Test 'returns null when no transcript and no settings match' (lines 5-11): accepts BOTH null AND valid effort levels \u2014 the test name says 'null' but the assertion says 'null or anything valid'",
+        "Test 'returns a valid effort level or null' (lines 13-19): literally asserts result is either null or in the valid set \u2014 this is a type check, not a behavior test",
+        "Neither test controls environment (no mocking of readFileSync, no temp transcript files), so results depend on the developer's actual ~/.claude/settings.json"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "no_findoptimal_unit_tests",
+      "summary": "Combinatorial layout assignment algorithm tested only indirectly through render()",
+      "confidence": "medium",
+      "suggestion": "Export findOptimalAssignment (or test through a thin wrapper) and add unit tests with known block widths: (1) single block returns [0], (2) two blocks fitting one row return same-row assignment, (3) blocks exceeding row width produce multi-row assignment, (4) assignment returns null when a block exceeds maxRowWidth alone. This enables testing the algorithm independently of segment rendering.",
+      "related_files": [
+        "src/layout.test.ts",
+        "src/layout.ts"
+      ],
+      "evidence": [
+        "findOptimalAssignment is private and tested only through render() integration tests",
+        "Cannot verify specific edge cases: single block assignment, impossible-fit fallback, tie-breaking between equal-width assignments",
+        "The pyramid shape test in layout.test.ts validates output structure but not assignment correctness for specific width configurations"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "api_surface_coherence",
+      "identifier": "allocwidth_unused_by_most_segments",
+      "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
+      "confidence": "low",
+      "suggestion": "This is a pragmatic interface design for a 5-segment codebase \u2014 making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed now, but if more segments are added that also ignore it, consider splitting into a base interface without allocWidth and a width-aware variant.",
+      "related_files": [
+        "src/types.ts",
+        "src/segments/model.ts",
+        "src/segments/context.ts",
+        "src/segments/promo.ts",
+        "src/segments/git.ts",
+        "src/segments/usage.ts"
+      ],
+      "evidence": [
+        "modelSegment.render() uses allocWidth for directory truncation budget (line 34: const dirBudget = Math.max(allocWidth - nameLen, 0))",
+        "contextSegment.render(data) does not declare allocWidth parameter at all",
+        "gitSegment.render(data) does not declare allocWidth parameter at all",
+        "promoSegment.render() does not declare allocWidth parameter at all",
+        "usageSegment.render(data) does not declare allocWidth parameter at all"
+      ],
+      "impact_scope": "module",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "design_coherence",
+      "identifier": "model_gap_distribution",
+      "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution across effort/duration/version",
+      "confidence": "medium",
+      "suggestion": "Extract a function like spreadParts(parts: string[], targetWidth: number): string that encapsulates the dot-vs-space decision and gap arithmetic. This replaces ~24 lines of manual arithmetic with a single call.",
+      "related_files": [
+        "src/segments/model.ts"
+      ],
+      "evidence": [
+        "Lines 58-81: variables spareWithDots, clamped, g, extra, g1, g2, g3, g4, remaining, leftGap, rightGap all compute spacing for 3 text items",
+        "Two code paths (dots vs plain spacing) with different gap arithmetic that are hard to verify visually"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "6058484bc35b2eed",
+      "reasoning": "The cyclomatic complexity has been reduced by extracting state resolution into focused helper functions. The remaining branches in getActiveCampaign() are necessary for campaign lifecycle (before start, after end, weekend, peak/off-peak)."
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "eafe5c4c9660842f",
+      "reasoning": "The complexity comes from two data sources with error handling, which is a single coherent responsibility. Extracting would fragment without reducing cognitive load."
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "bb6c6608cbf3357b",
+      "reasoning": "The cyclomatic complexity arises from a brute-force bin-packing algorithm. The branches are all part of a single optimization loop \u2014 extracting sub-functions would obscure the algorithm without reducing real complexity."
+    },
+    {
+      "concern_verdict": "dismissed",
+      "concern_fingerprint": "cc1dbfee1c85c533",
+      "reasoning": "The number 5000 is a cache TTL in milliseconds \u2014 its meaning is clear from context (now - gitCache.ts < 5000). Not a design problem."
+    },
+    {
+      "dimension": "contract_coherence",
+      "identifier": "promo_double_call",
+      "summary": "promoSegment.enabled() and render() both call getActiveCampaign() independently, risking state divergence",
+      "confidence": "low",
+      "suggestion": "Cache the campaign status in a closure-scoped variable: add a let cachedStatus: CampaignStatus | null = null above the segment, set it in enabled(), and read it in render(). Clear it after render() completes. This eliminates the double call without changing the public interface.",
+      "related_files": [
+        "src/segments/promo.ts"
+      ],
+      "evidence": [
+        "enabled() on line 8 calls getActiveCampaign() to check non-null",
+        "render() on line 10 calls getActiveCampaign() again independently",
+        "If campaign transitions between calls (e.g., crosses end time), enabled() returns true but render() gets null",
+        "render() line 11 has a null guard that returns a fallback Block, making this safe but not tight"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "promo_contentwidth_misleading",
+      "summary": "promo.ts render() computes contentWidth variable that misleadingly suggests rendering width but is only used for fallback separator sizing",
+      "confidence": "high",
+      "suggestion": "Rename contentWidth to separatorWidth or fallbackLineWidth to clarify its actual purpose \u2014 it computes the wider of the two content lines for separator sizing when line2 is empty.",
+      "related_files": [
+        "src/segments/promo.ts"
+      ],
+      "evidence": [
+        "Line 37: const contentWidth = Math.max(visibleLength(line1), visibleLength(line2)) \u2014 name suggests this is the content rendering width",
+        "Line 40: used only in the fallback: color('\u2500'.repeat(contentWidth), c.gray) \u2014 it sizes a separator line when line2 is empty",
+        "A developer reading 'contentWidth' would expect it to define the block's width, but it's only a separator sizing aid"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "layout_row1_magic_offset",
+      "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
+      "confidence": "medium",
+      "suggestion": "Extract the 5 as a named constant (e.g., NOTIFICATION_OVERLAP = 5) next to INK_PADDING with a comment explaining that Claude Code's notification badge overlaps only the first row's right edge by approximately 5 characters beyond the general INK_PADDING.",
+      "related_files": [
+        "src/layout.ts"
+      ],
+      "evidence": [
+        "Line 12: const INK_PADDING = 4; // Claude Code's outer paddingX: 2 on each side",
+        "Line 171: const row1MaxWidth = maxRowWidth - 5; // Row 1 gets extra right margin for notification panel",
+        "The comment says 'notification panel' but doesn't explain why 5 specifically, or how it relates to INK_PADDING's 4"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "weekend_negative_intermediate",
+      "summary": "Weekend progress calculation produces a negative intermediate value before clamping",
+      "confidence": "low",
+      "suggestion": "Add a brief comment above line 61 explaining that secsSinceFriPeak measures total seconds since Friday's peak window ended, and the Math.max(0, ...) clamp handles the edge case where the current time of day is before the peak end hour on Saturday.",
+      "related_files": [
+        "src/campaigns/engine.ts"
+      ],
+      "evidence": [
+        "Line 61 in resolveWeekendState: secsSinceFriPeak = daysSinceFri * 86400 + (currentSecs - peakEndSecs)",
+        "On Saturday before the original peak end time, currentSecs < peakEndSecs produces a negative term",
+        "Line 62: Math.max(0, ...) clamps it safely, but a reader must trace through to verify correctness"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "type_safety",
+      "identifier": "stdin_unsafe_cast",
+      "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
+      "confidence": "medium",
+      "suggestion": "Add minimal runtime guards after parsing: if (!data?.model?.display_name || !data?.context_window || !data?.workspace?.current_dir) throw new Error('Invalid statusline data: missing required fields'). This catches shape mismatches at the boundary with a clear error message.",
+      "related_files": [
+        "src/index.ts"
+      ],
+      "evidence": [
+        "Line 14: const data = JSON.parse(input) as StatusLineData \u2014 no runtime check that the parsed object has model, context_window, workspace, etc.",
+        "If Claude Code changes its JSON shape or sends malformed data, the error surfaces deep in segment rendering, not at the parse boundary",
+        "The outer catch (line 38) would catch the crash but the error message would be unhelpful (e.g., 'Cannot read properties of undefined')"
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "single_edit"
+    },
+    {
+      "dimension": "type_safety",
+      "identifier": "config_unsafe_cast",
+      "summary": "Config file JSON.parse result cast to StatusBlocksConfig without shape validation",
+      "confidence": "medium",
+      "suggestion": "Add minimal shape validation: check that parsed.segments is undefined or an array of strings, and parsed.theme is undefined or in VALID_THEMES. This matches the validation already done for the env var theme.",
+      "related_files": [
+        "src/config.ts"
+      ],
+      "evidence": [
+        "Line 16: config = parsed as StatusBlocksConfig \u2014 only checks typeof parsed === 'object', not that segments is string[] or theme is a valid union member",
+        "A malformed config file (e.g., {\"segments\": 42}) would pass the object check but cause runtime errors later",
+        "Contrast with the theme env var check on line 20 which properly validates with VALID_THEMES.has()"
+      ],
+      "impact_scope": "local",
+      "fix_scope": "single_edit"
+    }
+  ],
+  "review_quality": {
+    "batch_count": 20,
+    "dimension_coverage": 0.05,
+    "evidence_density": 5.817,
+    "high_score_missing_issue_note": 2
+  },
+  "context_updates": {
+    "cross_module_architecture": {
+      "add": [
+        {
+          "header": "Clean unidirectional dependency flow",
+          "description": "Dependencies flow from segments toward foundations (types.ts, colors.ts) with no reverse imports. layout.ts is the only file that imports segments, serving as the composition root. No cycles exist.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "High fan-in modules are pure leaves",
+          "description": "types.ts (13 importers) and colors.ts (10 importers) have zero local imports themselves -- they are stable foundations, not behavior-heavy god modules. Changes to them are rare and intentional.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No cross-module mutable state",
+          "description": "Module-level caches in git.ts and effort.ts are scoped to their own modules and not exported. No shared mutable state coordinates behavior across module boundaries.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Campaigns subsystem cleanly isolated",
+          "description": "The campaigns/ directory only imports types.ts from src/ and is only consumed by the promo segment. It has no knowledge of layout, config, or other segments -- a well-bounded subsystem.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "high_level_elegance": {
+      "add": [
+        {
+          "header": "Domain-aligned file decomposition",
+          "description": "Each source file maps to exactly one domain capability (layout rendering, terminal width detection, user config, CLI commands). A new developer can predict file responsibilities from names alone.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Consistent segment pattern",
+          "description": "All 5 segments follow an identical structure: single named export implementing the Segment interface with id, priority, enabled(), and render(). Adding a new segment is predictable.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Clean CLI mode separation",
+          "description": "cli.ts handles interactive commands (init, preview, help) and delegates piped input to index.ts via dynamic import. The two modes have zero shared logic beyond config loading.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "CLAUDE.md testing claim outdated",
+          "description": "Documentation states no tests exist but vitest is configured with 6 test files. This drift means a new contributor gets an incorrect mental model of the project.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    },
+    "convention_outlier": {
+      "add": [
+        {
+          "header": "Uniform segment export pattern",
+          "description": "All 5 segment files use identical structure: export const <name>Segment: Segment with matching id. This makes adding new segments predictable and eliminates convention learning cost.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Consistent named export convention",
+          "description": "Every module uses named exports exclusively -- no default exports anywhere. Combined with camelCase functions and PascalCase types, this creates a single naming vocabulary across the project.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Promo segment naming alignment resolved",
+          "description": "The previously flagged campaign.ts/campaignSegment with id 'promo' mismatch has been resolved -- file is now promo.ts with promoSegment export. All segment identifiers are aligned.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "error_consistency": {
+      "add": [
+        {
+          "header": "Coherent two-layer error strategy",
+          "description": "I/O boundaries use try-catch (file reads, subprocess calls, JSON parse); optional data retrieval returns null (git info, campaign status). This is intentional layering, not inconsistency.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Top-level never-crash error boundary",
+          "description": "index.ts wraps all processing in a single outer try-catch that writes errors to stderr and outputs a blank line to stdout. For a status line tool piped by Claude Code, this is the correct behavior -- a crash would disrupt the host application.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Error context preserved at boundaries",
+          "description": "No catch-and-rethrow patterns exist. The outer boundary preserves the original error message. Inner catches either return null (expected absence) or swallow terminal-detection failures where the fallback is hardcoded.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "naming_quality": {
+      "add": [
+        {
+          "header": "Domain-aligned function naming throughout",
+          "description": "Function names directly communicate domain intent: formatTokens, visibleLength, getGitInfo, getActiveCampaign, resolveEffort. A developer can predict behavior from names without reading implementations.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Consistent naming vocabulary by role",
+          "description": "The codebase uses a consistent naming vocabulary: format* for formatters, get* for data retrieval, resolve* for computed derivations, is* for predicates. This vocabulary is applied uniformly except for resetCountdown.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Promo segment naming mismatch resolved",
+          "description": "The previously flagged campaign.ts/campaignSegment with id 'promo' mismatch is now fully resolved: file is promo.ts, export is promoSegment, id matches. This prior issue should be closed.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "abstraction_fitness": {
+      "add": [
+        {
+          "header": "Segment interface with five genuine implementations",
+          "description": "The Segment interface is implemented by all 5 segments (context, model, git, promo, usage) \u2014 this is real polymorphism consumed by layout.ts for flexible composition, not ceremony.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No wrapper or delegation chains anywhere",
+          "description": "All function calls are direct \u2014 layout calls segment.render(), promo calls getActiveCampaign(), index calls render(). There are zero pass-through wrappers or forwarding functions in the codebase.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Types serve as multi-consumer domain contracts",
+          "description": "StatusLineData (13 importers), Block (used by all segments and layout), Campaign (used by data.ts and engine.ts) \u2014 each type has genuine cross-module usage justifying its existence as a shared interface.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "TimingContext groups related time values for state resolvers",
+          "description": "The TimingContext interface in engine.ts bundles currentSecs, peakStartSecs, peakEndSecs, and dow for consumption by three state resolver functions, keeping function signatures clean without adding unnecessary indirection.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Segment files are single-use by design",
+          "description": "Each segment module is imported only by layout.ts \u2014 this is the expected leaf-node pattern in a composition architecture, not a sign of unnecessary indirection. The single_use mechanical signal is a false positive here.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    },
+    "dependency_health": {
+      "add": [
+        {
+          "header": "Zero production dependencies by design",
+          "description": "The codebase deliberately uses only Node.js built-in modules for all runtime functionality \u2014 fs, path, os, child_process, and Intl. This eliminates supply chain risk and keeps the package lightweight for npx invocation.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Self-contained ANSI string utilities",
+          "description": "colors.ts implements visibleLength, padRight, and truncate in ~60 LOC rather than importing strip-ansi or similar. For this codebase size, the DIY approach avoids a dependency without significant maintenance cost.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Clean unidirectional import graph",
+          "description": "No circular dependency cycles exist. The import graph flows from entry points (index.ts, cli.ts) through layout.ts to segments, with shared types and colors at the leaf. This is confirmed by the empty holistic_context.coupling object.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "low_level_elegance": {
+      "add": [
+        {
+          "header": "Engine state resolvers cleanly extracted",
+          "description": "getActiveCampaign now delegates to resolveWeekendState, resolvePeakState, and resolveOffPeakState \u2014 each 10-15 lines handling one timing state with clear inputs (TimingContext + Campaign) and output (CampaignStatus). This addresses the previously flagged mixed-responsibility issue.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Consistent segment render pattern",
+          "description": "All 5 segments follow the same internal structure: compute data, format styled lines, compute visible width, return Block. This consistency means a developer modifying one segment can predict the structure of any other.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Precise edge-case handling in ANSI utilities",
+          "description": "colors.ts truncate handles ANSI sequences at cut points, trailing resets, and zero-width inputs in 19 lines without defensive sprawl. padRight delegates to truncate for over-width inputs rather than duplicating logic.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Model line2 gap distribution remains dense",
+          "description": "The 3-part layout in model.ts (effort/duration/version) uses 12+ local variables for gap arithmetic across two branches. This is the primary local craft issue in the codebase \u2014 correct but hard to modify.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    },
+    "mid_level_elegance": {
+      "add": [
+        {
+          "header": "Layout pipeline reads as linear composition",
+          "description": "render() flows top-down through filter -> render -> assign -> materialize -> renderRow with no back-and-forth callbacks or tangled state. A developer can trace the entire data flow in one pass through the function.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Segment boundary is minimal and typed",
+          "description": "Segments receive (StatusLineData, allocWidth) and return Block \u2014 two inputs, one structured output, no shared mutable state or side channels. This makes adding new segments predictable.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Config loaded once at entry point boundary",
+          "description": "Both index.ts and cli.ts call loadConfig() once and pass the result to render(). Config is not loaded lazily or re-read at segment level, keeping the configuration boundary clean.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Error propagation follows single pattern at entry",
+          "description": "index.ts uses a top-level try/catch that writes diagnostics to stderr and blank output to stdout. All segment-level failures are contained within this boundary.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "test_strategy": {
+      "add": [
+        {
+          "header": "Vitest framework established with coverage",
+          "description": "vitest v4.1.0 configured with @vitest/coverage-v8, 6 test files with 112 passing tests. The test infrastructure is mature and ready for more coverage.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "ANSI utilities thoroughly tested",
+          "description": "colors.test.ts covers color wrapping, ANSI stripping, padRight truncation, zero-width, nested styles, and empty string edge cases \u2014 the most-imported utility (10 importers) has solid test coverage.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Layout integration tests validate end-to-end behavior",
+          "description": "layout.test.ts tests empty segments, single/multiple segments, width constraints, row wrapping at narrow widths, and pyramid shape \u2014 covering the primary rendering pipeline.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Campaign engine tests are superficial placeholders",
+          "description": "engine.test.ts has 1 test that calls getActiveCampaign() and checks return shape without controlling time. The most complex module in the codebase (5 states, timezone arithmetic, countdown math) has no behavior-validating tests.",
+          "settled": true,
+          "positive": false
+        },
+        {
+          "header": "Effort tests are tautological",
+          "description": "effort.test.ts tests accept both null and valid returns, making them impossible to fail. Tests depend on developer's actual ~/.claude/settings.json rather than controlling inputs via mocks.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    },
+    "api_surface_coherence": {
+      "add": [
+        {
+          "header": "Consistent Segment interface across all modules",
+          "description": "All 5 segments implement the same Segment interface with identical render/enabled signatures and uniform Block return shape. A developer seeing one segment can predict all others.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Single named export per segment module",
+          "description": "Each segment file exports exactly one const implementing Segment. This makes the public surface minimal and predictable \u2014 no overloaded exports or mixed patterns.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "All APIs synchronous with no mixed patterns",
+          "description": "Every public function across the codebase is synchronous. There is no mixed sync/async in any module's public API, eliminating a common coherence failure mode.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "ai_generated_debt": {
+      "add": [
+        {
+          "header": "Very lean comment ratio at 4.9%",
+          "description": "Comments are sparse and purposeful throughout the codebase. No docstring bloat, no restating comments, no formulaic patterns. Comments either explain WHY or provide structural navigation within render methods.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Domain-specific naming throughout",
+          "description": "No generic names like handleData or processItem anywhere. All functions use domain terms: formatTokens, tildeDir, resetCountdown, miniBar, getActiveCampaign, resolveEffort \u2014 each name communicates its specific purpose.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "cli.ts raw ANSI issue resolved",
+          "description": "cli.ts now imports {color, c} from './colors.js' and uses the project's own color utility consistently, eliminating the previously flagged convention bypass.",
+          "settled": true,
+          "positive": true
+        }
+      ],
+      "remove": [
+        "cli.ts uses raw ANSI escape strings instead of the project's own color() utility"
+      ]
+    },
+    "incomplete_migration": {
+      "add": [
+        {
+          "header": "Pure TypeScript ESM codebase with no legacy residue",
+          "description": "All 14 source files are TypeScript with ESM imports. No JS files, no CJS patterns, no deprecated markers, no migration TODOs. The codebase was built modern from inception.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "package_organization": {
+      "add": [
+        {
+          "header": "Three-directory structure with clear ownership",
+          "description": "src/ holds core utilities with high fan-in (types 13 importers, colors 10 importers), segments/ holds the 5 segment implementations, campaigns/ holds campaign data and engine. Each directory has a single clear responsibility.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Tree-like coupling with no circular dependencies",
+          "description": "The coupling matrix shows clean dependency direction: segments imports core (11 edges), core imports segments via layout (5 edges), campaigns imports core (2 edges), segments imports campaigns (1 edge). No circular directory-level dependencies exist.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Small project size makes flat structure appropriate",
+          "description": "At 14 production files and 959 total LOC, the codebase is well below the threshold where deeper directory nesting would improve navigability. The current 3-directory split is proportionate.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    },
+    "initialization_coupling": {
+      "add": [
+        {
+          "header": "Call-time path resolution throughout",
+          "description": "All homedir() and config path computations happen inside function bodies (loadConfig, settingsPath, resolveEffort), not at module scope. This was a fix for previously baked CONFIG_PATH/SETTINGS_PATH constants and now follows a consistent pattern across all modules.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No import-time I/O in any module",
+          "description": "All file reads (readFileSync), subprocess calls (execSync), and environment variable accesses happen at call time inside function bodies. Module-level code is limited to pure constants, type definitions, and object literals with method references.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Module-private caches with TTL",
+          "description": "gitCache (git.ts) and effort cache (effort.ts) are module-scoped mutable variables with 5-second TTL expiry. They create no cross-module ordering dependencies since they are entirely self-contained within their respective modules.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Dynamic import for lazy stdin handler loading",
+          "description": "cli.ts uses dynamic import('./index.js') to load the stdin processing path only when piped input is detected, avoiding unnecessary module loading and side effects for CLI subcommands like init, preview, and help.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "design_coherence": {
+      "add": [
+        {
+          "header": "Engine refactored into focused helpers",
+          "description": "getActiveCampaign() now delegates to resolveWeekendState, resolvePeakState, and resolveOffPeakState, each handling a single timing state. This resolved the original mixed-responsibility issue.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Consistent segment plugin pattern",
+          "description": "All 5 segments implement the same Segment interface with focused render() methods. Each segment owns its own data fetching and formatting, creating clean boundaries.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Model segment gap arithmetic complexity",
+          "description": "model.ts render() uses 9+ local variables for 3-part gap distribution with two code paths (dots vs spaces). This is the primary remaining design coherence issue.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    },
+    "contract_coherence": {
+      "add": [
+        {
+          "header": "Return types match all code paths",
+          "description": "Functions consistently declare accurate return types. getActiveCampaign() returns CampaignStatus | null covering all branches. resolveEffort() returns EffortLevel | null. No paths return values outside their declared types.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Segment interface consistently implemented",
+          "description": "All 5 segments correctly implement the Segment interface: id matches, priority matches, render() returns Block, enabled() returns boolean. No contract violations in the plugin pattern.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Error contracts use null returns consistently",
+          "description": "Functions that can fail return null (getActiveCampaign, getGitInfo, resolveEffort) or fall back to defaults (loadConfig). No functions promise to throw but silently return null, or vice versa.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "logic_clarity": {
+      "add": [
+        {
+          "header": "Consistent guard clause pattern across segments",
+          "description": "All segment render() methods use early-return guard clauses when data is missing, returning fallback Block objects. This makes the happy path immediately visible.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Clean sequential fallback in terminal detection",
+          "description": "index.ts terminal width detection uses a clear cascade: stderr.columns -> parent TTY via ps/stty -> tput cols -> fallback 120. Each step is self-contained with try-catch.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No dead code paths or unreachable branches",
+          "description": "All conditional branches serve distinct purposes. No identical if/else branches, no code after unconditional returns, no always-true conditions detected.",
+          "settled": true,
+          "positive": true
+        }
+      ]
+    },
+    "type_safety": {
+      "add": [
+        {
+          "header": "Well-structured type definitions",
+          "description": "StatusLineData, Block, Segment, Campaign, and StatusBlocksConfig interfaces use appropriate optional fields, null unions, and nested types. No overly broad 'any' usage in type definitions.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Theme env var validation added",
+          "description": "config.ts now validates CLAUDE_STATUSBLOCKS_THEME against VALID_THEMES set before casting. This partially resolves the previously flagged unsafe cast issue \u2014 the env var path is now safe, but the config file path still lacks validation.",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "No type:ignore comments in codebase",
+          "description": "The codebase avoids type:ignore entirely. All type assertions use 'as' casts, and where they appear, they are either validated (effort regex, theme set check) or at known trust boundaries (stdin, config file).",
+          "settled": true,
+          "positive": true
+        },
+        {
+          "header": "Unvalidated external data boundaries",
+          "description": "Both stdin JSON (index.ts) and config file JSON (config.ts) use 'as' casts without runtime shape validation. This is the primary type safety gap \u2014 errors from malformed input surface deep in rendering code rather than at the parse boundary.",
+          "settled": true,
+          "positive": false
+        }
+      ]
+    }
+  },
+  "review_scope": {
+    "reviewed_files_count": 0,
+    "successful_batch_count": 20,
+    "full_sweep_included": false,
+    "total_files": 14,
+    "imported_dimensions": [
+      "abstraction_fitness",
+      "ai_generated_debt",
+      "api_surface_coherence",
+      "authorization_consistency",
+      "contract_coherence",
+      "convention_outlier",
+      "cross_module_architecture",
+      "dependency_health",
+      "design_coherence",
+      "error_consistency",
+      "high_level_elegance",
+      "incomplete_migration",
+      "initialization_coupling",
+      "logic_clarity",
+      "low_level_elegance",
+      "mid_level_elegance",
+      "naming_quality",
+      "package_organization",
+      "test_strategy",
+      "type_safety"
+    ]
+  },
+  "provenance": {
+    "kind": "blind_review_batch_import",
+    "blind": true,
+    "runner": "dry-run",
+    "run_stamp": "20260320_184655",
+    "created_at": "2026-03-20T18:50:43+00:00",
+    "batch_count": 20,
+    "batch_indexes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "packet_path": "/Users/okan/code/claude-tools/claude-statusblocks/.desloppify/review_packet_blind.json",
+    "packet_sha256": "a37f0324a57a5400747aec3f38ea6c172f6986e0638a6bf323999ee764d70f9e"
+  },
+  "assessment_coverage": {
+    "scored_dimensions": [
+      "naming_quality",
+      "logic_clarity",
+      "type_safety",
+      "contract_coherence",
+      "error_consistency",
+      "abstraction_fitness",
+      "ai_generated_debt",
+      "high_level_elegance",
+      "mid_level_elegance",
+      "low_level_elegance",
+      "cross_module_architecture",
+      "initialization_coupling",
+      "convention_outlier",
+      "dependency_health",
+      "test_strategy",
+      "api_surface_coherence",
+      "authorization_consistency",
+      "incomplete_migration",
+      "package_organization",
+      "design_coherence"
+    ],
+    "selected_dimensions": [
+      "naming_quality",
+      "logic_clarity",
+      "type_safety",
+      "contract_coherence",
+      "error_consistency",
+      "abstraction_fitness",
+      "ai_generated_debt",
+      "high_level_elegance",
+      "mid_level_elegance",
+      "low_level_elegance",
+      "cross_module_architecture",
+      "initialization_coupling",
+      "convention_outlier",
+      "dependency_health",
+      "test_strategy",
+      "api_surface_coherence",
+      "authorization_consistency",
+      "incomplete_migration",
+      "package_organization",
+      "design_coherence"
+    ],
+    "imported_dimensions": [
+      "abstraction_fitness",
+      "ai_generated_debt",
+      "api_surface_coherence",
+      "authorization_consistency",
+      "contract_coherence",
+      "convention_outlier",
+      "cross_module_architecture",
+      "dependency_health",
+      "design_coherence",
+      "error_consistency",
+      "high_level_elegance",
+      "incomplete_migration",
+      "initialization_coupling",
+      "logic_clarity",
+      "low_level_elegance",
+      "mid_level_elegance",
+      "naming_quality",
+      "package_organization",
+      "test_strategy",
+      "type_safety"
+    ],
+    "missing_dimensions": []
+  }
+}

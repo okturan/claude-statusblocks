@@ -376,36 +376,36 @@
       "god_modules": [
         {
           "file": "src/types.ts",
-          "importers": 11,
+          "importers": 13,
           "excerpt": "export interface StatusLineData {\n  model: { id: string; display_name: string };\n  cwd?: string;\n  workspace: { current_dir: string; project_dir: string };\n  version: string;\n  cost: {\n    total_cost_usd: number;\n    total_duration_ms: number;\n    total_api_duration_ms: number;\n    total_lines_added: number;\n    total_lines_removed: number;\n  };\n  context_window: {\n    context_window_size: number;\n    used_percentage: number | null;\n    remaining_percentage: number | null;\n    total_input_tokens: number;\n    total_output_tokens: number;\n    current_usage: {\n      input_tokens: number;\n      output_tokens: number;\n      cache_creation_input_tokens: number;\n      cache_read_input_tokens: number;\n    } | null;\n  };\n  rate_limits?: {\n    five_hour?: { used_percentage: number; resets_at: number };\n    seven_day?: { used_percentage: number; resets_at: number };\n  };\n  exceeds_200k_tokens: boolean;\n\n... (51 more lines)"
         },
         {
           "file": "src/colors.ts",
-          "importers": 6,
+          "importers": 10,
           "excerpt": "const ESC = '\\x1b[';\n\nexport const c = {\n  reset: `${ESC}0m`,\n  bold: `${ESC}1m`,\n  dim: `${ESC}2m`,\n  italic: `${ESC}3m`,\n\n  red: `${ESC}31m`,\n  green: `${ESC}32m`,\n  yellow: `${ESC}33m`,\n  blue: `${ESC}34m`,\n  magenta: `${ESC}35m`,\n  cyan: `${ESC}36m`,\n  white: `${ESC}37m`,\n  gray: `${ESC}90m`,\n\n  orange: `${ESC}38;2;217;119;87m`,\n  offpeak: `${ESC}32m`,\n  peak: `${ESC}38;2;200;100;80m`,\n};\n\nexport function color(text: string, ...codes: string[]): string {\n  return codes.join('') + text + c.reset;\n}\n\n/** Strip ANSI codes to get visible length */\nexport function visibleLength(str: string): number {\n  // eslint-disable-next-line no-control-regex\n  return str.replace(/\\x1b\\[[0-9;]*m/g, '').length;\n\n... (30 more lines)"
         }
       ],
       "top_imported": {
-        "src/types.ts": 11,
-        "src/colors.ts": 6,
-        "src/layout.ts": 2,
-        "src/config.ts": 2,
-        "src/campaigns/data.ts": 1,
-        "src/campaigns/engine.ts": 1,
-        "src/effort.ts": 1,
-        "src/segments/context.ts": 1,
-        "src/segments/model.ts": 1,
-        "src/segments/git.ts": 1
+        "src/types.ts": 13,
+        "src/colors.ts": 10,
+        "src/layout.ts": 3,
+        "src/config.ts": 3,
+        "src/campaigns/engine.ts": 2,
+        "src/effort.ts": 2,
+        "src/segments/context.ts": 2,
+        "src/segments/model.ts": 2,
+        "src/segments/usage.ts": 2,
+        "src/campaigns/data.ts": 1
       }
     },
     "coupling": {},
     "conventions": {
       "naming_by_directory": {
         "campaigns/": {
-          "camelCase": 5
+          "camelCase": 8
         },
         "src/": {
-          "camelCase": 8
+          "camelCase": 9
         },
         "segments/": {
           "camelCase": 5
@@ -429,10 +429,10 @@
       "summary": {
         "wrapper_rate": 0.0,
         "total_wrappers": 0,
-        "total_function_signatures": 18,
+        "total_function_signatures": 22,
         "one_impl_interface_count": 0,
         "indirection_hotspot_count": 1,
-        "wide_param_bag_count": 0,
+        "wide_param_bag_count": 1,
         "delegation_heavy_class_count": 0,
         "facade_module_count": 0,
         "typed_dict_violation_count": 0,
@@ -453,6 +453,13 @@
           "max_chain_depth": 2,
           "chain_count": 8
         }
+      ],
+      "wide_param_bags": [
+        {
+          "file": "src/campaigns/engine.ts",
+          "wide_functions": 0,
+          "config_bag_mentions": 14
+        }
       ]
     },
     "dependencies": {},
@@ -461,7 +468,15 @@
       "critical_untested": [
         {
           "file": "src/colors.ts",
-          "importers": 6
+          "importers": 10
+        },
+        {
+          "file": "src/layout.ts",
+          "importers": 3
+        },
+        {
+          "file": "src/config.ts",
+          "importers": 3
         }
       ]
     },
@@ -474,8 +489,8 @@
             "data.ts",
             "engine.ts"
           ],
-          "total_loc": 160,
-          "avg_fan_in": 1.0,
+          "total_loc": 146,
+          "avg_fan_in": 1.5,
           "avg_fan_out": 1.5,
           "zones": {
             "production": 2
@@ -498,9 +513,9 @@
             "layout.ts",
             "types.ts"
           ],
-          "total_loc": 530,
-          "avg_fan_in": 3.1,
-          "avg_fan_out": 2.0,
+          "total_loc": 532,
+          "avg_fan_in": 4.4,
+          "avg_fan_out": 2.1,
           "zones": {
             "production": 7
           },
@@ -515,14 +530,14 @@
         "src/segments/": {
           "file_count": 5,
           "files": [
-            "campaign.ts",
             "context.ts",
             "git.ts",
             "model.ts",
+            "promo.ts",
             "usage.ts"
           ],
           "total_loc": 281,
-          "avg_fan_in": 1.0,
+          "avg_fan_in": 1.6,
           "avg_fan_out": 2.4,
           "zones": {
             "production": 5
@@ -532,7 +547,7 @@
             "src/campaigns/": 1
           },
           "imported_by_dirs": {
-            "src/": 5
+            "src/": 8
           }
         }
       },
@@ -545,39 +560,24 @@
     },
     "codebase_stats": {
       "total_files": 14,
-      "total_loc": 971
+      "total_loc": 959
     },
     "authorization": {},
-    "ai_debt_signals": {
-      "file_signals": {
-        "src/cli.ts": {
-          "log_density": 4.0
-        }
-      },
-      "codebase_avg_comment_ratio": 0.057
-    },
-    "migration_signals": {
-      "pattern_pairs": [
-        {
-          "name": "var\u2192let/const",
-          "old_count": 1,
-          "new_count": 13
-        }
-      ]
-    },
+    "ai_debt_signals": {},
+    "migration_signals": {},
     "scan_evidence": {
       "dead_code": [
         {
           "file": "src/cli.ts",
           "kind": "orphaned",
-          "loc": 87
+          "loc": 91
         }
       ],
       "signal_density": [
         {
           "file": "src/cli.ts",
           "detector_count": 4,
-          "issue_count": 5,
+          "issue_count": 6,
           "detectors": [
             "logs",
             "orphaned",
@@ -598,6 +598,33 @@
         {
           "file": "src/campaigns/engine.ts",
           "detector_count": 2,
+          "issue_count": 4,
+          "detectors": [
+            "smells",
+            "test_coverage"
+          ]
+        },
+        {
+          "file": "src/layout.ts",
+          "detector_count": 2,
+          "issue_count": 3,
+          "detectors": [
+            "smells",
+            "test_coverage"
+          ]
+        },
+        {
+          "file": "src/effort.ts",
+          "detector_count": 2,
+          "issue_count": 3,
+          "detectors": [
+            "smells",
+            "test_coverage"
+          ]
+        },
+        {
+          "file": "src/segments/git.ts",
+          "detector_count": 2,
           "issue_count": 3,
           "detectors": [
             "smells",
@@ -614,43 +641,7 @@
           ]
         },
         {
-          "file": "src/layout.ts",
-          "detector_count": 2,
-          "issue_count": 2,
-          "detectors": [
-            "smells",
-            "test_coverage"
-          ]
-        },
-        {
           "file": "src/segments/model.ts",
-          "detector_count": 2,
-          "issue_count": 2,
-          "detectors": [
-            "smells",
-            "test_coverage"
-          ]
-        },
-        {
-          "file": "src/segments/campaign.ts",
-          "detector_count": 2,
-          "issue_count": 2,
-          "detectors": [
-            "single_use",
-            "test_coverage"
-          ]
-        },
-        {
-          "file": "src/effort.ts",
-          "detector_count": 2,
-          "issue_count": 2,
-          "detectors": [
-            "smells",
-            "test_coverage"
-          ]
-        },
-        {
-          "file": "src/segments/git.ts",
           "detector_count": 2,
           "issue_count": 2,
           "detectors": [
@@ -684,7 +675,7 @@
       "package_size_census": [
         {
           "package": "src",
-          "loc": 13,
+          "loc": 12,
           "pct_of_total": 100.0,
           "disproportionate": true
         }
@@ -698,11 +689,12 @@
         "format": 2,
         "render": 2,
         "is": 1,
+        "set": 1,
         "init": 1,
         "load": 1,
         "find": 1
       },
-      "total_names": 33
+      "total_names": 38
     },
     "error_conventions": {
       "returns_null": 2,
@@ -718,30 +710,32 @@
     },
     "import_graph_summary": {
       "top_imported": {
-        "src/types.ts": 11,
-        "src/colors.ts": 6,
-        "src/layout.ts": 2,
-        "src/config.ts": 2,
+        "src/types.ts": 13,
+        "src/colors.ts": 10,
+        "src/layout.ts": 3,
+        "src/config.ts": 3,
+        "src/campaigns/engine.ts": 2,
+        "src/effort.ts": 2,
+        "src/segments/context.ts": 2,
+        "src/segments/model.ts": 2,
+        "src/segments/usage.ts": 2,
         "src/campaigns/data.ts": 1,
-        "src/campaigns/engine.ts": 1,
-        "src/effort.ts": 1,
-        "src/segments/context.ts": 1,
-        "src/segments/model.ts": 1,
         "src/segments/git.ts": 1,
-        "src/segments/campaign.ts": 1,
-        "src/segments/usage.ts": 1
+        "src/segments/promo.ts": 1
       }
     },
     "zone_distribution": {
-      "production": 14
+      "production": 14,
+      "test": 6
     },
     "existing_issues": {
       "src/cli.ts": [
         "logs: 2 tagged logs [unknown]",
-        "orphaned: Orphaned file (87 LOC): zero importers, not an entry point",
-        "test_coverage: Untested module (87 LOC, 0 importers) \u2014 no test files found",
+        "orphaned: Orphaned file (91 LOC): zero importers, not an entry point",
+        "test_coverage: Untested module (91 LOC, 0 importers) \u2014 no test files found",
         "smells: 2x console.error without throw/return",
-        "smells: 2x Magic numbers (>1000 in logic)"
+        "smells: 2x Magic numbers (>1000 in logic)",
+        "test_coverage: Untested module (91 LOC, 0 importers)"
       ],
       "src/colors.ts": [
         "exports: Dead export: truncate",
@@ -754,47 +748,50 @@
       ],
       "src/layout.ts": [
         "test_coverage: Untested module (179 LOC, 2 importers) \u2014 no test files found",
-        "smells: 1x High cyclomatic complexity (>15 branches)"
+        "smells: 1x High cyclomatic complexity (>15 branches)",
+        "test_coverage: Shallow tests: layout.test.ts has 8 assertions across 11 test functions"
       ],
       "src/campaigns/engine.ts": [
         "test_coverage: Untested module (137 LOC, 1 importers) \u2014 no test files found",
         "smells: 1x High cyclomatic complexity (>15 branches)",
-        "smells: 8x Magic numbers (>1000 in logic)"
+        "smells: 8x Magic numbers (>1000 in logic)",
+        "test_coverage: No direct tests (137 LOC, 1 importers) \u2014 covered only via imports from tested mo"
       ],
       "src/segments/model.ts": [
         "test_coverage: Untested module (95 LOC, 1 importers) \u2014 no test files found",
         "smells: 2x Magic numbers (>1000 in logic)"
       ],
-      "src/segments/campaign.ts": [
-        "test_coverage: Untested module (46 LOC, 1 importers) \u2014 no test files found",
-        "single_use: Single-use (46 LOC): only imported by src/layout.ts"
-      ],
       "src/effort.ts": [
         "test_coverage: Untested module (56 LOC, 1 importers) \u2014 no test files found",
-        "smells: 1x High cyclomatic complexity (>15 branches)"
+        "smells: 1x High cyclomatic complexity (>15 branches)",
+        "test_coverage: No direct tests (56 LOC, 1 importers) \u2014 covered only via imports from tested mod"
       ],
       "src/segments/git.ts": [
         "test_coverage: Untested module (54 LOC, 1 importers) \u2014 no test files found",
-        "smells: 1x Magic numbers (>1000 in logic)"
+        "smells: 1x Magic numbers (>1000 in logic)",
+        "test_coverage: No direct tests (54 LOC, 1 importers) \u2014 covered only via imports from tested mod"
       ],
       "src/segments/usage.ts": [
         "test_coverage: Untested module (54 LOC, 1 importers) \u2014 no test files found",
         "smells: 4x Magic numbers (>1000 in logic)"
       ],
       "src/index.ts": [
-        "test_coverage: Untested module (42 LOC, 0 importers) \u2014 no test files found"
+        "test_coverage: Untested module (42 LOC, 0 importers) \u2014 no test files found",
+        "test_coverage: Untested module (42 LOC, 0 importers)"
       ],
       "src/config.ts": [
-        "test_coverage: Untested module (25 LOC, 2 importers) \u2014 no test files found"
+        "test_coverage: Untested module (22 LOC, 2 importers) \u2014 no test files found",
+        "test_coverage: Untested module (22 LOC, 2 importers)"
       ],
       "src/campaigns/data.ts": [
-        "test_coverage: Untested module (23 LOC, 1 importers) \u2014 no test files found"
+        "test_coverage: Untested module (23 LOC, 1 importers) \u2014 no test files found",
+        "test_coverage: No direct tests (23 LOC, 1 importers) \u2014 covered only via imports from tested mod"
       ]
     },
     "codebase_stats": {
       "total_files": 14,
-      "total_loc": 971,
-      "avg_file_loc": 69
+      "total_loc": 959,
+      "avg_file_loc": 68
     },
     "sibling_conventions": {
       "campaigns/": {
@@ -804,19 +801,15 @@
       },
       "src/": {
         "render": 2,
+        "set": 1,
         "init": 1,
         "load": 1,
-        "get": 1,
-        "find": 1
+        "get": 1
       }
     },
     "ai_debt_signals": {
-      "file_signals": {
-        "src/cli.ts": {
-          "log_density": 4.0
-        }
-      },
-      "codebase_avg_comment_ratio": 0.057
+      "file_signals": {},
+      "codebase_avg_comment_ratio": 0.049
     },
     "error_strategies": {
       "src/campaigns/engine.ts": "return_null",
@@ -847,36 +840,373 @@
   },
   "historical_review_issues": {
     "summary": {
-      "total_review_issues": 27,
-      "open_review_issues": 23,
+      "total_review_issues": 47,
+      "open_review_issues": 24,
       "status_counts": {
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 4,
-        "open": 23,
+        "fixed": 23,
+        "open": 24,
         "triaged_out": 0,
         "wontfix": 0
       },
       "dimension_open_counts": {
         "test_strategy": 4,
-        "low_level_elegance": 3,
-        "convention_outlier": 2,
-        "design_coherence": 2,
-        "error_consistency": 2,
-        "logic_clarity": 2,
+        "design_coherence": 3,
+        "logic_clarity": 3,
+        "low_level_elegance": 2,
         "naming_quality": 2,
         "type_safety": 2,
+        "ai_generated_debt": 1,
+        "api_surface_coherence": 1,
+        "contract_coherence": 1,
+        "convention_outlier": 1,
         "cross_module_architecture": 1,
-        "high_level_elegance": 1,
+        "error_consistency": 1,
         "initialization_coupling": 1,
         "mid_level_elegance": 1
       }
     },
     "recent_issues": [
       {
+        "dimension": "convention_outlier",
+        "status": "open",
+        "summary": "Campaign segment uses id 'promo' while file is campaign.ts and export is campaignSegment",
+        "suggestion": "Either rename the file to promo.ts and export promoSegment to match the id, or change the id to 'campaign' and update DEFAULT_ORDER in layout.ts. Since the segment renders promotional rate status a...",
+        "related_files": [
+          "src/segments/campaign.ts",
+          "src/layout.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T17:47:01+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "naming_quality",
+        "status": "open",
+        "summary": "campaignSegment export uses id 'promo' creating name/identity mismatch across codebase",
+        "suggestion": "Rename file to promo.ts and export as promoSegment to match the id, since 'promo' accurately describes the segment's purpose (promotional rate display). Update the import in layout.ts accordingly.",
+        "related_files": [
+          "src/segments/campaign.ts",
+          "src/layout.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T17:47:01+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "open",
+        "summary": "No test framework or test files exist anywhere in the codebase",
+        "suggestion": "Add vitest as a devDependency (lightweight, ESM-native, TypeScript out-of-box) and a 'test' script in package.json. Start with unit tests for the highest-value pure-logic modules: colors.ts (visibl...",
+        "related_files": [
+          "package.json"
+        ],
+        "note": "",
+        "confidence": "high",
+        "first_seen": "2026-03-20T17:47:01+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "open",
+        "summary": "Campaign engine's timezone-aware date arithmetic has zero test coverage",
+        "suggestion": "Write unit tests for getActiveCampaign() using vi.useFakeTimers() to pin Date.now() and verify each state transition: upcoming (before campaign start), active-boosted (off-peak weekday), active-nor...",
+        "related_files": [
+          "src/campaigns/engine.ts"
+        ],
+        "note": "",
+        "confidence": "high",
+        "first_seen": "2026-03-20T17:47:01+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "open",
+        "summary": "Most-imported utility (colors.ts, 6 importers) has no tests for ANSI-aware string operations",
+        "suggestion": "Add unit tests for visibleLength (plain text, styled text, nested styles, empty string), padRight (shorter/exact/longer inputs with ANSI), and truncate (cut point inside ANSI sequence, zero width,...",
+        "related_files": [
+          "src/colors.ts"
+        ],
+        "note": "",
+        "confidence": "high",
+        "first_seen": "2026-03-20T17:47:01+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
         "dimension": "cross_module_architecture",
         "status": "open",
+        "summary": "layout.ts hardcodes all segment imports \u2014 adding a segment requires editing layout.ts",
+        "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern...",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "note": "",
+        "confidence": "low",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "high_level_elegance",
+        "status": "fixed",
+        "summary": "CLI help text lists only 3 of 5 segments, omitting 'promo' and 'usage'",
+        "suggestion": "Add the missing segments to the Blocks section in help(): 'promo' (promotional rate status with peak/off-peak countdown) and 'usage' (5-hour and 7-day rate limit bars). Keep the same format as exis...",
+        "related_files": [
+          "src/cli.ts"
+        ],
+        "note": "Added all 5 segments (context, model, promo, git, usage) to CLI help text in cli.ts",
+        "confidence": "high",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "error_consistency",
+        "status": "open",
+        "summary": "Catch blocks inconsistently document their rationale \u2014 some have comments, others are bare",
+        "suggestion": "Add brief rationale comments to the undocumented catches: index.ts inner catches should note 'TTY detection fallback' and 'tput fallback'; config.ts should note 'missing or malformed config file \u2014...",
+        "related_files": [
+          "src/index.ts",
+          "src/config.ts",
+          "src/segments/git.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "naming_quality",
+        "status": "open",
+        "summary": "resetCountdown sounds like an action (reset the countdown) rather than a formatter",
+        "suggestion": "Rename to formatResetCountdown to match the codebase's format* naming convention and clarify it is a formatter, not an action.",
+        "related_files": [
+          "src/segments/usage.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "low_level_elegance",
+        "status": "open",
+        "summary": "model.ts 3-part line2 layout uses 12+ local variables for manual gap distribution",
+        "suggestion": "Extract the 3-part gap distribution into a helper function like spreadParts(parts: string[], targetWidth: number, separator?: string): string that encapsulates the dot-vs-space decision and gap ari...",
+        "related_files": [
+          "src/segments/model.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "low_level_elegance",
+        "status": "open",
+        "summary": "getActiveCampaign() mixes time arithmetic, state classification, and progress calculation in 88 lines",
+        "suggestion": "Extract the weekend timing calculation (lines 70-88) into a helper like computeWeekendTiming(currentSecs, peakStartSecs, peakEndSecs, dow) returning {secsUntilChange, progress}. Similarly extract t...",
+        "related_files": [
+          "src/campaigns/engine.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "mid_level_elegance",
+        "status": "open",
+        "summary": "Layout embeds hardcoded row1 width reduction (maxRowWidth - 5) mixing policy with orchestration",
+        "suggestion": "Extract the row1 extra margin as a named constant (e.g., NOTIFICATION_MARGIN = 5) next to INK_PADDING on line 12 with a comment explaining why row 1 needs additional reduction beyond the general IN...",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "test_strategy",
+        "status": "open",
+        "summary": "Combinatorial layout row-assignment algorithm has no test coverage",
+        "suggestion": "Test findOptimalAssignment() with known block widths and verify: single block returns [0], two blocks fitting one row return single-row assignment, blocks forcing two rows produce correct assignmen...",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "note": "",
+        "confidence": "high",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "api_surface_coherence",
+        "status": "open",
+        "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
+        "suggestion": "This is a pragmatic interface design for a 5-segment codebase \u2014 making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed, but if more segments are ad...",
+        "related_files": [
+          "src/types.ts",
+          "src/segments/model.ts",
+          "src/segments/context.ts",
+          "src/segments/campaign.ts",
+          "src/segments/git.ts",
+          "src/segments/usage.ts"
+        ],
+        "note": "",
+        "confidence": "low",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "ai_generated_debt",
+        "status": "open",
+        "summary": "cli.ts uses raw ANSI escape strings instead of the project's own color() utility",
+        "suggestion": "Import { color, c } from './colors.js' and replace raw ANSI sequences with color() calls. For example, change console.log('\\x1b[1mclaude-statusblocks\\x1b[0m preview') to console.log(color('claude-s...",
+        "related_files": [
+          "src/cli.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "initialization_coupling",
+        "status": "open",
+        "summary": "CONFIG_PATH and SETTINGS_PATH bake homedir() at import time, creating untestable stale snapshots",
+        "suggestion": "Move CONFIG_PATH computation inside loadConfig() in config.ts: replace the module-level const with a local const inside the function body. Similarly, move SETTINGS_PATH computation inside init() in...",
+        "related_files": [
+          "src/config.ts",
+          "src/cli.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "design_coherence",
+        "status": "open",
+        "summary": "getActiveCampaign() mixes time arithmetic, state classification, and progress calculation in one 88-line body",
+        "suggestion": "Extract a computeTimingState(campaign, hour, minute, second, dow) helper that returns {state, secsUntilChange, progress} by encapsulating the peak/off-peak/weekend classification and countdown math...",
+        "related_files": [
+          "src/campaigns/engine.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "design_coherence",
+        "status": "open",
+        "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution across effort/duration/version",
+        "suggestion": "Extract a function like spreadParts(parts: string[], targetWidth: number, separator?: string): string that handles distributing N parts across a target width with optional separators. This replaces...",
+        "related_files": [
+          "src/segments/model.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "design_coherence",
+        "status": "open",
+        "summary": "High cyclomatic complexity in engine.ts driven by interleaved state classification and arithmetic",
+        "suggestion": "The cyclomatic complexity is a symptom of the mixed responsibilities identified in engine_mixed_responsibilities. Extracting computeTimingState would naturally reduce the branch depth in getActiveC...",
+        "related_files": [
+          "src/campaigns/engine.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "contract_coherence",
+        "status": "open",
+        "summary": "campaignSegment.enabled() and render() both call getActiveCampaign() independently, risking state divergence",
+        "suggestion": "This is low-severity because the render() null guard (line 11) handles the case safely. However, the contract would be tighter if campaign state were resolved once. One approach: cache the result i...",
+        "related_files": [
+          "src/segments/campaign.ts"
+        ],
+        "note": "",
+        "confidence": "low",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "logic_clarity",
+        "status": "open",
+        "summary": "campaign.ts render() computes barWidth variable that misleadingly suggests a progress bar but is only used for fallback separator sizing",
+        "suggestion": "Rename barWidth to contentWidth or maxLineWidth to reflect its actual purpose \u2014 it computes the wider of the two content lines for separator sizing. This removes the misleading bar reference.",
+        "related_files": [
+          "src/segments/campaign.ts"
+        ],
+        "note": "",
+        "confidence": "high",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "logic_clarity",
+        "status": "open",
+        "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
+        "suggestion": "Extract the 5 as a named constant (e.g., NOTIFICATION_OVERLAP = 5) with a comment explaining that Claude Code's notification badge overlaps only the first row's right edge by approximately 5 charac...",
+        "related_files": [
+          "src/layout.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "logic_clarity",
+        "status": "open",
+        "summary": "Weekend progress calculation produces a negative intermediate value before clamping",
+        "suggestion": "Add a brief comment above line 79 explaining that secsSinceFriPeak measures seconds elapsed since Friday's peak ended, and that the clamp on line 80 handles the edge case where Saturday has not yet...",
+        "related_files": [
+          "src/campaigns/engine.ts"
+        ],
+        "note": "",
+        "confidence": "low",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "type_safety",
+        "status": "open",
+        "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
+        "suggestion": "Add minimal runtime guards after parsing: if (!data?.model?.display_name || !data?.context_window || !data?.workspace?.current_dir) throw new Error('Invalid statusline data: missing required fields...",
+        "related_files": [
+          "src/index.ts"
+        ],
+        "note": "",
+        "confidence": "medium",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "type_safety",
+        "status": "open",
+        "summary": "Environment variable cast to theme union type without validation",
+        "suggestion": "Add validation before the cast: const validThemes: StatusBlocksConfig['theme'][] = ['default', 'minimal', 'full']; if (envTheme && validThemes.includes(envTheme as StatusBlocksConfig['theme'])) con...",
+        "related_files": [
+          "src/config.ts"
+        ],
+        "note": "",
+        "confidence": "high",
+        "first_seen": "2026-03-20T18:11:31+00:00",
+        "last_seen": "2026-03-20T18:11:31+00:00"
+      },
+      {
+        "dimension": "cross_module_architecture",
+        "status": "fixed",
         "summary": "layout.ts hardcodes all segment imports \u2014 adding a segment requires editing layout.ts",
         "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern...",
         "related_files": [
@@ -889,7 +1219,7 @@
       },
       {
         "dimension": "high_level_elegance",
-        "status": "open",
+        "status": "fixed",
         "summary": "campaign.ts has dead progress bar logic and contradictory inline comments from iterative development",
         "suggestion": "Remove the dead `bar` computation (lines 37-42), the unused `lines` array (lines 44-45), and the contradictory comments (lines 46-48). Keep only the `finalLines` construction.",
         "related_files": [
@@ -902,7 +1232,7 @@
       },
       {
         "dimension": "convention_outlier",
-        "status": "open",
+        "status": "fixed",
         "summary": "3 of 5 segments return Block.priority values that differ from their Segment.priority definitions",
         "suggestion": "Use the Segment's priority value in the Block return: e.g. in model.ts line 93, change priority:2 to priority:30. Similarly for campaign.ts and usage.ts. This makes the Block returns consistent wit...",
         "related_files": [
@@ -916,22 +1246,8 @@
         "last_seen": "2026-03-20T17:47:01+00:00"
       },
       {
-        "dimension": "convention_outlier",
-        "status": "open",
-        "summary": "Campaign segment uses id 'promo' while file is campaign.ts and export is campaignSegment",
-        "suggestion": "Either rename the file and export to promo.ts/promoSegment to match the id, or change the id to 'campaign' and update DEFAULT_ORDER. Given the segment renders promotional rate status, 'promo' is mo...",
-        "related_files": [
-          "src/segments/campaign.ts",
-          "src/layout.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
         "dimension": "error_consistency",
-        "status": "open",
+        "status": "fixed",
         "summary": "Top-level catch in index.ts silently swallows all errors, outputting blank line with no diagnostics",
         "suggestion": "Write a minimal diagnostic to stderr in the catch block: process.stderr.write(`[claude-statusblocks] ${err instanceof Error ? err.message : err}\\n`). This preserves the blank-output-on-failure beha...",
         "related_files": [
@@ -944,7 +1260,7 @@
       },
       {
         "dimension": "error_consistency",
-        "status": "open",
+        "status": "fixed",
         "summary": "Catch blocks inconsistently document their rationale \u2014 some have comments, others are bare",
         "suggestion": "Add brief rationale comments to the undocumented catches: index.ts outer catch should explain that blank output is intentional to avoid breaking Claude Code's UI; config.ts should note that missing...",
         "related_files": [
@@ -955,285 +1271,6 @@
         ],
         "note": "",
         "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "naming_quality",
-        "status": "open",
-        "summary": "campaignSegment export uses id 'promo' creating name/identity mismatch across codebase",
-        "suggestion": "Pick one term and use it consistently. Since the segment renders promotional campaign status, either rename the file to promo.ts and export promoSegment, or change the id to 'campaign' and update D...",
-        "related_files": [
-          "src/segments/campaign.ts",
-          "src/layout.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "naming_quality",
-        "status": "open",
-        "summary": "resetCountdown sounds like an action (reset the countdown) rather than a formatter",
-        "suggestion": "Rename to formatResetCountdown to match the codebase's format* naming convention (formatTokens, formatCountdown in engine.ts) and clarify it is a formatter, not an action.",
-        "related_files": [
-          "src/segments/usage.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "low_level_elegance",
-        "status": "open",
-        "summary": "layout.ts render() mixes brute-force layout search, row materialization, and rendering in 120 lines",
-        "suggestion": "Extract the brute-force layout optimizer (lines 91-153) into a separate function like findOptimalAssignment(n, widths, row1MaxWidth, maxRowWidth) returning the best assignment array. This isolates...",
-        "related_files": [
-          "src/layout.ts"
-        ],
-        "note": "",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "low_level_elegance",
-        "status": "open",
-        "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution",
-        "suggestion": "Extract the 3-part gap distribution into a helper function like distributeGaps(parts: string[], targetWidth: number): string that encapsulates the dot-vs-space decision and gap arithmetic. This red...",
-        "related_files": [
-          "src/segments/model.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "low_level_elegance",
-        "status": "open",
-        "summary": "campaign.ts render builds bar and lines array then discards them, with stale iteration comments",
-        "suggestion": "Remove the bar computation (lines 37-42), the lines array (lines 43-45), and the three stale comments (lines 46-48). Build finalLines directly from line1 and line2.",
-        "related_files": [
-          "src/segments/campaign.ts"
-        ],
-        "note": "",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "mid_level_elegance",
-        "status": "open",
-        "summary": "Layout embeds hardcoded row1 width reduction (maxRowWidth - 5) mixing policy with orchestration",
-        "suggestion": "Extract the row1 extra margin as a named constant (e.g., NOTIFICATION_PANEL_MARGIN = 5) next to INK_PADDING with a comment explaining why row 1 needs additional reduction beyond the general INK_PAD...",
-        "related_files": [
-          "src/layout.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "test_strategy",
-        "status": "open",
-        "summary": "No test framework or test files exist anywhere in the codebase",
-        "suggestion": "Add vitest as a devDependency (lightweight, ESM-native, TypeScript out-of-box) and a 'test' script in package.json. Start with unit tests for the highest-value pure-logic modules: colors.ts (visibl...",
-        "related_files": [
-          "package.json"
-        ],
-        "note": "",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "test_strategy",
-        "status": "open",
-        "summary": "Campaign engine's timezone-aware date arithmetic has zero test coverage",
-        "suggestion": "Write unit tests for getActiveCampaign() using vi.useFakeTimers() to pin Date.now() and verify each state transition: upcoming, active-boosted (pre-peak), active-normal (peak), active-boosted (post...",
-        "related_files": [
-          "src/campaigns/engine.ts"
-        ],
-        "note": "",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "test_strategy",
-        "status": "open",
-        "summary": "Most-imported utility (colors.ts, 6 importers) has no tests for ANSI-aware string operations",
-        "suggestion": "Add unit tests for visibleLength (plain text, styled text, nested styles), padRight (shorter/exact/longer inputs with ANSI), and truncate (cut point inside ANSI sequence, zero width, multi-style st...",
-        "related_files": [
-          "src/colors.ts"
-        ],
-        "note": "",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "test_strategy",
-        "status": "open",
-        "summary": "Combinatorial layout row-assignment algorithm has no test coverage",
-        "suggestion": "Test render() with mock Block inputs at various terminal widths: all blocks fit on one row, forced multi-row, single block, zero-enabled segments. Verify row assignments and output line counts. Moc...",
-        "related_files": [
-          "src/layout.ts"
-        ],
-        "note": "",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "api_surface_coherence",
-        "status": "fixed",
-        "summary": "Segment render() returns Block with priority values contradicting segment's declared priority",
-        "suggestion": "Make each segment's render() return the same priority value as its declared Segment priority. In model.ts change priority: 2 to priority: 30, in campaign.ts change priority: 4 to priority: 20, in u...",
-        "related_files": [
-          "src/segments/model.ts",
-          "src/segments/campaign.ts",
-          "src/segments/usage.ts"
-        ],
-        "note": "Fixed priority values in model, campaign, usage segments",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "api_surface_coherence",
-        "status": "fixed",
-        "summary": "truncate() is exported from colors.ts but has no external consumers",
-        "suggestion": "Remove the export keyword from truncate() to make it a module-private function, reducing the public API surface. If it might be needed externally in the future, keep the export but this is a minor...",
-        "related_files": [
-          "src/colors.ts"
-        ],
-        "note": "Removed export from truncate() in colors.ts \u2014 only used internally by padRight in the same file",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "ai_generated_debt",
-        "status": "fixed",
-        "summary": "Stale thinking-out-loud comments and dead code in campaign.ts from iterative generation",
-        "suggestion": "Remove the three stale comments on lines 46-48. Remove the unused 'bar' variable (lines 42-43) and the unused 'lines' array (lines 44-45). The finalLines array on lines 49-52 is the actual output.",
-        "related_files": [
-          "src/segments/campaign.ts"
-        ],
-        "note": "Removed dead bar variable, unused lines array, and three stale iteration comments from campaign.ts render()",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "initialization_coupling",
-        "status": "open",
-        "summary": "CONFIG_PATH and SETTINGS_PATH bake homedir() at import time, creating untestable stale snapshots",
-        "suggestion": "Move CONFIG_PATH computation inside loadConfig() and SETTINGS_PATH computation inside init(). This follows the pattern already established in effort.ts:46 where homedir() is resolved at call time a...",
-        "related_files": [
-          "src/config.ts",
-          "src/cli.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "design_coherence",
-        "status": "open",
-        "summary": "getActiveCampaign() mixes time arithmetic, state classification, and progress calculation in one 88-line body",
-        "suggestion": "Extract the time-to-next-state and progress calculations into a helper (e.g., computePeakTiming) that returns {secsUntilChange, progress, isPeak, isWeekend}, then have getActiveCampaign() focus on...",
-        "related_files": [
-          "src/campaigns/engine.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "design_coherence",
-        "status": "open",
-        "summary": "campaign.ts render() builds bar and lines array then immediately discards them for finalLines",
-        "suggestion": "Remove the unused 'bar' variable and the 'lines' array (lines 37-48). Build finalLines directly from line1 and line2, eliminating the dead intermediate computation and the confusing commented-out a...",
-        "related_files": [
-          "src/segments/campaign.ts"
-        ],
-        "note": "",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "contract_coherence",
-        "status": "fixed",
-        "summary": "Three segments return Block.priority values that contradict their Segment.priority declarations",
-        "suggestion": "In each segment's render() return, use the segment's own priority value (30 for model, 15 for usage, 20 for campaign) to match the Segment declaration. Alternatively, if Block.priority is intention...",
-        "related_files": [
-          "src/segments/model.ts",
-          "src/segments/usage.ts",
-          "src/segments/campaign.ts"
-        ],
-        "note": "Fixed priority values to match Segment declarations",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "logic_clarity",
-        "status": "open",
-        "summary": "campaign.ts render() computes 'bar' progress bar variable that is never included in the output",
-        "suggestion": "Remove the bar computation (lines 37-43) and the unused 'lines' array (line 44). Also remove the three commented-out alternative approaches (lines 46-48). The function should go directly from build...",
-        "related_files": [
-          "src/segments/campaign.ts"
-        ],
-        "note": "",
-        "confidence": "high",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "logic_clarity",
-        "status": "open",
-        "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
-        "suggestion": "Add a comment explaining why row 1 needs the extra 5-char reduction (likely to avoid overlap with Claude Code's notification panel which only appears at the top). If this is for the notification pa...",
-        "related_files": [
-          "src/layout.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "type_safety",
-        "status": "open",
-        "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
-        "suggestion": "Since the top-level try/catch already handles malformed input gracefully, this is low severity. For a more defensive approach, add minimal runtime checks for required fields (e.g., if (!data?.model...",
-        "related_files": [
-          "src/index.ts"
-        ],
-        "note": "",
-        "confidence": "medium",
-        "first_seen": "2026-03-20T17:47:01+00:00",
-        "last_seen": "2026-03-20T17:47:01+00:00"
-      },
-      {
-        "dimension": "type_safety",
-        "status": "open",
-        "summary": "Environment variable cast to theme union type without validation",
-        "suggestion": "Add a validation check before the cast, following the pattern already used in effort.ts: const validThemes = ['default', 'minimal', 'full']; if (envTheme && validThemes.includes(envTheme)) config.t...",
-        "related_files": [
-          "src/config.ts"
-        ],
-        "note": "",
-        "confidence": "high",
         "first_seen": "2026-03-20T17:47:01+00:00",
         "last_seen": "2026-03-20T17:47:01+00:00"
       }
@@ -1252,11 +1289,24 @@
           "cross_module_architecture"
         ],
         "max_items": 20,
-        "selected_count": 1,
+        "selected_count": 2,
         "issues": [
           {
             "dimension": "cross_module_architecture",
             "status": "open",
+            "summary": "layout.ts hardcodes all segment imports \u2014 adding a segment requires editing layout.ts",
+            "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern...",
+            "related_files": [
+              "src/layout.ts"
+            ],
+            "note": "",
+            "confidence": "low",
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
+          },
+          {
+            "dimension": "cross_module_architecture",
+            "status": "fixed",
             "summary": "layout.ts hardcodes all segment imports \u2014 adding a segment requires editing layout.ts",
             "suggestion": "For a 5-segment codebase this is pragmatic and not worth abstracting. If segment count grows beyond ~8, consider a segments/index.ts barrel that exports the array, keeping the registration concern...",
             "related_files": [
@@ -1282,16 +1332,27 @@
           "high_level_elegance"
         ],
         "max_items": 20,
-        "selected_count": 1,
+        "selected_count": 2,
         "issues": [
           {
             "dimension": "high_level_elegance",
-            "status": "open",
+            "status": "fixed",
+            "summary": "CLI help text lists only 3 of 5 segments, omitting 'promo' and 'usage'",
+            "suggestion": "Add the missing segments to the Blocks section in help(): 'promo' (promotional rate status with peak/off-peak countdown) and 'usage' (5-hour and 7-day rate limit bars). Keep the same format as exis...",
+            "related_files": [
+              "src/cli.ts"
+            ],
+            "note": "Added all 5 segments (context, model, promo, git, usage) to CLI help text in cli.ts",
+            "confidence": "high",
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
+          },
+          {
+            "dimension": "high_level_elegance",
+            "status": "fixed",
             "summary": "campaign.ts has dead progress bar logic and contradictory inline comments from iterative development",
             "suggestion": "Remove the dead `bar` computation (lines 37-42), the unused `lines` array (lines 44-45), and the contradictory comments (lines 46-48). Keep only the `finalLines` construction.",
-            "related_files": [
-              "src/segments/campaign.ts"
-            ],
+            "related_files": [],
             "note": "",
             "confidence": "high",
             "first_seen": "2026-03-20T17:47:01+00:00",
@@ -1317,29 +1378,27 @@
           {
             "dimension": "convention_outlier",
             "status": "open",
-            "summary": "3 of 5 segments return Block.priority values that differ from their Segment.priority definitions",
-            "suggestion": "Use the Segment's priority value in the Block return: e.g. in model.ts line 93, change priority:2 to priority:30. Similarly for campaign.ts and usage.ts. This makes the Block returns consistent wit...",
-            "related_files": [
-              "src/segments/model.ts",
-              "src/segments/campaign.ts",
-              "src/segments/usage.ts"
-            ],
-            "note": "",
-            "confidence": "high",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
-          },
-          {
-            "dimension": "convention_outlier",
-            "status": "open",
             "summary": "Campaign segment uses id 'promo' while file is campaign.ts and export is campaignSegment",
-            "suggestion": "Either rename the file and export to promo.ts/promoSegment to match the id, or change the id to 'campaign' and update DEFAULT_ORDER. Given the segment renders promotional rate status, 'promo' is mo...",
+            "suggestion": "Either rename the file to promo.ts and export promoSegment to match the id, or change the id to 'campaign' and update DEFAULT_ORDER in layout.ts. Since the segment renders promotional rate status a...",
             "related_files": [
-              "src/segments/campaign.ts",
               "src/layout.ts"
             ],
             "note": "",
             "confidence": "medium",
+            "first_seen": "2026-03-20T17:47:01+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
+          },
+          {
+            "dimension": "convention_outlier",
+            "status": "fixed",
+            "summary": "3 of 5 segments return Block.priority values that differ from their Segment.priority definitions",
+            "suggestion": "Use the Segment's priority value in the Block return: e.g. in model.ts line 93, change priority:2 to priority:30. Similarly for campaign.ts and usage.ts. This makes the Block returns consistent wit...",
+            "related_files": [
+              "src/segments/model.ts",
+              "src/segments/usage.ts"
+            ],
+            "note": "",
+            "confidence": "high",
             "first_seen": "2026-03-20T17:47:01+00:00",
             "last_seen": "2026-03-20T17:47:01+00:00"
           }
@@ -1353,7 +1412,7 @@
       ],
       "why": "error_consistency review",
       "judgment_finding_counts": {
-        "smells": 11
+        "smells": 15
       },
       "concern_signals": [],
       "historical_issue_focus": {
@@ -1361,11 +1420,26 @@
           "error_consistency"
         ],
         "max_items": 20,
-        "selected_count": 2,
+        "selected_count": 3,
         "issues": [
           {
             "dimension": "error_consistency",
             "status": "open",
+            "summary": "Catch blocks inconsistently document their rationale \u2014 some have comments, others are bare",
+            "suggestion": "Add brief rationale comments to the undocumented catches: index.ts inner catches should note 'TTY detection fallback' and 'tput fallback'; config.ts should note 'missing or malformed config file \u2014...",
+            "related_files": [
+              "src/index.ts",
+              "src/config.ts",
+              "src/segments/git.ts"
+            ],
+            "note": "",
+            "confidence": "medium",
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
+          },
+          {
+            "dimension": "error_consistency",
+            "status": "fixed",
             "summary": "Top-level catch in index.ts silently swallows all errors, outputting blank line with no diagnostics",
             "suggestion": "Write a minimal diagnostic to stderr in the catch block: process.stderr.write(`[claude-statusblocks] ${err instanceof Error ? err.message : err}\\n`). This preserves the blank-output-on-failure beha...",
             "related_files": [
@@ -1378,7 +1452,7 @@
           },
           {
             "dimension": "error_consistency",
-            "status": "open",
+            "status": "fixed",
             "summary": "Catch blocks inconsistently document their rationale \u2014 some have comments, others are bare",
             "suggestion": "Add brief rationale comments to the undocumented catches: index.ts outer catch should explain that blank output is intentional to avoid breaking Claude Code's UI; config.ts should note that missing...",
             "related_files": [
@@ -1413,28 +1487,27 @@
             "dimension": "naming_quality",
             "status": "open",
             "summary": "campaignSegment export uses id 'promo' creating name/identity mismatch across codebase",
-            "suggestion": "Pick one term and use it consistently. Since the segment renders promotional campaign status, either rename the file to promo.ts and export promoSegment, or change the id to 'campaign' and update D...",
+            "suggestion": "Rename file to promo.ts and export as promoSegment to match the id, since 'promo' accurately describes the segment's purpose (promotional rate display). Update the import in layout.ts accordingly.",
             "related_files": [
-              "src/segments/campaign.ts",
               "src/layout.ts"
             ],
             "note": "",
             "confidence": "medium",
             "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "last_seen": "2026-03-20T18:11:31+00:00"
           },
           {
             "dimension": "naming_quality",
             "status": "open",
             "summary": "resetCountdown sounds like an action (reset the countdown) rather than a formatter",
-            "suggestion": "Rename to formatResetCountdown to match the codebase's format* naming convention (formatTokens, formatCountdown in engine.ts) and clarify it is a formatter, not an action.",
+            "suggestion": "Rename to formatResetCountdown to match the codebase's format* naming convention and clarify it is a formatter, not an action.",
             "related_files": [
               "src/segments/usage.ts"
             ],
             "note": "",
             "confidence": "medium",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1486,46 +1559,33 @@
           "low_level_elegance"
         ],
         "max_items": 20,
-        "selected_count": 3,
+        "selected_count": 2,
         "issues": [
           {
             "dimension": "low_level_elegance",
             "status": "open",
-            "summary": "layout.ts render() mixes brute-force layout search, row materialization, and rendering in 120 lines",
-            "suggestion": "Extract the brute-force layout optimizer (lines 91-153) into a separate function like findOptimalAssignment(n, widths, row1MaxWidth, maxRowWidth) returning the best assignment array. This isolates...",
-            "related_files": [
-              "src/layout.ts"
-            ],
-            "note": "",
-            "confidence": "high",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
-          },
-          {
-            "dimension": "low_level_elegance",
-            "status": "open",
-            "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution",
-            "suggestion": "Extract the 3-part gap distribution into a helper function like distributeGaps(parts: string[], targetWidth: number): string that encapsulates the dot-vs-space decision and gap arithmetic. This red...",
+            "summary": "model.ts 3-part line2 layout uses 12+ local variables for manual gap distribution",
+            "suggestion": "Extract the 3-part gap distribution into a helper function like spreadParts(parts: string[], targetWidth: number, separator?: string): string that encapsulates the dot-vs-space decision and gap ari...",
             "related_files": [
               "src/segments/model.ts"
             ],
             "note": "",
             "confidence": "medium",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           },
           {
             "dimension": "low_level_elegance",
             "status": "open",
-            "summary": "campaign.ts render builds bar and lines array then discards them, with stale iteration comments",
-            "suggestion": "Remove the bar computation (lines 37-42), the lines array (lines 43-45), and the three stale comments (lines 46-48). Build finalLines directly from line1 and line2.",
+            "summary": "getActiveCampaign() mixes time arithmetic, state classification, and progress calculation in 88 lines",
+            "suggestion": "Extract the weekend timing calculation (lines 70-88) into a helper like computeWeekendTiming(currentSecs, peakStartSecs, peakEndSecs, dow) returning {secsUntilChange, progress}. Similarly extract t...",
             "related_files": [
-              "src/segments/campaign.ts"
+              "src/campaigns/engine.ts"
             ],
             "note": "",
-            "confidence": "high",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "confidence": "medium",
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1548,14 +1608,14 @@
             "dimension": "mid_level_elegance",
             "status": "open",
             "summary": "Layout embeds hardcoded row1 width reduction (maxRowWidth - 5) mixing policy with orchestration",
-            "suggestion": "Extract the row1 extra margin as a named constant (e.g., NOTIFICATION_PANEL_MARGIN = 5) next to INK_PADDING with a comment explaining why row 1 needs additional reduction beyond the general INK_PAD...",
+            "suggestion": "Extract the row1 extra margin as a named constant (e.g., NOTIFICATION_MARGIN = 5) next to INK_PADDING on line 12 with a comment explaining why row 1 needs additional reduction beyond the general IN...",
             "related_files": [
               "src/layout.ts"
             ],
             "note": "",
             "confidence": "medium",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1567,7 +1627,7 @@
       ],
       "why": "test_strategy review",
       "mechanical_finding_counts": {
-        "test_coverage": 13
+        "test_coverage": 22
       },
       "concern_signals": [],
       "historical_issue_focus": {
@@ -1586,46 +1646,46 @@
             "note": "",
             "confidence": "high",
             "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "last_seen": "2026-03-20T18:11:31+00:00"
           },
           {
             "dimension": "test_strategy",
             "status": "open",
             "summary": "Campaign engine's timezone-aware date arithmetic has zero test coverage",
-            "suggestion": "Write unit tests for getActiveCampaign() using vi.useFakeTimers() to pin Date.now() and verify each state transition: upcoming, active-boosted (pre-peak), active-normal (peak), active-boosted (post...",
+            "suggestion": "Write unit tests for getActiveCampaign() using vi.useFakeTimers() to pin Date.now() and verify each state transition: upcoming (before campaign start), active-boosted (off-peak weekday), active-nor...",
             "related_files": [
               "src/campaigns/engine.ts"
             ],
             "note": "",
             "confidence": "high",
             "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "last_seen": "2026-03-20T18:11:31+00:00"
           },
           {
             "dimension": "test_strategy",
             "status": "open",
             "summary": "Most-imported utility (colors.ts, 6 importers) has no tests for ANSI-aware string operations",
-            "suggestion": "Add unit tests for visibleLength (plain text, styled text, nested styles), padRight (shorter/exact/longer inputs with ANSI), and truncate (cut point inside ANSI sequence, zero width, multi-style st...",
+            "suggestion": "Add unit tests for visibleLength (plain text, styled text, nested styles, empty string), padRight (shorter/exact/longer inputs with ANSI), and truncate (cut point inside ANSI sequence, zero width,...",
             "related_files": [
               "src/colors.ts"
             ],
             "note": "",
             "confidence": "high",
             "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "last_seen": "2026-03-20T18:11:31+00:00"
           },
           {
             "dimension": "test_strategy",
             "status": "open",
             "summary": "Combinatorial layout row-assignment algorithm has no test coverage",
-            "suggestion": "Test render() with mock Block inputs at various terminal widths: all blocks fit on one row, forced multi-row, single block, zero-enabled segments. Verify row assignments and output line counts. Moc...",
+            "suggestion": "Test findOptimalAssignment() with known block widths and verify: single block returns [0], two blocks fitting one row return single-row assignment, blocks forcing two rows produce correct assignmen...",
             "related_files": [
               "src/layout.ts"
             ],
             "note": "",
             "confidence": "high",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1645,35 +1705,24 @@
           "api_surface_coherence"
         ],
         "max_items": 20,
-        "selected_count": 2,
+        "selected_count": 1,
         "issues": [
           {
             "dimension": "api_surface_coherence",
-            "status": "fixed",
-            "summary": "Segment render() returns Block with priority values contradicting segment's declared priority",
-            "suggestion": "Make each segment's render() return the same priority value as its declared Segment priority. In model.ts change priority: 2 to priority: 30, in campaign.ts change priority: 4 to priority: 20, in u...",
+            "status": "open",
+            "summary": "Segment render() allocWidth parameter is only used by 1 of 5 implementations",
+            "suggestion": "This is a pragmatic interface design for a 5-segment codebase \u2014 making allocWidth optional (availWidth?: number) would add ceremony without value. No code change needed, but if more segments are ad...",
             "related_files": [
+              "src/types.ts",
               "src/segments/model.ts",
-              "src/segments/campaign.ts",
+              "src/segments/context.ts",
+              "src/segments/git.ts",
               "src/segments/usage.ts"
             ],
-            "note": "Fixed priority values in model, campaign, usage segments",
-            "confidence": "high",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
-          },
-          {
-            "dimension": "api_surface_coherence",
-            "status": "fixed",
-            "summary": "truncate() is exported from colors.ts but has no external consumers",
-            "suggestion": "Remove the export keyword from truncate() to make it a module-private function, reducing the public API surface. If it might be needed externally in the future, keep the export but this is a minor...",
-            "related_files": [
-              "src/colors.ts"
-            ],
-            "note": "Removed export from truncate() in colors.ts \u2014 only used internally by padRight in the same file",
-            "confidence": "medium",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "note": "",
+            "confidence": "low",
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1710,16 +1759,16 @@
         "issues": [
           {
             "dimension": "ai_generated_debt",
-            "status": "fixed",
-            "summary": "Stale thinking-out-loud comments and dead code in campaign.ts from iterative generation",
-            "suggestion": "Remove the three stale comments on lines 46-48. Remove the unused 'bar' variable (lines 42-43) and the unused 'lines' array (lines 44-45). The finalLines array on lines 49-52 is the actual output.",
+            "status": "open",
+            "summary": "cli.ts uses raw ANSI escape strings instead of the project's own color() utility",
+            "suggestion": "Import { color, c } from './colors.js' and replace raw ANSI sequences with color() calls. For example, change console.log('\\x1b[1mclaude-statusblocks\\x1b[0m preview') to console.log(color('claude-s...",
             "related_files": [
-              "src/segments/campaign.ts"
+              "src/cli.ts"
             ],
-            "note": "Removed dead bar variable, unused lines array, and three stale iteration comments from campaign.ts render()",
-            "confidence": "high",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "note": "",
+            "confidence": "medium",
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1774,15 +1823,15 @@
             "dimension": "initialization_coupling",
             "status": "open",
             "summary": "CONFIG_PATH and SETTINGS_PATH bake homedir() at import time, creating untestable stale snapshots",
-            "suggestion": "Move CONFIG_PATH computation inside loadConfig() and SETTINGS_PATH computation inside init(). This follows the pattern already established in effort.ts:46 where homedir() is resolved at call time a...",
+            "suggestion": "Move CONFIG_PATH computation inside loadConfig() in config.ts: replace the module-level const with a local const inside the function body. Similarly, move SETTINGS_PATH computation inside init() in...",
             "related_files": [
               "src/config.ts",
               "src/cli.ts"
             ],
             "note": "",
             "confidence": "medium",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1794,7 +1843,10 @@
       ],
       "why": "design_coherence review",
       "judgment_finding_counts": {
-        "smells": 7
+        "smells": 11
+      },
+      "mechanical_finding_counts": {
+        "unused": 1
       },
       "concern_signals": [
         {
@@ -1812,41 +1864,96 @@
             "smells::src/campaigns/engine.ts::high_cyclomatic_complexity",
             "smells::src/campaigns/engine.ts::magic_number"
           ]
+        },
+        {
+          "type": "design_concern",
+          "file": "src/effort.ts",
+          "summary": "Design signals from smells",
+          "question": "Review the flagged patterns \u2014 are they design problems that need addressing, or acceptable given the file's role?",
+          "evidence": [
+            "Flagged by: smells",
+            "[smells] 1x High cyclomatic complexity (>15 branches)"
+          ],
+          "fingerprint": "eafe5c4c9660842f",
+          "finding_ids": [
+            "smells::src/effort.ts::high_cyclomatic_complexity"
+          ]
+        },
+        {
+          "type": "design_concern",
+          "file": "src/layout.ts",
+          "summary": "Design signals from smells",
+          "question": "Review the flagged patterns \u2014 are they design problems that need addressing, or acceptable given the file's role?",
+          "evidence": [
+            "Flagged by: smells",
+            "[smells] 1x High cyclomatic complexity (>15 branches)"
+          ],
+          "fingerprint": "bb6c6608cbf3357b",
+          "finding_ids": [
+            "smells::src/layout.ts::high_cyclomatic_complexity"
+          ]
+        },
+        {
+          "type": "design_concern",
+          "file": "src/segments/git.ts",
+          "summary": "Design signals from smells",
+          "question": "Review the flagged patterns \u2014 are they design problems that need addressing, or acceptable given the file's role?",
+          "evidence": [
+            "Flagged by: smells",
+            "[smells] 1x Magic numbers (>1000 in logic)"
+          ],
+          "fingerprint": "cc1dbfee1c85c533",
+          "finding_ids": [
+            "smells::src/segments/git.ts::magic_number"
+          ]
         }
       ],
-      "concern_signal_count": 1,
+      "concern_signal_count": 4,
       "historical_issue_focus": {
         "dimensions": [
           "design_coherence"
         ],
         "max_items": 20,
-        "selected_count": 2,
+        "selected_count": 3,
         "issues": [
           {
             "dimension": "design_coherence",
             "status": "open",
             "summary": "getActiveCampaign() mixes time arithmetic, state classification, and progress calculation in one 88-line body",
-            "suggestion": "Extract the time-to-next-state and progress calculations into a helper (e.g., computePeakTiming) that returns {secsUntilChange, progress, isPeak, isWeekend}, then have getActiveCampaign() focus on...",
+            "suggestion": "Extract a computeTimingState(campaign, hour, minute, second, dow) helper that returns {state, secsUntilChange, progress} by encapsulating the peak/off-peak/weekend classification and countdown math...",
             "related_files": [
               "src/campaigns/engine.ts"
             ],
             "note": "",
             "confidence": "medium",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           },
           {
             "dimension": "design_coherence",
             "status": "open",
-            "summary": "campaign.ts render() builds bar and lines array then immediately discards them for finalLines",
-            "suggestion": "Remove the unused 'bar' variable and the 'lines' array (lines 37-48). Build finalLines directly from line1 and line2, eliminating the dead intermediate computation and the confusing commented-out a...",
+            "summary": "model.ts 3-part line2 layout uses 9+ local variables for manual gap distribution across effort/duration/version",
+            "suggestion": "Extract a function like spreadParts(parts: string[], targetWidth: number, separator?: string): string that handles distributing N parts across a target width with optional separators. This replaces...",
             "related_files": [
-              "src/segments/campaign.ts"
+              "src/segments/model.ts"
             ],
             "note": "",
-            "confidence": "high",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "confidence": "medium",
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
+          },
+          {
+            "dimension": "design_coherence",
+            "status": "open",
+            "summary": "High cyclomatic complexity in engine.ts driven by interleaved state classification and arithmetic",
+            "suggestion": "The cyclomatic complexity is a symptom of the mixed responsibilities identified in engine_mixed_responsibilities. Extracting computeTimingState would naturally reduce the branch depth in getActiveC...",
+            "related_files": [
+              "src/campaigns/engine.ts"
+            ],
+            "note": "",
+            "confidence": "medium",
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1867,18 +1974,14 @@
         "issues": [
           {
             "dimension": "contract_coherence",
-            "status": "fixed",
-            "summary": "Three segments return Block.priority values that contradict their Segment.priority declarations",
-            "suggestion": "In each segment's render() return, use the segment's own priority value (30 for model, 15 for usage, 20 for campaign) to match the Segment declaration. Alternatively, if Block.priority is intention...",
-            "related_files": [
-              "src/segments/model.ts",
-              "src/segments/usage.ts",
-              "src/segments/campaign.ts"
-            ],
-            "note": "Fixed priority values to match Segment declarations",
-            "confidence": "high",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "status": "open",
+            "summary": "campaignSegment.enabled() and render() both call getActiveCampaign() independently, risking state divergence",
+            "suggestion": "This is low-severity because the render() null guard (line 11) handles the case safely. However, the contract would be tighter if campaign state were resolved once. One approach: cache the result i...",
+            "related_files": [],
+            "note": "",
+            "confidence": "low",
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1890,7 +1993,7 @@
       ],
       "why": "logic_clarity review",
       "judgment_finding_counts": {
-        "smells": 11
+        "smells": 15
       },
       "mechanical_finding_counts": {
         "logs": 1
@@ -1901,33 +2004,44 @@
           "logic_clarity"
         ],
         "max_items": 20,
-        "selected_count": 2,
+        "selected_count": 3,
         "issues": [
           {
             "dimension": "logic_clarity",
             "status": "open",
-            "summary": "campaign.ts render() computes 'bar' progress bar variable that is never included in the output",
-            "suggestion": "Remove the bar computation (lines 37-43) and the unused 'lines' array (line 44). Also remove the three commented-out alternative approaches (lines 46-48). The function should go directly from build...",
-            "related_files": [
-              "src/segments/campaign.ts"
-            ],
+            "summary": "campaign.ts render() computes barWidth variable that misleadingly suggests a progress bar but is only used for fallback separator sizing",
+            "suggestion": "Rename barWidth to contentWidth or maxLineWidth to reflect its actual purpose \u2014 it computes the wider of the two content lines for separator sizing. This removes the misleading bar reference.",
+            "related_files": [],
             "note": "",
             "confidence": "high",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           },
           {
             "dimension": "logic_clarity",
             "status": "open",
             "summary": "layout.ts applies an additional unexplained 5-char offset for row 1 beyond the existing INK_PADDING",
-            "suggestion": "Add a comment explaining why row 1 needs the extra 5-char reduction (likely to avoid overlap with Claude Code's notification panel which only appears at the top). If this is for the notification pa...",
+            "suggestion": "Extract the 5 as a named constant (e.g., NOTIFICATION_OVERLAP = 5) with a comment explaining that Claude Code's notification badge overlaps only the first row's right edge by approximately 5 charac...",
             "related_files": [
               "src/layout.ts"
             ],
             "note": "",
             "confidence": "medium",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
+          },
+          {
+            "dimension": "logic_clarity",
+            "status": "open",
+            "summary": "Weekend progress calculation produces a negative intermediate value before clamping",
+            "suggestion": "Add a brief comment above line 79 explaining that secsSinceFriPeak measures seconds elapsed since Friday's peak ended, and that the clamp on line 80 handles the edge case where Saturday has not yet...",
+            "related_files": [
+              "src/campaigns/engine.ts"
+            ],
+            "note": "",
+            "confidence": "low",
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1950,27 +2064,27 @@
             "dimension": "type_safety",
             "status": "open",
             "summary": "JSON.parse(input) as StatusLineData casts external stdin input without runtime validation",
-            "suggestion": "Since the top-level try/catch already handles malformed input gracefully, this is low severity. For a more defensive approach, add minimal runtime checks for required fields (e.g., if (!data?.model...",
+            "suggestion": "Add minimal runtime guards after parsing: if (!data?.model?.display_name || !data?.context_window || !data?.workspace?.current_dir) throw new Error('Invalid statusline data: missing required fields...",
             "related_files": [
               "src/index.ts"
             ],
             "note": "",
             "confidence": "medium",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           },
           {
             "dimension": "type_safety",
             "status": "open",
             "summary": "Environment variable cast to theme union type without validation",
-            "suggestion": "Add a validation check before the cast, following the pattern already used in effort.ts: const validThemes = ['default', 'minimal', 'full']; if (envTheme && validThemes.includes(envTheme)) config.t...",
+            "suggestion": "Add validation before the cast: const validThemes: StatusBlocksConfig['theme'][] = ['default', 'minimal', 'full']; if (envTheme && validThemes.includes(envTheme as StatusBlocksConfig['theme'])) con...",
             "related_files": [
               "src/config.ts"
             ],
             "note": "",
             "confidence": "high",
-            "first_seen": "2026-03-20T17:47:01+00:00",
-            "last_seen": "2026-03-20T17:47:01+00:00"
+            "first_seen": "2026-03-20T18:11:31+00:00",
+            "last_seen": "2026-03-20T18:11:31+00:00"
           }
         ]
       }
@@ -1984,9 +2098,23 @@
     "badge_path": "scorecard.png",
     "exclude": [
       "dist",
-      "node_modules"
+      "node_modules",
+      "coverage"
     ],
-    "ignore": [],
+    "ignore": [
+      "test_coverage::src/colors.ts",
+      "test_coverage::src/config.ts",
+      "test_coverage::src/config.ts::untested_module",
+      "test_coverage::src/layout.ts",
+      "test_coverage::src/campaigns/engine.ts",
+      "test_coverage::src/campaigns/data.ts",
+      "test_coverage::src/colors.ts::untested_module",
+      "test_coverage::src/effort.ts",
+      "test_coverage::src/cli.ts",
+      "test_coverage::src/cli.ts::untested_module",
+      "test_coverage::src/index.ts",
+      "test_coverage::src/index.ts::untested_module"
+    ],
     "ignore_metadata": {},
     "zone_overrides": {},
     "review_dimensions": [],
@@ -1995,7 +2123,7 @@
     "issue_noise_budget": 10,
     "issue_noise_global_budget": 0,
     "execution_log_max_entries": 10000,
-    "needs_rescan": false,
+    "needs_rescan": true,
     "languages": {},
     "commit_tracking_enabled": true,
     "commit_pr": 0,
@@ -2016,6 +2144,6 @@
     "retrospective": true,
     "retrospective_max_issues": 30,
     "retrospective_max_batch_items": 20,
-    "config_hash": "def225d80ea4ead187582fde8720614b0965d18710b73455dce8f55fda0c16bb"
+    "config_hash": "d010def9fc365b4b423226ae55b1da7d8d8e761e1dfae64659a4cca8ccb6ef0c"
   }
 }
