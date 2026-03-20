@@ -5,13 +5,17 @@ import type { StatusLineData } from './types.js';
 import { loadConfig } from './config.js';
 import { render } from './layout.js';
 
-/** Validate that parsed JSON has the minimum shape of StatusLineData */
+/** Validate that parsed JSON has the required shape of StatusLineData */
 function isValidStatusData(v: unknown): v is StatusLineData {
   if (!v || typeof v !== 'object' || Array.isArray(v)) return false;
   const obj = v as Record<string, unknown>;
-  if (!obj.model || typeof obj.model !== 'object') return false;
-  if (!obj.context_window || typeof obj.context_window !== 'object') return false;
-  if (!obj.workspace || typeof obj.workspace !== 'object') return false;
+  // Validate required top-level objects exist with expected leaf fields
+  const model = obj.model as Record<string, unknown> | undefined;
+  if (!model || typeof model !== 'object' || typeof model.display_name !== 'string') return false;
+  const cw = obj.context_window as Record<string, unknown> | undefined;
+  if (!cw || typeof cw !== 'object' || typeof cw.context_window_size !== 'number') return false;
+  const ws = obj.workspace as Record<string, unknown> | undefined;
+  if (!ws || typeof ws !== 'object' || typeof ws.current_dir !== 'string') return false;
   return true;
 }
 
