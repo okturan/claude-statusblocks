@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { color, c, visibleLength, padRight } from '../colors.js';
+import { color, c, visibleLength, padRight } from './colors.js';
 
 describe('color', () => {
   it('wraps text with ANSI codes and reset', () => {

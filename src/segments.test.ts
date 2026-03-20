@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { visibleLength } from '../colors.js';
-import { contextSegment } from '../segments/context.js';
-import { modelSegment } from '../segments/model.js';
-import { usageSegment } from '../segments/usage.js';
-import type { StatusLineData } from '../types.js';
+import { visibleLength } from './colors.js';
+import { contextSegment } from './segments/context.js';
+import { modelSegment } from './segments/model.js';
+import { usageSegment } from './segments/usage.js';
+import type { StatusLineData } from './types.js';
 
 function makeData(overrides: Partial<StatusLineData> = {}): StatusLineData {
   return {

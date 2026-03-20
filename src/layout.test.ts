@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { render } from '../layout.js';
-import { visibleLength } from '../colors.js';
-import type { StatusLineData } from '../types.js';
+import { render } from './layout.js';
+import { visibleLength } from './colors.js';
+import type { StatusLineData } from './types.js';
 
 function makeData(overrides: Partial<StatusLineData> = {}): StatusLineData {
   return {
