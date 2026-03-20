@@ -1,13 +1,18 @@
 import type { Segment } from '../types.js';
 import { color, c, visibleLength } from '../colors.js';
-import { getActiveCampaign } from '../campaigns/engine.js';
+import { getActiveCampaign, type CampaignStatus } from '../campaigns/engine.js';
+
+let cachedStatus: CampaignStatus | null = null;
 
 export const promoSegment: Segment = {
   id: 'promo',
   priority: 20,
-  enabled: () => getActiveCampaign() !== null,
+  enabled: () => {
+    cachedStatus = getActiveCampaign();
+    return cachedStatus !== null;
+  },
   render() {
-    const status = getActiveCampaign();
+    const status = cachedStatus ?? getActiveCampaign();
     if (!status) return { id: 'promo', priority: 20, width: 0, lines: [''] };
 
     const { state, countdown } = status;
