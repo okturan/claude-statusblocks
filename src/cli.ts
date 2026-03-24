@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, writeFileSync, mkdirSync, cpSync } from 'fs';
+import { join, dirname } from 'path';
 import { homedir } from 'os';
+import { fileURLToPath } from 'url';
 import { render } from './layout.js';
 import { loadConfig } from './config.js';
 import { color, c } from './colors.js';
@@ -10,6 +11,19 @@ import type { StatusLineData } from './types.js';
 
 function settingsPath(): string {
   return join(homedir(), '.claude', 'settings.json');
+}
+
+function installDir(): string {
+  return join(homedir(), '.claude', 'statusblocks');
+}
+
+/** Copy dist files to ~/.claude/statusblocks/ for fast direct-node invocation */
+function installFiles(): string {
+  const dest = installDir();
+  const distDir = dirname(fileURLToPath(import.meta.url));
+  mkdirSync(dest, { recursive: true });
+  cpSync(distDir, dest, { recursive: true, force: true });
+  return dest;
 }
 
 const MOCK_DATA: StatusLineData = {
@@ -44,17 +58,49 @@ function preview() {
 function init() {
   console.log(`\n${color('claude-statusblocks', c.orange, c.bold)} setup\n`);
   try {
+    // Install dist files to ~/.claude/statusblocks/
+    const dest = installFiles();
+    const command = `node ${dest}/index.js`;
+
     const raw = readFileSync(settingsPath(), 'utf8');
     const settings = JSON.parse(raw);
     const oldCommand = settings.statusLine?.command;
-    settings.statusLine = { type: 'command', command: 'npx -y claude-statusblocks@latest', padding: 0 };
+    settings.statusLine = { type: 'command', command, padding: 0 };
     writeFileSync(settingsPath(), JSON.stringify(settings, null, 2) + '\n');
     if (oldCommand) console.log(`  Replaced: ${color(oldCommand, c.dim)}`);
-    console.log(`  Installed: ${color('npx -y claude-statusblocks@latest', c.green)}`);
-    console.log(`  Settings:  ${color('~/.claude/settings.json', c.dim)}\n`);
+    console.log(`  Installed: ${color(command, c.green)}`);
+    console.log(`  Files:     ${color(dest, c.dim)}`);
+    console.log(`  Settings:  ${color('~/.claude/settings.json', c.dim)}`);
+    console.log(`\n  Run ${color('npx claude-statusblocks update', c.cyan)} to update later.\n`);
   } catch (err) {
     console.error(`  Error: Could not update ${settingsPath()}`);
     console.error(`  ${err instanceof Error ? err.message : err}\n`);
+    process.exit(1);
+  }
+}
+
+function update() {
+  console.log(`\n${color('claude-statusblocks', c.orange, c.bold)} update\n`);
+  try {
+    const dest = installFiles();
+    console.log(`  Updated:  ${color(dest, c.green)}`);
+
+    // Also update settings if they still point to the old npx command
+    try {
+      const raw = readFileSync(settingsPath(), 'utf8');
+      const settings = JSON.parse(raw);
+      const cmd = settings.statusLine?.command ?? '';
+      if (cmd.includes('npx') && cmd.includes('claude-statusblocks')) {
+        const command = `node ${dest}/index.js`;
+        settings.statusLine = { ...settings.statusLine, command };
+        writeFileSync(settingsPath(), JSON.stringify(settings, null, 2) + '\n');
+        console.log(`  Migrated: ${color('npx → node (direct)', c.cyan)}`);
+      }
+    } catch { /* settings update is best-effort */ }
+
+    console.log();
+  } catch (err) {
+    console.error(`  Error: ${err instanceof Error ? err.message : err}\n`);
     process.exit(1);
   }
 }
@@ -65,6 +111,7 @@ ${color('claude-statusblocks', c.orange, c.bold)} — block-based status line fo
 
 ${color('Usage:', c.bold)}
   claude-statusblocks init       Install into Claude Code settings
+  claude-statusblocks update     Update installed files to current version
   claude-statusblocks preview    Preview with mock data at various widths
   claude-statusblocks help       Show this help
 
@@ -84,6 +131,7 @@ ${color('Customize:', c.bold)}
 const cmd = process.argv[2];
 switch (cmd) {
   case 'init': init(); break;
+  case 'update': update(); break;
   case 'preview': preview(); break;
   case 'help': case '--help': case '-h': help(); break;
   default:

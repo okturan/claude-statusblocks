@@ -37,7 +37,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 
 **Config** (`src/config.ts`) loads from `~/.claude-statusblocks.json` with env var overrides (`CLAUDE_STATUSBLOCKS_SEGMENTS`, `CLAUDE_STATUSBLOCKS_THEME`). Controls segment order and theme.
 
-**CLI** (`src/cli.ts`) handles subcommands (`init`, `preview`, `help`). When no TTY is detected (piped input), delegates to `src/index.ts`.
+**CLI** (`src/cli.ts`) handles subcommands (`init`, `update`, `preview`, `help`). When no TTY is detected (piped input), delegates to `src/index.ts`. The `init` command copies dist files to `~/.claude/statusblocks/` and sets the statusLine command to `node ~/.claude/statusblocks/index.js` for fast direct invocation (bypasses npx overhead). The `update` command refreshes those installed files and migrates any leftover npx-based settings.
 
 ## Key Patterns
 
