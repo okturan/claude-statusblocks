@@ -22,6 +22,11 @@ describe('cli', () => {
     expect(output).toContain('usage');
   });
 
+  it('shows update command in help', () => {
+    const output = execSync(`node ${CLI} help`, { encoding: 'utf8' });
+    expect(output).toContain('update');
+  });
+
   it('shows help when run with no args and TTY', () => {
     // Simulate TTY by just checking help output
     const output = execSync(`node ${CLI} --help`, { encoding: 'utf8' });
