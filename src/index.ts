@@ -1,9 +1,36 @@
 #!/usr/bin/env node
 
-import { execSync } from 'child_process';
+import { execSync, spawn } from 'child_process';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 import type { StatusLineData } from './types.js';
 import { loadConfig } from './config.js';
 import { render } from './layout.js';
+
+const AUTO_UPDATE_INTERVAL = 86400000; // 24 hours
+
+/** Once per day, spawn a background npx process to update ~/.claude/statusblocks/ */
+function maybeAutoUpdate() {
+  try {
+    const dir = join(homedir(), '.claude', 'statusblocks');
+    if (!existsSync(dir)) return;
+
+    const checkFile = join(dir, '.last-update-check');
+    let lastCheck = 0;
+    try { lastCheck = parseInt(readFileSync(checkFile, 'utf8'), 10) || 0; } catch { /* missing file */ }
+    if (Date.now() - lastCheck < AUTO_UPDATE_INTERVAL) return;
+
+    writeFileSync(checkFile, String(Date.now()));
+
+    const child = spawn('npx -y claude-statusblocks@latest update', {
+      detached: true,
+      stdio: 'ignore',
+      shell: true,
+    });
+    child.unref();
+  } catch { /* auto-update is best-effort */ }
+}
 
 /** Validate that parsed JSON has the required shape of StatusLineData */
 function isValidStatusData(v: unknown): v is StatusLineData {
@@ -58,4 +85,5 @@ process.stdin.on('end', () => {
     process.stderr.write(`[claude-statusblocks] ${err instanceof Error ? err.message : err}\n`);
     process.stdout.write('\n');
   }
+  maybeAutoUpdate();
 });
