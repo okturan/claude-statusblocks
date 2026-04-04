@@ -32,7 +32,7 @@ export interface StatusLineData {
   transcript_path?: string;
   output_style?: { name: string };
   vim?: { mode: string };
-  agent?: { name: string };
+  agent?: { name: string; type?: string };
   worktree?: {
     name: string;
     path: string;

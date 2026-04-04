@@ -4,7 +4,7 @@ import { join } from 'path';
 
 export type EffortLevel = 'low' | 'medium' | 'high' | 'max';
 
-const EFFORT_RE = /^<local-command-stdout>Set model to[\s\S]*? with (low|medium|high|max) effort<\/local-command-stdout>$/i;
+const EFFORT_RE = /<local-command-stdout>[\s\S]*?\b(low|medium|high|max)\s+effort\b[\s\S]*?<\/local-command-stdout>/i;
 const VALID_LEVELS = new Set(['low', 'medium', 'high', 'max']);
 
 let cache: { effort: EffortLevel | null; ts: number } | null = null;

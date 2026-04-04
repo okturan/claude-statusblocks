@@ -38,6 +38,15 @@ const MOCK_DATA: StatusLineData = {
   },
   exceeds_200k_tokens: true,
   session_id: 'preview',
+  vim: { mode: 'NORMAL' },
+  agent: { name: 'code-architect', type: 'Explore' },
+  worktree: {
+    name: 'feature-auth',
+    path: '/tmp/worktrees/feature-auth',
+    branch: 'feature/auth-rework',
+    original_cwd: process.cwd(),
+    original_branch: 'main',
+  },
 };
 
 function preview() {
@@ -121,6 +130,9 @@ ${color('Blocks:', c.bold)}
   promo      Rate promotion status with peak/off-peak countdown
   git        Branch, staged/modified counts, lines added/removed
   usage      5-hour and 7-day rate limit utilization
+  vim        Vim mode indicator (NORMAL/INSERT)
+  agent      Active agent name and type
+  worktree   Worktree branch and original branch
 
 ${color('Customize:', c.bold)}
   ~/.claude-statusblocks.json:  { "segments": ["context", "model", "git"] }

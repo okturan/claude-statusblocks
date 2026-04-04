@@ -4,6 +4,9 @@ import { contextSegment } from './segments/context.js';
 import { modelSegment } from './segments/model.js';
 import { usageSegment } from './segments/usage.js';
 import { promoSegment } from './segments/promo.js';
+import { vimSegment } from './segments/vim.js';
+import { agentSegment } from './segments/agent.js';
+import { worktreeSegment } from './segments/worktree.js';
 import type { StatusLineData } from './types.js';
 
 function makeData(overrides: Partial<StatusLineData> = {}): StatusLineData {
@@ -186,5 +189,117 @@ describe('modelSegment line2 layout', () => {
     const data = makeData({ version: '' });
     const block = modelSegment.render(data, 80);
     expect(block.lines).toHaveLength(2);
+  });
+});
+
+describe('vimSegment', () => {
+  it('is disabled without vim data', () => {
+    expect(vimSegment.enabled(makeData())).toBe(false);
+  });
+
+  it('is enabled with vim data', () => {
+    expect(vimSegment.enabled(makeData({ vim: { mode: 'NORMAL' } }))).toBe(true);
+  });
+
+  it('returns correct id and priority', () => {
+    const block = vimSegment.render(makeData({ vim: { mode: 'NORMAL' } }), 80);
+    expect(block.id).toBe('vim');
+    expect(block.priority).toBe(50);
+  });
+
+  it('renders 1 line with mode', () => {
+    const block = vimSegment.render(makeData({ vim: { mode: 'INSERT' } }), 80);
+    expect(block.lines).toHaveLength(1);
+    const stripped = block.lines[0]!.replace(/\x1b\[[0-9;]*m/g, '');
+    expect(stripped).toBe('INSERT');
+  });
+
+  it('width matches visible line length', () => {
+    const block = vimSegment.render(makeData({ vim: { mode: 'NORMAL' } }), 80);
+    expect(block.width).toBe(visibleLength(block.lines[0]!));
+  });
+});
+
+describe('agentSegment', () => {
+  it('is disabled without agent data', () => {
+    expect(agentSegment.enabled(makeData())).toBe(false);
+  });
+
+  it('is enabled with agent data', () => {
+    expect(agentSegment.enabled(makeData({ agent: { name: 'test-runner' } }))).toBe(true);
+  });
+
+  it('returns correct id and priority', () => {
+    const block = agentSegment.render(makeData({ agent: { name: 'test-runner' } }), 80);
+    expect(block.id).toBe('agent');
+    expect(block.priority).toBe(35);
+  });
+
+  it('renders 1 line when no type', () => {
+    const block = agentSegment.render(makeData({ agent: { name: 'test-runner' } }), 80);
+    expect(block.lines).toHaveLength(1);
+    const stripped = block.lines[0]!.replace(/\x1b\[[0-9;]*m/g, '');
+    expect(stripped).toBe('test-runner');
+  });
+
+  it('renders 2 lines when type is present', () => {
+    const block = agentSegment.render(makeData({ agent: { name: 'code-architect', type: 'Explore' } }), 80);
+    expect(block.lines).toHaveLength(2);
+    const stripped0 = block.lines[0]!.replace(/\x1b\[[0-9;]*m/g, '');
+    const stripped1 = block.lines[1]!.replace(/\x1b\[[0-9;]*m/g, '');
+    expect(stripped0).toBe('code-architect');
+    expect(stripped1).toBe('Explore');
+  });
+
+  it('width matches max visible line length', () => {
+    const block = agentSegment.render(makeData({ agent: { name: 'code-architect', type: 'Explore' } }), 80);
+    const maxLineWidth = Math.max(...block.lines.map(visibleLength));
+    expect(block.width).toBe(maxLineWidth);
+  });
+});
+
+describe('worktreeSegment', () => {
+  it('is disabled without worktree data', () => {
+    expect(worktreeSegment.enabled(makeData())).toBe(false);
+  });
+
+  it('is enabled with worktree data', () => {
+    const data = makeData({ worktree: { name: 'feat', path: '/tmp/feat' } });
+    expect(worktreeSegment.enabled(data)).toBe(true);
+  });
+
+  it('returns correct id and priority', () => {
+    const data = makeData({ worktree: { name: 'feat', path: '/tmp/feat', branch: 'feature/x', original_branch: 'main' } });
+    const block = worktreeSegment.render(data, 80);
+    expect(block.id).toBe('worktree');
+    expect(block.priority).toBe(45);
+  });
+
+  it('renders 2 lines when original_branch is present', () => {
+    const data = makeData({ worktree: { name: 'feat', path: '/tmp/feat', branch: 'feature/x', original_branch: 'main' } });
+    const block = worktreeSegment.render(data, 80);
+    expect(block.lines).toHaveLength(2);
+    const stripped1 = block.lines[1]!.replace(/\x1b\[[0-9;]*m/g, '');
+    expect(stripped1).toBe('← main');
+  });
+
+  it('renders 1 line when no original_branch', () => {
+    const data = makeData({ worktree: { name: 'feat', path: '/tmp/feat', branch: 'feature/x' } });
+    const block = worktreeSegment.render(data, 80);
+    expect(block.lines).toHaveLength(1);
+  });
+
+  it('uses name as fallback when no branch', () => {
+    const data = makeData({ worktree: { name: 'my-worktree', path: '/tmp/wt' } });
+    const block = worktreeSegment.render(data, 80);
+    const stripped = block.lines[0]!.replace(/\x1b\[[0-9;]*m/g, '');
+    expect(stripped).toBe('my-worktree');
+  });
+
+  it('width matches max visible line length', () => {
+    const data = makeData({ worktree: { name: 'feat', path: '/tmp/feat', branch: 'feature/x', original_branch: 'main' } });
+    const block = worktreeSegment.render(data, 80);
+    const maxLineWidth = Math.max(...block.lines.map(visibleLength));
+    expect(block.width).toBe(maxLineWidth);
   });
 });

@@ -48,6 +48,25 @@ describe('resolveEffort', () => {
     expect(second).toBe('high');
   });
 
+  it('matches effort even if output format changes', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'alt-format.jsonl');
+    // Simulate a different output format that still contains "X effort" within the tag
+    writeFileSync(path, JSON.stringify({
+      message: { content: '<local-command-stdout>Model changed — now using high effort</local-command-stdout>' }
+    }) + '\n');
+    expect(resolveEffort(path)).toBe('high');
+  });
+
+  it('matches effort when surrounded by other content', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'embedded.jsonl');
+    writeFileSync(path, JSON.stringify({
+      message: { content: 'prefix text <local-command-stdout>Set model to x with low effort</local-command-stdout> suffix text' }
+    }) + '\n');
+    expect(resolveEffort(path)).toBe('low');
+  });
+
   it('returns null for empty transcript when no settings exist', async () => {
     // Point CLAUDE_CONFIG_DIR to a nonexistent path so settings fallback returns null
     const origDir = process.env.CLAUDE_CONFIG_DIR;
