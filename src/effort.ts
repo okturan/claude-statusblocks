@@ -39,6 +39,10 @@ function readEffortFromSettings(): EffortLevel | null {
     if (settings.effortLevel && VALID_LEVELS.has(settings.effortLevel)) {
       return settings.effortLevel as EffortLevel;
     }
+    // Claude Code uses alwaysThinkingEnabled for max effort mode
+    if (settings.alwaysThinkingEnabled === true) {
+      return 'max';
+    }
   } catch { /* settings file missing or invalid — return null */ }
   return null;
 }
