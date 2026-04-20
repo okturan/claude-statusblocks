@@ -19,7 +19,8 @@ const EFFORT_COLORS: Record<string, string> = {
   low: c.dim,
   medium: c.dim,
   high: c.yellow,
-  max: c.orange,
+  xhigh: c.orange,
+  max: c.orange + c.bold,
 };
 
 /** Spread styled parts evenly across a target width, with optional dot separators */
@@ -83,7 +84,7 @@ export const modelSegment: Segment = {
     const line1 = `${nameStyled}${sep}${color(dir, c.dim)}`;
 
     // Line 2: effort · duration · version, spread across line1 width
-    const effort = resolveEffort(data.transcript_path);
+    const effort = resolveEffort(data.transcript_path, data.model.id);
     const effortStr = effort ? color(effort, EFFORT_COLORS[effort] ?? c.dim) : '';
 
     let durationStr = '';
