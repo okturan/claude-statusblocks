@@ -46,8 +46,17 @@ function readEffortFromSettings(): EffortLevel | null {
   return null;
 }
 
-/** CLAUDE_CODE_EFFORT_LEVEL env var takes precedence over all other sources */
-function readEffortFromEnv(): EffortLevel | null {
+/** CLAUDE_EFFORT — canonical active effort exposed by Claude Code ≥2.1.133 to hooks
+ *  and Bash subprocesses. Reflects the level CC is actually using after override resolution. */
+function readActiveEffortEnv(): EffortLevel | null {
+  const v = process.env.CLAUDE_EFFORT?.toLowerCase();
+  return v && VALID_LEVELS.has(v as EffortLevel) ? (v as EffortLevel) : null;
+}
+
+/** CLAUDE_CODE_EFFORT_LEVEL — legacy user override env (commonly set in shell rc or
+ *  settings.json env block). Demoted to lowest env source so transcript /effort updates
+ *  are still visible in the status line for users who have it pinned. */
+function readLegacyOverrideEnv(): EffortLevel | null {
   const v = process.env.CLAUDE_CODE_EFFORT_LEVEL?.toLowerCase();
   return v && VALID_LEVELS.has(v as EffortLevel) ? (v as EffortLevel) : null;
 }
@@ -62,14 +71,19 @@ function inferDefaultFromModel(modelId?: string): EffortLevel | null {
   return null;
 }
 
-/** Resolve effort level. Priority: env → transcript → settings → model default. */
+/** Resolve effort level.
+ *  Priority: transcript /effort → $CLAUDE_EFFORT → settings.effortLevel → CLAUDE_CODE_EFFORT_LEVEL → model default.
+ *
+ *  Transcript wins so /effort updates show in the status line even when
+ *  CLAUDE_CODE_EFFORT_LEVEL is pinned in the user's shell or settings.json env block. */
 export function resolveEffort(transcriptPath?: string, modelId?: string): EffortLevel | null {
   const now = Date.now();
   if (cache && now - cache.ts < CACHE_TTL) return cache.effort;
 
-  const effort = readEffortFromEnv()
-    ?? (transcriptPath ? readEffortFromTranscript(transcriptPath) : null)
+  const effort = (transcriptPath ? readEffortFromTranscript(transcriptPath) : null)
+    ?? readActiveEffortEnv()
     ?? readEffortFromSettings()
+    ?? readLegacyOverrideEnv()
     ?? inferDefaultFromModel(modelId);
 
   cache = { effort, ts: now };

@@ -13,7 +13,7 @@ describe('resolveEffort', () => {
   // Reset module cache and env between tests so a developer's shell can't shadow expected fallbacks
   beforeEach(() => {
     vi.resetModules();
-    for (const k of ['CLAUDE_CODE_EFFORT_LEVEL', 'CLAUDE_CONFIG_DIR']) {
+    for (const k of ['CLAUDE_EFFORT', 'CLAUDE_CODE_EFFORT_LEVEL', 'CLAUDE_CONFIG_DIR']) {
       savedEnv[k] = process.env[k];
       delete process.env[k];
     }
@@ -129,18 +129,57 @@ describe('resolveEffort', () => {
     expect(resolveEffort(path)).toBe('xhigh');
   });
 
-  it('env CLAUDE_CODE_EFFORT_LEVEL takes precedence over transcript and settings', async () => {
-    const configDir = join(tmpDir, 'env-override-config');
-    mkdirSync(configDir, { recursive: true });
-    writeFileSync(join(configDir, 'settings.json'), JSON.stringify({ effortLevel: 'low' }));
-    process.env.CLAUDE_CONFIG_DIR = configDir;
+  it('transcript /effort wins over CLAUDE_EFFORT and CLAUDE_CODE_EFFORT_LEVEL env so /effort updates show in status', async () => {
+    // Reproduces the bug where users with CLAUDE_CODE_EFFORT_LEVEL=max set in settings.json
+    // saw the status line stuck on "max" no matter how often they ran /effort.
+    process.env.CLAUDE_EFFORT = 'max';
     process.env.CLAUDE_CODE_EFFORT_LEVEL = 'max';
     const { resolveEffort } = await import('./effort.js');
-    const path = join(tmpDir, 'env-override.jsonl');
+    const path = join(tmpDir, 'transcript-wins.jsonl');
     writeFileSync(path, JSON.stringify({
       message: { content: '<local-command-stdout>Set effort level to high (this session only): ...</local-command-stdout>' }
     }) + '\n');
+    expect(resolveEffort(path)).toBe('high');
+  });
+
+  it('reads CLAUDE_EFFORT (canonical active effort, Claude Code ≥2.1.133) when no transcript /effort', async () => {
+    process.env.CLAUDE_EFFORT = 'medium';
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'claude-effort.jsonl');
+    writeFileSync(path, '');
+    expect(resolveEffort(path)).toBe('medium');
+  });
+
+  it('CLAUDE_EFFORT outranks settings.json effortLevel', async () => {
+    const configDir = join(tmpDir, 'effort-vs-settings');
+    mkdirSync(configDir, { recursive: true });
+    writeFileSync(join(configDir, 'settings.json'), JSON.stringify({ effortLevel: 'low' }));
+    process.env.CLAUDE_CONFIG_DIR = configDir;
+    process.env.CLAUDE_EFFORT = 'xhigh';
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'effort-vs-settings.jsonl');
+    writeFileSync(path, '');
+    expect(resolveEffort(path)).toBe('xhigh');
+  });
+
+  it('falls back to CLAUDE_CODE_EFFORT_LEVEL only when CLAUDE_EFFORT is unset (legacy Claude Code <2.1.133)', async () => {
+    process.env.CLAUDE_CODE_EFFORT_LEVEL = 'max';
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'legacy-env.jsonl');
+    writeFileSync(path, '');
     expect(resolveEffort(path)).toBe('max');
+  });
+
+  it('settings.json effortLevel beats legacy CLAUDE_CODE_EFFORT_LEVEL', async () => {
+    const configDir = join(tmpDir, 'settings-beats-legacy');
+    mkdirSync(configDir, { recursive: true });
+    writeFileSync(join(configDir, 'settings.json'), JSON.stringify({ effortLevel: 'high' }));
+    process.env.CLAUDE_CONFIG_DIR = configDir;
+    process.env.CLAUDE_CODE_EFFORT_LEVEL = 'max';
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'settings-beats-legacy.jsonl');
+    writeFileSync(path, '');
+    expect(resolveEffort(path)).toBe('high');
   });
 
   it('falls back to xhigh for Opus 4.7 when nothing else is set', async () => {
