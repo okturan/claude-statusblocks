@@ -204,6 +204,27 @@ describe('resolveEffort', () => {
     expect(r1(path, 'claude-opus-4-6')).toBe('high');
   });
 
+  it('falls back to xhigh for Opus 4.8', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'opus48.jsonl');
+    writeFileSync(path, '');
+    expect(resolveEffort(path, 'claude-opus-4-8')).toBe('xhigh');
+  });
+
+  it('falls back to high for Sonnet 5', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'sonnet5.jsonl');
+    writeFileSync(path, '');
+    expect(resolveEffort(path, 'claude-sonnet-5')).toBe('high');
+  });
+
+  it('returns null for Fable 5 (default unverified — show nothing rather than guess)', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'fable5.jsonl');
+    writeFileSync(path, '');
+    expect(resolveEffort(path, 'claude-fable-5')).toBeNull();
+  });
+
   it('returns null for unknown models when no other source', async () => {
     const { resolveEffort } = await import('./effort.js');
     const path = join(tmpDir, 'unknown-model.jsonl');

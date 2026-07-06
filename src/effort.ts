@@ -61,13 +61,16 @@ function readLegacyOverrideEnv(): EffortLevel | null {
   return v && VALID_LEVELS.has(v as EffortLevel) ? (v as EffortLevel) : null;
 }
 
-// Opus 4.7 always defaults to xhigh when no explicit effort source is set;
-// older effort-capable models default to 'high' (or 'medium' on Pro/Max, which
-// we can't detect from model id alone, so we stick to the non-plan default).
+// Best-effort lineage defaults when no explicit effort source is set:
+// Opus 4.7+ defaults to xhigh; the 4.6 generation and Sonnet 5 default to
+// 'high' (or 'medium' on Pro/Max, which we can't detect from model id alone,
+// so we stick to the non-plan default). Fable/Mythos 5 defaults are
+// unverified, so we show nothing rather than guess.
 function inferDefaultFromModel(modelId?: string): EffortLevel | null {
   if (!modelId) return null;
-  if (/^claude-opus-4-7\b/i.test(modelId)) return 'xhigh';
+  if (/^claude-opus-4-[7-9]\b/i.test(modelId)) return 'xhigh';
   if (/^claude-(?:opus|sonnet)-4-6\b/i.test(modelId)) return 'high';
+  if (/^claude-sonnet-5\b/i.test(modelId)) return 'high';
   return null;
 }
 

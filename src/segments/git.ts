@@ -1,16 +1,53 @@
 import { execSync } from 'child_process';
 import type { Segment } from '../types.js';
 import { color, c, visibleLength } from '../colors.js';
+import { readCache, writeCache, hashKey } from '../cache.js';
 
 const GIT_CACHE_TTL = 5000;
-let gitCache: { branch: string; staged: number; modified: number; added: number; removed: number; ts: number } | null = null;
 
-function getGitInfo(cwd: string): typeof gitCache {
-  const now = Date.now();
-  if (gitCache && now - gitCache.ts < GIT_CACHE_TTL) return gitCache;
+type GitInfo = { branch: string; staged: number; modified: number; added: number; removed: number };
+
+// The in-process memo only dedupes enabled()+render() within one render; the
+// file cache is what actually survives across renders (each is a new process).
+let memo: { cwd: string; info: GitInfo | null } | null = null;
+
+/** Strip control chars (incl. ANSI escapes) so cached or repo-provided text can't corrupt the terminal */
+function defang(s: string): string {
+  return s.replace(/[^\x20-\x7e\u00a0-\uffff]/g, '');
+}
+
+/** Coerce a computed or cache-loaded value into a safe GitInfo */
+function normalize(v: unknown): GitInfo | null {
+  if (!v || typeof v !== 'object') return null;
+  const o = v as Record<string, unknown>;
+  if (typeof o.branch !== 'string') return null;
+  return {
+    branch: defang(o.branch),
+    staged: Number(o.staged) || 0,
+    modified: Number(o.modified) || 0,
+    added: Number(o.added) || 0,
+    removed: Number(o.removed) || 0,
+  };
+}
+
+function getGitInfo(cwd: string): GitInfo | null {
+  if (memo && memo.cwd === cwd) return memo.info;
+
+  const cacheName = `git-${hashKey(cwd)}`;
+  const cached = readCache<GitInfo | null>(cacheName, GIT_CACHE_TTL);
+  if (cached !== undefined) {
+    memo = { cwd, info: normalize(cached) };
+    return memo.info;
+  }
+
+  let info: GitInfo | null = null;
   try {
-    execSync('git rev-parse --git-dir', { cwd, stdio: 'ignore' });
-    const branch = execSync('git branch --show-current', { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
+    // Fails (non-zero exit) outside a repo — no separate rev-parse needed
+    let branch = execSync('git branch --show-current', { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
+    if (!branch) {
+      // Detached HEAD: show the short commit hash instead
+      branch = '@' + execSync('git rev-parse --short HEAD', { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
+    }
     const stagedOut = execSync('git diff --cached --numstat', { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
     const modifiedOut = execSync('git diff --numstat', { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
     const staged = stagedOut ? stagedOut.split('\n').length : 0;
@@ -22,9 +59,12 @@ function getGitInfo(cwd: string): typeof gitCache {
       if (a && a !== '-') added += parseInt(a, 10) || 0;
       if (r && r !== '-') removed += parseInt(r, 10) || 0;
     }
-    gitCache = { branch, staged, modified, added, removed, ts: now };
-    return gitCache;
-  } catch { /* not a git repo or git unavailable */ return null; }
+    info = normalize({ branch, staged, modified, added, removed });
+  } catch { /* not a git repo or git unavailable */ info = null; }
+
+  memo = { cwd, info };
+  writeCache(cacheName, info); // negative results cached too — non-repo dirs skip git entirely
+  return info;
 }
 
 export const gitSegment: Segment = {

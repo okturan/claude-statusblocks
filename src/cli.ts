@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { readFileSync, writeFileSync, mkdirSync, cpSync } from 'fs';
-import { join, dirname } from 'path';
+import { join, dirname, sep } from 'path';
 import { homedir } from 'os';
 import { fileURLToPath } from 'url';
 import { render } from './layout.js';
@@ -9,8 +9,38 @@ import { loadConfig } from './config.js';
 import { color, c } from './colors.js';
 import type { StatusLineData } from './types.js';
 
+type Settings = {
+  statusLine?: { type?: string; command?: string; padding?: number; [k: string]: unknown };
+  [k: string]: unknown;
+};
+
 function settingsPath(): string {
   return join(homedir(), '.claude', 'settings.json');
+}
+
+/**
+ * Statusline command that survives every shell Claude Code may run it
+ * through: forward slashes + quotes parse identically in sh, Git Bash, cmd,
+ * and PowerShell. Backslashes would be eaten as escapes by bash on Windows,
+ * and unquoted paths break on spaces (e.g. C:\Users\First Last).
+ */
+function statusLineCommand(dest: string): string {
+  return `node "${join(dest, 'index.js').split(sep).join('/')}"`;
+}
+
+/** Read ~/.claude/settings.json; a missing file is a valid empty config. */
+function readSettings(): Settings {
+  try {
+    return JSON.parse(readFileSync(settingsPath(), 'utf8'));
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') return {};
+    throw new Error(`could not parse ${settingsPath()}: ${err instanceof Error ? err.message : err}`);
+  }
+}
+
+/** Is this statusline command one of ours (any historical form)? */
+function isOurCommand(cmd: string): boolean {
+  return cmd.includes('claude-statusblocks') || /[\\/]statusblocks[\\/]index\.js/.test(cmd);
 }
 
 function installDir(): string {
@@ -67,16 +97,15 @@ function preview() {
 function init() {
   console.log(`\n${color('claude-statusblocks', c.orange, c.bold)} setup\n`);
   try {
-    // Install dist files to ~/.claude/statusblocks/
+    // Install dist files to ~/.claude/statusblocks/ (also creates ~/.claude)
     const dest = installFiles();
-    const command = `node ${dest}/index.js`;
+    const command = statusLineCommand(dest);
 
-    const raw = readFileSync(settingsPath(), 'utf8');
-    const settings = JSON.parse(raw);
+    const settings = readSettings();
     const oldCommand = settings.statusLine?.command;
     settings.statusLine = { type: 'command', command, padding: 0 };
     writeFileSync(settingsPath(), JSON.stringify(settings, null, 2) + '\n');
-    if (oldCommand) console.log(`  Replaced: ${color(oldCommand, c.dim)}`);
+    if (oldCommand && oldCommand !== command) console.log(`  Replaced: ${color(oldCommand, c.dim)}`);
     console.log(`  Installed: ${color(command, c.green)}`);
     console.log(`  Files:     ${color(dest, c.dim)}`);
     console.log(`  Settings:  ${color('~/.claude/settings.json', c.dim)}`);
@@ -94,16 +123,16 @@ function update() {
     const dest = installFiles();
     console.log(`  Updated:  ${color(dest, c.green)}`);
 
-    // Also update settings if they still point to the old npx command
+    // Migrate any stale form of our command: the old npx invocation, or the
+    // pre-0.5 unquoted/backslash direct form that breaks on Windows shells
     try {
-      const raw = readFileSync(settingsPath(), 'utf8');
-      const settings = JSON.parse(raw);
-      const cmd = settings.statusLine?.command ?? '';
-      if (cmd.includes('npx') && cmd.includes('claude-statusblocks')) {
-        const command = `node ${dest}/index.js`;
-        settings.statusLine = { ...settings.statusLine, command };
+      const settings = readSettings();
+      const cmd = String(settings.statusLine?.command ?? '');
+      const command = statusLineCommand(dest);
+      if (cmd && isOurCommand(cmd) && cmd !== command) {
+        settings.statusLine = { type: 'command', ...settings.statusLine, command };
         writeFileSync(settingsPath(), JSON.stringify(settings, null, 2) + '\n');
-        console.log(`  Migrated: ${color('npx → node (direct)', c.cyan)}`);
+        console.log(`  Migrated: ${color(command, c.cyan)}`);
       }
     } catch { /* settings update is best-effort */ }
 

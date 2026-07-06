@@ -20,19 +20,26 @@ Adaptive, block-based status line for [Claude Code](https://claude.ai/code). Car
 
 ## Install
 
+Requires Node.js ≥ 20. Works on macOS, Linux, and Windows.
+
 ```sh
 npx claude-statusblocks init
 ```
 
-This writes `statusLine.command` into `~/.claude/settings.json`. Restart Claude Code to activate.
+This copies the renderer to `~/.claude/statusblocks/` and writes `statusLine.command` into `~/.claude/settings.json` (creating it if needed). Restart Claude Code to activate.
 
 ### Update
 
 ```sh
-npx claude-statusblocks update
+npx claude-statusblocks@latest update
 ```
 
-After v0.4.1, updates happen automatically — the statusline checks for new versions daily in the background. The `postinstall` hook also auto-updates when you run `npm update -g claude-statusblocks`.
+After v0.4.1, updates happen automatically — the statusline checks for new versions daily in the background. The `postinstall` hook also auto-updates when you run `npm update -g claude-statusblocks`. Set `CLAUDE_STATUSBLOCKS_NO_UPDATE=1` to disable the background check.
+
+### Windows notes
+
+- If `npx` fails in PowerShell with "running scripts is disabled", run the command from **cmd.exe** instead (or use `npx.cmd`). This is npm's PowerShell shim colliding with the default execution policy, not a statusblocks issue.
+- Installed with a version before 0.5.0 and the statusline shows nothing? Re-run `npx claude-statusblocks@latest init` — older versions wrote a `statusLine.command` that broke on Windows shells (unquoted backslash paths).
 
 ## Cards
 
@@ -78,7 +85,7 @@ The `usage` card reads rate limit data directly from Claude Code's `rate_limits`
 
 ## Width detection
 
-Claude Code doesn't pass terminal width to status line commands ([#22115](https://github.com/anthropics/claude-code/issues/22115)). We walk up the process tree to find the parent's TTY via `ps`, then query its width with `stty`. Falls back to `tput cols`, then 120.
+Claude Code doesn't pass terminal width to status line commands ([#22115](https://github.com/anthropics/claude-code/issues/22115)). Detection cascade: std stream columns → `COLUMNS` env var → cached value → (macOS/Linux only) walk up the process tree to find the parent's TTY via `ps`, query its width with `stty`, fall back to `tput cols` → 120. The spawn-based result is cached per session for 15s so renders don't pay two subprocesses each. On Windows there is no reliable way to query the parent console from a piped child, so it uses `COLUMNS` or the 120 fallback.
 
 ## Preview
 

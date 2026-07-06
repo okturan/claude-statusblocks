@@ -19,6 +19,11 @@ function makeData(cwd: string): StatusLineData {
   };
 }
 
+// -c identity flags: CI runners have git but no configured user.name/email
+function git(cwd: string, cmd: string): void {
+  execSync(`git -c user.email=test@example.com -c user.name=test ${cmd}`, { cwd, stdio: 'ignore' });
+}
+
 describe('gitSegment', () => {
   it('is disabled in non-git directory', () => {
     const dir = join(tmpdir(), `csb-git-nongit-${process.pid}`);
@@ -35,9 +40,11 @@ describe('gitSegment', () => {
     const dir = join(tmpdir(), `csb-git-full-${process.pid}`);
     mkdirSync(dir, { recursive: true });
     try {
-      execSync('git init -q && git checkout -q -b test-branch', { cwd: dir, stdio: 'ignore' });
+      git(dir, 'init -q');
+      git(dir, 'checkout -q -b test-branch');
       writeFileSync(join(dir, 'file.txt'), 'hello\nworld\n');
-      execSync('git add . && git commit -q -m init', { cwd: dir, stdio: 'ignore' });
+      git(dir, 'add .');
+      git(dir, 'commit -q -m init');
       // Modify file to create unstaged changes
       writeFileSync(join(dir, 'file.txt'), 'changed\nworld\nnew line\n');
 
@@ -55,6 +62,26 @@ describe('gitSegment', () => {
 
       const maxLineWidth = Math.max(...block.lines.map(visibleLength));
       expect(block.width).toBe(maxLineWidth);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('shows the short commit hash on detached HEAD', () => {
+    const dir = join(tmpdir(), `csb-git-detached-${process.pid}`);
+    mkdirSync(dir, { recursive: true });
+    try {
+      git(dir, 'init -q');
+      git(dir, 'checkout -q -b main');
+      writeFileSync(join(dir, 'file.txt'), 'hello\n');
+      git(dir, 'add .');
+      git(dir, 'commit -q -m init');
+      git(dir, 'checkout -q --detach');
+
+      expect(gitSegment.enabled(makeData(dir))).toBe(true);
+      const block = gitSegment.render(makeData(dir), 80);
+      const branchLine = block.lines[0]!.replace(/\x1b\[[0-9;]*m/g, '');
+      expect(branchLine).toMatch(/^@[0-9a-f]{4,}$/);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

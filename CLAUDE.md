@@ -10,7 +10,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 
 - `npm run build` — compile TypeScript (`tsc`) to `dist/`
 - `npm run dev` — watch mode (`tsc --watch`)
-- `npm run preview` — render with mock JSON data piped to the built output
+- `npm run preview` — render mock data at multiple widths (`node dist/cli.js preview`)
 - `claude-statusblocks init` — writes `statusLine` config into `~/.claude/settings.json`
 - `claude-statusblocks preview` — renders at 120/80/50 column widths with mock data
 
@@ -20,7 +20,9 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 
 **Data flow:** Claude Code pipes JSON (`StatusLineData`) to stdin → `src/index.ts` parses it, loads config, detects terminal width → `src/layout.ts` renders segments into boxified blocks with flexbox-like row wrapping → stdout.
 
-**Terminal width detection** (`src/index.ts`): Claude Code doesn't pass terminal width to status line commands (known issue #22115). Detection cascade: `process.stderr.columns` → walk parent process tree via `ps` to find TTY, then `stty size` on that TTY → `tput cols` → fallback 120. The detected width has a 44-char reserve subtracted for Claude Code's Ink notification panel on the right side.
+**Terminal width detection** (`src/index.ts`): Claude Code doesn't pass terminal width to status line commands (known issue #22115). Detection cascade: `process.stderr.columns` → `COLUMNS` env var → per-session file cache → (non-Windows only) walk parent process tree via `ps` to find TTY, then `stty size` on that TTY → `tput cols` → fallback 120. The spawn-based result is cached (15s TTL, keyed by session_id) via `src/cache.ts` so repeated renders don't each pay two subprocess spawns. On Windows the Unix commands are skipped entirely. The detected width has a 44-char reserve subtracted for Claude Code's Ink notification panel on the right side.
+
+**Cross-process caching** (`src/cache.ts`): every render is a fresh node process, so module-level caches don't survive between renders. Short-TTL JSON files in a per-user tmp dir (`$TMPDIR/claude-statusblocks-<uid>/`) do. Used by width detection and the git segment. All cache operations are best-effort; values loaded from cache are re-validated/sanitized before use.
 
 **Segments** (`src/segments/`) are the core rendering units. Each implements the `Segment` interface (`id`, `priority`, `enabled()`, `render()`). Available segments:
 - `context` (priority 10) — context window usage bar with token counts
@@ -37,7 +39,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 
 **Config** (`src/config.ts`) loads from `~/.claude-statusblocks.json` with env var overrides (`CLAUDE_STATUSBLOCKS_SEGMENTS`, `CLAUDE_STATUSBLOCKS_THEME`). Controls segment order and theme.
 
-**CLI** (`src/cli.ts`) handles subcommands (`init`, `update`, `preview`, `help`). When no TTY is detected (piped input), delegates to `src/index.ts`. The `init` command copies dist files to `~/.claude/statusblocks/` and sets the statusLine command to `node ~/.claude/statusblocks/index.js` for fast direct invocation (bypasses npx overhead). The `update` command refreshes those installed files and migrates any leftover npx-based settings.
+**CLI** (`src/cli.ts`) handles subcommands (`init`, `update`, `preview`, `help`). When no TTY is detected (piped input), delegates to `src/index.ts`. The `init` command copies dist files to `~/.claude/statusblocks/` and sets the statusLine command to `node "<home>/.claude/statusblocks/index.js"` for fast direct invocation (bypasses npx overhead). The command string MUST stay quoted with forward slashes — it has to parse identically in sh, Git Bash, cmd, and PowerShell (Windows homes contain backslashes and often spaces). `init` creates `~/.claude/settings.json` if missing but aborts on unparseable JSON. The `update` command refreshes the installed files and migrates any stale command form (old npx invocation or pre-0.5 unquoted paths).
 
 ## Key Patterns
 
@@ -45,6 +47,8 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 - Segments return raw lines (no box chrome); boxing is applied by `layout.ts`.
 - Box titles are rendered in the top border: `╭─ title ──────╮`.
 - The `Block` type's `width` is the visible (ANSI-stripped) width, not byte length.
-- The git segment caches results for 5 seconds to avoid repeated subprocess calls.
+- The git segment caches results for 5 seconds via the cross-process file cache in `src/cache.ts` (a module-level cache alone would never hit — each render is a new process). Detached HEAD renders as `@<short-sha>`.
+- The daily background self-update (`maybeAutoUpdate` in `src/index.ts`) is disabled by `CLAUDE_STATUSBLOCKS_NO_UPDATE=1` — tests set this so runs never mutate the developer's real `~/.claude/statusblocks/`.
+- Code must stay Windows-safe: no Unix-only subprocesses outside `process.platform !== 'win32'` guards, no unquoted paths in generated commands, `windowsHide: true` on detached spawns. CI runs the suite on ubuntu/macos/windows.
 - ESM-only (`"type": "module"` in package.json) — all local imports use `.js` extensions. Do NOT use `require()` — it will crash silently in production.
 - Claude Code's Ink renderer uses `wrap="truncate"` (hardcoded). Lines exceeding available width get truncated with `…`. Design all output to fit within `termWidth - 44` chars.

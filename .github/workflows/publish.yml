@@ -17,6 +17,7 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
+      - run: npm test
       - run: |
           PUBLISHED=$(npm view claude-statusblocks version 2>/dev/null || echo "0.0.0")
           CURRENT=$(node -p "require('./package.json').version")

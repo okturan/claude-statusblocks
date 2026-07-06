@@ -4,6 +4,16 @@ import { join } from 'path';
 
 const INDEX = join(import.meta.dirname, '..', 'dist', 'index.js');
 
+// Feed stdin via execSync's `input` option — no shell pipes or quoting, so it
+// behaves identically on sh, cmd, and PowerShell (Windows CI included).
+function run(input: string): string {
+  return execSync(`node "${INDEX}"`, {
+    encoding: 'utf8',
+    input,
+    env: { ...process.env, CLAUDE_STATUSBLOCKS_NO_UPDATE: '1' },
+  });
+}
+
 const VALID_JSON = JSON.stringify({
   model: { id: 'test', display_name: 'Test' },
   workspace: { current_dir: '/tmp', project_dir: '/tmp' },
@@ -16,39 +26,29 @@ const VALID_JSON = JSON.stringify({
 
 describe('index (stdin pipeline)', () => {
   it('renders status blocks from valid JSON', () => {
-    const output = execSync(`echo '${VALID_JSON}' | node ${INDEX}`, {
-      encoding: 'utf8', shell: '/bin/sh',
-    });
+    const output = run(VALID_JSON);
     expect(output).toContain('╭');
     expect(output).toContain('context');
     expect(output).toContain('model');
   });
 
   it('outputs blank line for invalid JSON', () => {
-    const output = execSync(`echo 'not json' | node ${INDEX}`, {
-      encoding: 'utf8', shell: '/bin/sh',
-    });
+    const output = run('not json');
     expect(output.trim()).toBe('');
   });
 
   it('outputs blank line for empty input', () => {
-    const output = execSync(`echo '' | node ${INDEX}`, {
-      encoding: 'utf8', shell: '/bin/sh',
-    });
+    const output = run('');
     expect(output.trim()).toBe('');
   });
 
   it('outputs blank line for JSON array (not object)', () => {
-    const output = execSync(`echo '[1,2,3]' | node ${INDEX}`, {
-      encoding: 'utf8', shell: '/bin/sh',
-    });
+    const output = run('[1,2,3]');
     expect(output.trim()).toBe('');
   });
 
   it('outputs blank line for JSON missing required fields', () => {
-    const output = execSync(`echo '{"foo":"bar"}' | node ${INDEX}`, {
-      encoding: 'utf8', shell: '/bin/sh',
-    });
+    const output = run('{"foo":"bar"}');
     expect(output.trim()).toBe('');
   });
 
@@ -60,9 +60,7 @@ describe('index (stdin pipeline)', () => {
         seven_day: { used_percentage: 70, resets_at: Math.floor(Date.now() / 1000) + 86400 },
       },
     };
-    const output = execSync(`echo '${JSON.stringify(data)}' | node ${INDEX}`, {
-      encoding: 'utf8', shell: '/bin/sh',
-    });
+    const output = run(JSON.stringify(data));
     expect(output).toContain('usage');
     expect(output).toContain('5h');
     expect(output).toContain('7d');

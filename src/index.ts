@@ -7,11 +7,14 @@ import { homedir } from 'os';
 import type { StatusLineData } from './types.js';
 import { loadConfig } from './config.js';
 import { render } from './layout.js';
+import { readCache, writeCache, safeKey } from './cache.js';
 
 const AUTO_UPDATE_INTERVAL = 86400000; // 24 hours
+const WIDTH_CACHE_TTL = 15000; // resize lag tolerance vs. subprocess cost per render
 
 /** Once per day, spawn a background npx process to update ~/.claude/statusblocks/ */
 function maybeAutoUpdate() {
+  if (process.env.CLAUDE_STATUSBLOCKS_NO_UPDATE) return;
   try {
     const dir = join(homedir(), '.claude', 'statusblocks');
     if (!existsSync(dir)) return;
@@ -27,9 +30,48 @@ function maybeAutoUpdate() {
       detached: true,
       stdio: 'ignore',
       shell: true,
+      windowsHide: true, // detached children get their own console window on Windows otherwise
     });
     child.unref();
   } catch { /* auto-update is best-effort */ }
+}
+
+/**
+ * Claude Code doesn't pass terminal width to status line commands (issue
+ * #22115) and pipes stdio, so process.std*.columns is normally unset.
+ * Cascade: std streams → COLUMNS env → per-session cache → (non-Windows
+ * only) parent TTY via ps + stty → tput → fallback 120. The spawn-based
+ * result is cached so renders don't pay two subprocesses each.
+ */
+function detectWidth(sessionId: string): number {
+  let w = process.stderr.columns || process.stdout.columns || 0;
+  if (!w) w = parseInt(process.env.COLUMNS ?? '', 10) || 0;
+  if (w > 0) return w;
+
+  const cacheName = `width-${safeKey(sessionId)}`;
+  const cached = readCache<number>(cacheName, WIDTH_CACHE_TTL);
+  if (cached !== undefined && cached > 0) return cached;
+
+  if (process.platform !== 'win32') {
+    try {
+      const tty = execSync('ps -o tty= -p $(ps -o ppid= -p $$)', {
+        encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'], shell: '/bin/sh'
+      }).trim();
+      if (tty && tty !== '?' && tty !== '??' && /^[a-zA-Z0-9/]+$/.test(tty)) {
+        w = parseInt(execSync(`stty size < /dev/${tty} | awk '{print $2}'`, {
+          encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'], shell: '/bin/sh'
+        }).trim(), 10) || 0;
+      }
+    } catch { /* TTY detection failed — try fallback */ }
+    if (!w) {
+      try {
+        w = parseInt(execSync('tput cols', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim(), 10) || 0;
+      } catch { /* tput unavailable — use default */ }
+    }
+  }
+  if (!w) w = 120;
+  writeCache(cacheName, w); // cache the fallback too: failed detection would just fail again
+  return w;
 }
 
 /** Validate that parsed JSON has the required shape of StatusLineData */
@@ -59,26 +101,7 @@ process.stdin.on('end', () => {
     }
     const data = parsed;
     const config = loadConfig();
-    // Detect terminal width — stty on parent's TTY, then tput, then fallback
-    let termWidth = process.stderr.columns || process.stdout.columns || 0;
-    if (!termWidth) {
-      try {
-        const tty = execSync('ps -o tty= -p $(ps -o ppid= -p $$)', {
-          encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'], shell: '/bin/sh'
-        }).trim();
-        if (tty && tty !== '?' && tty !== '??' && /^[a-zA-Z0-9/]+$/.test(tty)) {
-          termWidth = parseInt(execSync(`stty size < /dev/${tty} | awk '{print $2}'`, {
-            encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'], shell: '/bin/sh'
-          }).trim(), 10) || 0;
-        }
-      } catch { /* TTY detection failed — try fallback */ }
-    }
-    if (!termWidth) {
-      try {
-        termWidth = parseInt(execSync('tput cols', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim(), 10) || 0;
-      } catch { /* tput unavailable — use default */ }
-    }
-    if (!termWidth) { termWidth = 120; }
+    const termWidth = detectWidth(String(data.session_id ?? 'default'));
     const output = render(data, termWidth, config);
     process.stdout.write(output + '\n');
   } catch (err) {

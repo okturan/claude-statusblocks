@@ -11,7 +11,8 @@ const SECS_PER_MIN = 60;
 function tildeDir(dir: string): string {
   const home = homedir();
   if (dir === home) return '~';
-  if (dir.startsWith(home + '/')) return '~' + dir.slice(home.length);
+  // Match both separators — Windows paths use '\'
+  if (dir.startsWith(home + '/') || dir.startsWith(home + '\\')) return '~' + dir.slice(home.length);
   return dir;
 }
 
