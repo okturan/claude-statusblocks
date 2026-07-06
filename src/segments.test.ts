@@ -73,6 +73,21 @@ describe('modelSegment', () => {
     const maxLineWidth = Math.max(...block.lines.map(visibleLength));
     expect(block.width).toBe(maxLineWidth);
   });
+
+  it('keeps separators when line 2 overflows a narrow line 1 (no "max7h22mv2.1.201" jam)', () => {
+    // Short model+dir → narrow line 1; long duration+version overflow it
+    const data = makeData({
+      model: { id: 'claude-opus-4-6', display_name: 'Fable 5' },
+      workspace: { current_dir: '/xcode', project_dir: '/xcode' },
+      version: '2.1.201',
+      cost: { total_cost_usd: 0, total_duration_ms: 26520000, total_api_duration_ms: 0, total_lines_added: 0, total_lines_removed: 0 },
+    });
+    const block = modelSegment.render(data, 80);
+    const line2 = block.lines[1]!.replace(/\x1b\[[0-9;]*m/g, '');
+    // effort value varies by environment; the separators must not
+    expect(line2).toMatch(/ · 7h22m · v2\.1\.201$/);
+    expect(block.width).toBe(Math.max(...block.lines.map(visibleLength)));
+  });
 });
 
 describe('usageSegment', () => {

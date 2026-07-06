@@ -37,12 +37,14 @@ function spreadLine(parts: string[], targetWidth: number): string {
     return parts[0]! + ' '.repeat(Math.max(1, totalGap)) + parts[1]!;
   }
 
-  // 3 parts: try dot separators first, fall back to even spacing
+  // 3 parts: dot separators when spare space is small — including when the
+  // parts overflow the target (negative spare): a wider card beats jamming
+  // "max7h22mv2.1.201" together with zero-width gaps
   const dot = color(' · ', c.dim);
   const dotWidth = 3;
   const spareAfterDots = totalGap - dotWidth * (parts.length - 1);
 
-  if (spareAfterDots <= 12 && spareAfterDots >= 0) {
+  if (spareAfterDots <= 12) {
     // Compact: distribute spare space evenly around dots
     const gaps = parts.length * 2 - 2; // gaps on each side of each dot
     const base = Math.floor(Math.max(0, spareAfterDots) / gaps);
