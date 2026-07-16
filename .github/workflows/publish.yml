@@ -55,7 +55,11 @@ jobs:
             echo "$package@$version is already published; npm publish is not needed"
           elif grep -q 'E404' "$lookup_log"; then
             echo "$package@$version is not published; publishing from $GITHUB_SHA"
-            npm publish --provenance --access public
+            publish_args=(--provenance --access public)
+            if [[ "$version" == *-* ]]; then
+              publish_args+=(--tag next)
+            fi
+            npm publish "${publish_args[@]}"
           else
             echo "Could not determine whether $package@$version is published; refusing to publish" >&2
             sed 's/^/npm: /' "$lookup_log" >&2
@@ -127,7 +131,6 @@ jobs:
             exit 1
           fi
 
-          tag_exists=false
           if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
             git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
             tag_commit=$(git rev-parse "$TAG^{commit}")
@@ -136,31 +139,56 @@ jobs:
               exit 1
             fi
             echo "$TAG already points to npm's published source commit"
-            tag_exists=true
-          fi
-
-          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            if [[ "$tag_exists" != true ]]; then
-              echo "GitHub Release $TAG exists without its matching tag" >&2
+          else
+            if [[ "$SOURCE_SHA" != "$GITHUB_SHA" ]]; then
+              echo "Missing historical tag $TAG for npm gitHead $SOURCE_SHA." >&2
+              echo "A maintainer token with workflow permission must create that tag once; GITHUB_TOKEN cannot backfill historical refs across workflow changes." >&2
               exit 1
             fi
-            echo "GitHub Release $TAG already exists; nothing to do"
+
+            git tag "$TAG" "$SOURCE_SHA"
+            if ! git push origin "refs/tags/$TAG"; then
+              # Accept a concurrently-created tag only when it resolves to the
+              # exact npm source commit.
+              git tag -d "$TAG"
+              if ! git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"; then
+                echo "Could not create $TAG and no matching concurrent tag exists" >&2
+                exit 1
+              fi
+              tag_commit=$(git rev-parse "$TAG^{commit}")
+              if [[ "$tag_commit" != "$SOURCE_SHA" ]]; then
+                echo "$TAG was concurrently created at $tag_commit, not npm's $SOURCE_SHA" >&2
+                exit 1
+              fi
+            fi
+          fi
+
+          expected_prerelease=false
+          if [[ "$TAG" == *-* ]]; then
+            expected_prerelease=true
+          fi
+
+          release_lookup_log=$(mktemp)
+          if actual_prerelease=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" --jq '.prerelease' 2>"$release_lookup_log"); then
+            if [[ "$actual_prerelease" != "$expected_prerelease" ]]; then
+              echo "GitHub Release $TAG prerelease=$actual_prerelease, expected $expected_prerelease" >&2
+              exit 1
+            fi
+            echo "GitHub Release $TAG already exists and matches; nothing to do"
             exit 0
+          elif ! grep -q 'HTTP 404' "$release_lookup_log"; then
+            echo "Could not determine whether GitHub Release $TAG exists" >&2
+            sed 's/^/github: /' "$release_lookup_log" >&2
+            exit 1
           fi
 
           release_args=(
             "$TAG"
             --repo "$GITHUB_REPOSITORY"
+            --verify-tag
             --title "$TAG"
           )
-          if [[ "$tag_exists" == true ]]; then
-            release_args+=(--verify-tag)
-          else
-            # Let the Releases API create the tag. A GITHUB_TOKEN cannot push
-            # a historical tag across commits that changed workflow files.
-            release_args+=(--target "$SOURCE_SHA")
-          fi
-          if [[ "$TAG" == *-* ]]; then
+          if [[ "$expected_prerelease" == true ]]; then
             release_args+=(--prerelease)
           fi
 
@@ -171,11 +199,4 @@ jobs:
           else
             gh release create "${release_args[@]}" \
               --generate-notes
-          fi
-
-          git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
-          tag_commit=$(git rev-parse "$TAG^{commit}")
-          if [[ "$tag_commit" != "$SOURCE_SHA" ]]; then
-            echo "$TAG was created at $tag_commit, not npm's $SOURCE_SHA" >&2
-            exit 1
           fi
