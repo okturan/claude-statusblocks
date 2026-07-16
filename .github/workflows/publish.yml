@@ -169,7 +169,12 @@ jobs:
           fi
 
           release_lookup_log=$(mktemp)
-          if actual_prerelease=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" --jq '.prerelease' 2>"$release_lookup_log"); then
+          if release_state=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" --jq '"\(.prerelease) \(.draft)"' 2>"$release_lookup_log"); then
+            read -r actual_prerelease actual_draft <<< "$release_state"
+            if [[ "$actual_draft" != false ]]; then
+              echo "GitHub Release $TAG is still a draft" >&2
+              exit 1
+            fi
             if [[ "$actual_prerelease" != "$expected_prerelease" ]]; then
               echo "GitHub Release $TAG prerelease=$actual_prerelease, expected $expected_prerelease" >&2
               exit 1
