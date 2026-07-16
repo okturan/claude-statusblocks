@@ -127,45 +127,55 @@ jobs:
             exit 1
           fi
 
-          git fetch --force --tags origin
-          if git rev-parse --verify "refs/tags/$TAG" >/dev/null 2>&1; then
+          tag_exists=false
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
             tag_commit=$(git rev-parse "$TAG^{commit}")
             if [[ "$tag_commit" != "$SOURCE_SHA" ]]; then
               echo "$TAG already points to $tag_commit, not npm's $SOURCE_SHA" >&2
               exit 1
             fi
             echo "$TAG already points to npm's published source commit"
-          else
-            git tag "$TAG" "$SOURCE_SHA"
-            if ! git push origin "refs/tags/$TAG"; then
-              # A concurrent actor may have created it after the fetch. Accept
-              # that only when the remote tag resolves to the same commit.
-              git tag -d "$TAG"
-              git fetch origin "refs/tags/$TAG:refs/tags/$TAG"
-              tag_commit=$(git rev-parse "$TAG^{commit}")
-              if [[ "$tag_commit" != "$SOURCE_SHA" ]]; then
-                echo "$TAG was concurrently created at $tag_commit, not $SOURCE_SHA" >&2
-                exit 1
-              fi
-            fi
+            tag_exists=true
           fi
 
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            if [[ "$tag_exists" != true ]]; then
+              echo "GitHub Release $TAG exists without its matching tag" >&2
+              exit 1
+            fi
             echo "GitHub Release $TAG already exists; nothing to do"
             exit 0
           fi
 
+          release_args=(
+            "$TAG"
+            --repo "$GITHUB_REPOSITORY"
+            --title "$TAG"
+          )
+          if [[ "$tag_exists" == true ]]; then
+            release_args+=(--verify-tag)
+          else
+            # Let the Releases API create the tag. A GITHUB_TOKEN cannot push
+            # a historical tag across commits that changed workflow files.
+            release_args+=(--target "$SOURCE_SHA")
+          fi
+          if [[ "$TAG" == *-* ]]; then
+            release_args+=(--prerelease)
+          fi
+
           notes_file=".github/release-notes/$TAG.md"
           if [[ -f "$notes_file" ]]; then
-            gh release create "$TAG" \
-              --repo "$GITHUB_REPOSITORY" \
-              --verify-tag \
-              --title "$TAG" \
+            gh release create "${release_args[@]}" \
               --notes-file "$notes_file"
           else
-            gh release create "$TAG" \
-              --repo "$GITHUB_REPOSITORY" \
-              --verify-tag \
-              --title "$TAG" \
+            gh release create "${release_args[@]}" \
               --generate-notes
+          fi
+
+          git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
+          tag_commit=$(git rev-parse "$TAG^{commit}")
+          if [[ "$tag_commit" != "$SOURCE_SHA" ]]; then
+            echo "$TAG was created at $tag_commit, not npm's $SOURCE_SHA" >&2
+            exit 1
           fi
