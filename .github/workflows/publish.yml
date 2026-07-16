@@ -21,14 +21,15 @@ jobs:
       tag: ${{ steps.package.outputs.tag }}
       version: ${{ steps.package.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
       - run: npm ci
+      - run: npm audit --audit-level=high
       - run: npm run build
       - run: npm test
       - name: Publish package if needed and resolve its source commit
@@ -110,7 +111,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
       - name: Create or backfill the matching GitHub Release
