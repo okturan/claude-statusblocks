@@ -1,13 +1,8 @@
-```
-╭─ context ──────╮ ╭─ model ────────────────────╮ ╭─ vim ───╮
-│ ████▒▒▒▒▒▒▒▒▒▒ │ │ Opus 4.6 · ~/my-proj       │ │ NORMAL  │
-│ 24% · 245K/1.0M│ │ high · 2h15m · v2.1.91     │ ╰─────────╯
-╰────────────────╯ ╰────────────────────────────╯
-╭─ promo ───────╮ ╭─ git ──────────────╮ ╭─ usage ─────────────────╮
-│ 2× off-peak   │ │ main               │ │ ████▒▒▒▒ 42% · ↻3h · 5h │
-│ → peak 3h 12m │ │ 2 staged · +47 -12 │ │ ██▒▒▒▒▒▒ 18% · ↻4d · 7d │
-╰───────────────╯ ╰────────────────────╯ ╰─────────────────────────╯
-```
+<p align="center">
+  <img src="docs/claude-statusblocks-preview.png" alt="Terminal preview of claude-statusblocks adaptive cards" width="100%">
+</p>
+
+<p align="center"><em>Real output from <code>npm run preview</code> at 120 columns.</em></p>
 
 # claude-statusblocks
 
