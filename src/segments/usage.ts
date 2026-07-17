@@ -30,10 +30,16 @@ function miniBar(pct: number, width: number): string {
  * model-scoped weekly limits (e.g. Fable) exist only in the remote usage
  * data, so that's preferred when the background refresher has populated
  * the cache. Falls back to stdin buckets whenever remote data is absent.
+ *
+ * Generic limits always apply; a scoped limit is only the session's
+ * concern when it matches the model in use, so others are dropped.
  */
 function limitsToRender(data: Parameters<Segment['render']>[0]): RemoteLimit[] {
   const remote = readRemoteLimits();
-  if (remote) return remote;
+  if (remote) {
+    const modelName = (data.model?.display_name ?? '').toLowerCase();
+    return remote.filter(l => !l.scoped || (!!modelName && modelName.includes(l.label.toLowerCase())));
+  }
 
   const rl = data.rate_limits;
   const out: RemoteLimit[] = [];
@@ -54,16 +60,12 @@ export const usageSegment: Segment = {
     const dot = color(' · ', c.dim);
     const labelW = Math.max(...limits.map(l => l.label.length));
 
-    // A scoped limit that matches the session's model is the budget this
-    // session is actually drawing down — pop its label like the model name.
-    const modelName = (data.model?.display_name ?? '').toLowerCase();
-    const isCurrentModel = (l: RemoteLimit) =>
-      !!l.scoped && !!modelName && modelName.includes(l.label.toLowerCase());
-
+    // Surviving scoped limits belong to the session's model — that's the
+    // budget being drawn down, so pop the label like the model name.
     const lines = limits.map(l => {
       const pct = padRight(color(`${l.percent}%`, pctColor(l.percent), c.bold), 4);
       const rst = padRight(color('↻', c.dim) + ' ' + formatResetTime(l.resetsAt), 9);
-      const label = padRight(color(l.label, ...(isCurrentModel(l) ? [c.orange, c.bold] : [c.dim])), labelW);
+      const label = padRight(color(l.label, ...(l.scoped ? [c.orange, c.bold] : [c.dim])), labelW);
       return `${miniBar(l.percent, barW)} ${pct}${dot}${rst}${dot}${label}`;
     });
 

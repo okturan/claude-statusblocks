@@ -44,7 +44,7 @@ After v0.4.1, updates happen automatically — the statusline checks for new ver
 | **model** | Model name, tilde-shortened directory, effort level, session duration, version |
 | **promo** | 2x off-peak / peak status with countdown to next transition |
 | **git** | Branch, staged/modified counts, lines added/removed |
-| **usage** | 5-hour, 7-day, and per-model (e.g. Fable) rate limit utilization with reset countdowns |
+| **usage** | 5-hour, 7-day, and per-model rate limit utilization with reset countdowns — model-scoped limits (e.g. Fable) appear only while that model is in use |
 | **vim** | Vim mode indicator (NORMAL/INSERT) |
 | **agent** | Active agent name and type when running with `--agent` |
 | **worktree** | Worktree branch and original branch when in a `--worktree` session |
@@ -77,7 +77,7 @@ CLAUDE_STATUSBLOCKS_SEGMENTS=context,model,usage
 
 The `usage` card has two data sources:
 
-1. **Remote usage limits** (preferred): the same data the claude.ai Usage page and Claude Code's `/usage` screen show, including **model-scoped weekly limits** (e.g. a separate Fable bucket) that Claude Code does not include in the statusline JSON. Fetched from the OAuth usage endpoint by a detached background process — renders never block on the network. Results are cached for up to 5 minutes and refreshed at most once per minute. The limits are rendered generically from the server's response, so if Anthropic changes a model's allocation or adds new scoped limits, they appear without a code change. Requires your Claude Code OAuth credentials (read from `~/.claude/.credentials.json`, or the Keychain on macOS); the endpoint is undocumented, so this tier may silently stop working if Anthropic changes it — which is exactly why there's a fallback.
+1. **Remote usage limits** (preferred): the same data the claude.ai Usage page and Claude Code's `/usage` screen show, including **model-scoped weekly limits** (e.g. a separate Fable bucket) that Claude Code does not include in the statusline JSON. Fetched from the OAuth usage endpoint by a detached background process — renders never block on the network. Results are cached for up to 5 minutes and refreshed at most once per minute. The limits are rendered generically from the server's response, so if Anthropic changes a model's allocation or adds new scoped limits, they appear without a code change. Model-scoped limits are shown (highlighted) only while the session runs that model — the generic 5h/7d limits always apply and are always shown. Requires your Claude Code OAuth credentials (read from `~/.claude/.credentials.json`, or the Keychain on macOS); the endpoint is undocumented, so this tier may silently stop working if Anthropic changes it — which is exactly why there's a fallback.
 2. **Statusline JSON** (fallback): the `five_hour`/`seven_day` buckets from Claude Code's `rate_limits` field (available since v2.1.80). Used whenever remote data is unavailable for any reason — no credentials, no network, locked-down machine.
 
 To disable the remote fetch entirely (statusline JSON only), set `"remoteUsage": false` in `~/.claude-statusblocks.json` or export `CLAUDE_STATUSBLOCKS_NO_REMOTE=1`.

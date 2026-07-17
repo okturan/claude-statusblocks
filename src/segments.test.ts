@@ -162,6 +162,7 @@ describe('usageSegment', () => {
     it('prefers remote limits (including scoped models) over stdin buckets', () => {
       writeCache(REMOTE_USAGE_CACHE, remote);
       const data = makeData({
+        model: { id: 'claude-fable-5', display_name: 'Fable 5' },
         rate_limits: {
           five_hour: { used_percentage: 10, resets_at: Math.floor(Date.now() / 1000) + 3600 },
           seven_day: { used_percentage: 50, resets_at: Math.floor(Date.now() / 1000) + 86400 },
@@ -179,7 +180,7 @@ describe('usageSegment', () => {
       expect(usageSegment.enabled(makeData())).toBe(true);
     });
 
-    it('highlights the scoped limit matching the current model', () => {
+    it('shows a scoped limit highlighted only when its model is in use', () => {
       const orange = '\x1b[38;2;217;119;87m';
       writeCache(REMOTE_USAGE_CACHE, remote);
 
@@ -187,10 +188,10 @@ describe('usageSegment', () => {
       const fableLine = usageSegment.render(onFable, 80).lines.find(l => l.includes('Fable'));
       expect(fableLine).toContain(orange);
 
-      const onOpus = makeData(); // Opus 4.6 — Fable line present but not highlighted
-      const opusLine = usageSegment.render(onOpus, 80).lines.find(l => l.includes('Fable'));
-      expect(opusLine).toBeDefined();
-      expect(opusLine).not.toContain(orange);
+      const onOpus = makeData(); // Opus 4.6 — Fable's scoped limit is not this session's concern
+      const opusBlock = usageSegment.render(onOpus, 80);
+      expect(opusBlock.lines).toHaveLength(2);
+      expect(opusBlock.lines.map(stripAnsi).join('\n')).not.toContain('Fable');
     });
   });
 });
