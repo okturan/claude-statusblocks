@@ -7,7 +7,7 @@
 # claude-statusblocks
 
 [![npm version](https://img.shields.io/npm/v/claude-statusblocks)](https://www.npmjs.com/package/claude-statusblocks)
-[![license](https://img.shields.io/npm/l/claude-statusblocks)](https://github.com/okturan/claude-statusblocks/blob/main/LICENSE)
+[![license](https://img.shields.io/npm/l/claude-statusblocks)](package.json)
 
 Adaptive, block-based status line for [Claude Code](https://claude.ai/code). Cards reflow into a pyramid layout based on available terminal width using an exhaustive bin-packing algorithm.
 
@@ -101,6 +101,10 @@ npm run preview:asset # regenerate the deterministic README preview SVG
 ```
 
 Tests are co-located with source files (`*.test.ts`). The project uses vitest with fake timers for deterministic campaign engine testing.
+
+## Support and security
+
+Use the [support policy](SUPPORT.md) for compatibility and issue-reporting guidance. Report suspected vulnerabilities privately through the [security policy](SECURITY.md), without posting status-line payloads, transcripts, paths, or settings publicly.
 
 ## License
 
