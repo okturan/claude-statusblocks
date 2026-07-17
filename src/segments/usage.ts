@@ -46,6 +46,33 @@ function stdinLimits(data: StatusLineData): RemoteLimit[] {
   return out;
 }
 
+/** Same refill instant (within tolerance) means the same rate-limit window. */
+function sameWindow(a: RemoteLimit, b: RemoteLimit): boolean {
+  return a.resetsAt > 0 && b.resetsAt > 0 && Math.abs(a.resetsAt - b.resetsAt) <= 120;
+}
+
+/**
+ * Limits sharing a window refill together, so the higher percentage is
+ * strictly the one that locks first — only it earns a line. This keeps the
+ * card at one line per window (5h + weekly) instead of growing a row per
+ * scoped model, and the weekly label flips (e.g. Fable → 7d) the moment
+ * the other bucket becomes the binding one, so the crossover stays visible.
+ */
+function collapseSameWindow(limits: RemoteLimit[]): RemoteLimit[] {
+  const out: RemoteLimit[] = [];
+  for (const l of limits) {
+    const i = out.findIndex(o => sameWindow(o, l));
+    if (i === -1) { out.push(l); continue; }
+    const kept = out[i]!;
+    // Higher percent binds first; on a tie the model-scoped one is the
+    // more specific answer to "what stops this session".
+    if (l.percent > kept.percent || (l.percent === kept.percent && l.scope === 'model' && kept.scope !== 'model')) {
+      out[i] = l;
+    }
+  }
+  return out;
+}
+
 /**
  * The stdin `rate_limits` field only carries the two generic buckets;
  * model-scoped weekly limits (e.g. Fable) exist only in the remote usage
@@ -59,7 +86,7 @@ function limitsToRender(data: StatusLineData): RemoteLimit[] {
   const remote = readRemoteLimits();
   if (remote) {
     const visible = remote.filter(l => !l.scope || matchesModel(l, data));
-    if (visible.length > 0) return visible;
+    if (visible.length > 0) return collapseSameWindow(visible);
   }
   return stdinLimits(data);
 }

@@ -26,7 +26,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 
 **Segments** (`src/segments/`) are the core rendering units. Each implements the `Segment` interface (`id`, `priority`, `enabled()`, `render()`). Available segments:
 - `context` (priority 10) — context window usage bar with token counts
-- `usage` (priority 15) — rate limit utilization: remote usage limits when the background-fetched cache is warm, falling back to the `rate_limits` field in statusline JSON (requires Claude Code ≥2.1.80). Model-scoped weekly buckets (e.g. Fable) render highlighted and only while the session's model matches; generic 5h/7d always render.
+- `usage` (priority 15) — rate limit utilization: remote usage limits when the background-fetched cache is warm, falling back to the `rate_limits` field in statusline JSON (requires Claude Code ≥2.1.80). Model-scoped weekly buckets (e.g. Fable) count only while the session's model matches (rendered highlighted). Limits sharing a reset instant collapse to the higher-percentage (binding) one — one line per window, so the card stays two lines and the weekly label flips when the all-models bucket overtakes the scoped one.
 - `promo` (priority 20) — rate promotion status with peak/off-peak countdown
 - `model` (priority 30) — model name, tilde-shortened directory, duration, version
 - `git` (priority 40) — branch name, staged/modified counts, lines added/removed
