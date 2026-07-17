@@ -176,3 +176,28 @@ describe('cli update', () => {
     }
   });
 });
+
+describe('cli preview isolation', () => {
+  it('renders mock usage data even when a warm remote cache exists', () => {
+    const cacheDir = join(tmpdir(), `csb-cli-preview-${process.pid}`);
+    rmSync(cacheDir, { recursive: true, force: true });
+    mkdirSync(cacheDir, { recursive: true });
+    writeFileSync(join(cacheDir, 'remote-usage'), JSON.stringify({
+      ts: Date.now(),
+      value: [
+        { label: '5h', percent: 93, resetsAt: Math.floor(Date.now() / 1000) + 3600 },
+        { label: '7d', percent: 88, resetsAt: Math.floor(Date.now() / 1000) + 86400 },
+      ],
+    }));
+    try {
+      // No CLAUDE_STATUSBLOCKS_NO_REMOTE in the env — preview must isolate itself.
+      const env: NodeJS.ProcessEnv = { ...process.env, CLAUDE_STATUSBLOCKS_CACHE_DIR: cacheDir };
+      delete env['CLAUDE_STATUSBLOCKS_NO_REMOTE'];
+      const output = execSync(`node "${CLI}" preview`, { encoding: 'utf8', env });
+      expect(output).toContain('12%');
+      expect(output).not.toContain('93%');
+    } finally {
+      rmSync(cacheDir, { recursive: true, force: true });
+    }
+  });
+});

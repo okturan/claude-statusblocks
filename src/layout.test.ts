@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, findOptimalAssignment, materializeAssignment } from './layout.js';
-import { visibleLength } from './colors.js';
+import { visibleLength, stripAnsi } from './colors.js';
 import type { StatusLineData, Block } from './types.js';
 
 function makeData(overrides: Partial<StatusLineData> = {}): StatusLineData {
@@ -124,7 +124,7 @@ describe('render', () => {
     let currentMax = 0;
     for (const line of lines) {
       currentMax = Math.max(currentMax, visibleLength(line));
-      if (line.replace(/\x1b\[[0-9;]*m/g, '').includes('╰')) {
+      if (stripAnsi(line).includes('╰')) {
         rowWidths.push(currentMax);
         currentMax = 0;
       }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { color, c, visibleLength, padRight, pctColor } from './colors.js';
+import { color, c, visibleLength, padRight, pctColor, stripAnsi, renderBar } from './colors.js';
 
 describe('color', () => {
   it('wraps text with ANSI codes and reset', () => {
@@ -61,7 +61,7 @@ describe('padRight', () => {
     const result = padRight(styled, 5);
     expect(visibleLength(result)).toBe(5);
     // Should preserve content up to the cut point
-    expect(result.replace(/\x1b\[[0-9;]*m/g, '')).toBe('hello');
+    expect(stripAnsi(result)).toBe('hello');
   });
 
   it('truncates at ANSI boundary without breaking sequences', () => {
@@ -70,13 +70,13 @@ describe('padRight', () => {
     const result = padRight(input, 3);
     expect(visibleLength(result)).toBe(3);
     // Should contain 'abc' (2 from first + 1 from second)
-    expect(result.replace(/\x1b\[[0-9;]*m/g, '')).toBe('abc');
+    expect(stripAnsi(result)).toBe('abc');
   });
 
   it('truncates to 1 character', () => {
     const result = padRight(color('hello', c.red), 1);
     expect(visibleLength(result)).toBe(1);
-    expect(result.replace(/\x1b\[[0-9;]*m/g, '')).toBe('h');
+    expect(stripAnsi(result)).toBe('h');
   });
 
   it('returns empty string for zero width', () => {
@@ -104,5 +104,23 @@ describe('pctColor', () => {
   it('returns green for < 70%', () => {
     expect(pctColor(0)).toBe(c.green);
     expect(pctColor(69)).toBe(c.green);
+  });
+});
+
+describe('stripAnsi', () => {
+  it('removes SGR sequences and leaves plain text', () => {
+    expect(stripAnsi(color('hi', c.orange, c.bold))).toBe('hi');
+    expect(stripAnsi('plain')).toBe('plain');
+  });
+});
+
+describe('renderBar', () => {
+  it('fills proportionally', () => {
+    expect(stripAnsi(renderBar(50, 8))).toBe('████▒▒▒▒');
+  });
+
+  it('clamps percentages beyond both bounds instead of throwing', () => {
+    expect(stripAnsi(renderBar(120, 8))).toBe('████████');
+    expect(stripAnsi(renderBar(-8, 8))).toBe('▒▒▒▒▒▒▒▒');
   });
 });

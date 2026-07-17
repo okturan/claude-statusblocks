@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
-import { execSync, spawn } from 'child_process';
+import { execSync } from 'child_process';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 import type { StatusLineData } from './types.js';
 import { loadConfig } from './config.js';
-import { render } from './layout.js';
+import { render, DEFAULT_ORDER } from './layout.js';
 import { readCache, writeCache, safeKey } from './cache.js';
 import { maybeRefreshRemoteUsage } from './remote-usage.js';
+import { spawnDetached } from './spawn.js';
 
 const AUTO_UPDATE_INTERVAL = 86400000; // 24 hours
 const WIDTH_CACHE_TTL = 15000; // resize lag tolerance vs. subprocess cost per render
@@ -27,13 +28,7 @@ function maybeAutoUpdate() {
 
     writeFileSync(checkFile, String(Date.now()));
 
-    const child = spawn('npx -y claude-statusblocks@latest update', {
-      detached: true,
-      stdio: 'ignore',
-      shell: true,
-      windowsHide: true, // detached children get their own console window on Windows otherwise
-    });
-    child.unref();
+    spawnDetached('npx -y claude-statusblocks@latest update', undefined, { shell: true });
   } catch { /* auto-update is best-effort */ }
 }
 
@@ -102,10 +97,16 @@ process.stdin.on('end', () => {
     }
     const data = parsed;
     const config = loadConfig();
+    // Bridge the config kill switch onto the env one so the render path's
+    // cache reads honor it too — otherwise a warm cache keeps rendering
+    // remote data after the user disabled the feature.
+    if (config.remoteUsage === false) process.env['CLAUDE_STATUSBLOCKS_NO_REMOTE'] = '1';
     const termWidth = detectWidth(String(data.session_id ?? 'default'));
     const output = render(data, termWidth, config);
     process.stdout.write(output + '\n');
-    if (config.remoteUsage !== false) maybeRefreshRemoteUsage();
+    // Refresh only when something can consume the result: no background
+    // credential probes or fetches for users who dropped the usage segment.
+    if ((config.segments ?? DEFAULT_ORDER).includes('usage')) maybeRefreshRemoteUsage();
   } catch (err) {
     process.stderr.write(`[claude-statusblocks] ${err instanceof Error ? err.message : err}\n`);
     process.stdout.write('\n');

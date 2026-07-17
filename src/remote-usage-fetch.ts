@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import { getOAuthToken } from './credentials.js';
-import { normalizeLimits, REMOTE_USAGE_CACHE } from './remote-usage.js';
-import { writeCache } from './cache.js';
+import { normalizeLimits, storeRemoteLimits } from './remote-usage.js';
 
 /**
  * Background refresher for the remote usage cache. Runs as a detached
@@ -26,8 +25,7 @@ async function main(): Promise<void> {
   if (!res.ok) return;
 
   const body = await res.json() as { limits?: unknown };
-  const limits = normalizeLimits(body?.limits);
-  if (limits.length > 0) writeCache(REMOTE_USAGE_CACHE, limits);
+  storeRemoteLimits(normalizeLimits(body?.limits));
 }
 
 main().catch(() => { /* silent — fallback rendering covers this */ });

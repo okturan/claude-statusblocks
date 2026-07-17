@@ -72,3 +72,13 @@ describe('index (stdin pipeline)', () => {
     expect(output).toContain('7d');
   });
 });
+
+describe('index (usage segment gating)', () => {
+  it('draws no usage box when rate_limits is empty and no remote cache exists', () => {
+    const withEmpty = JSON.parse(VALID_JSON);
+    withEmpty.rate_limits = {};
+    const output = run(JSON.stringify(withEmpty));
+    expect(output).toContain('model');
+    expect(output).not.toContain('usage');
+  });
+});

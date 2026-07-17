@@ -29,10 +29,24 @@ export function pctColor(pct: number): string {
   return pct >= 90 ? c.red : pct >= 70 ? c.yellow : c.green;
 }
 
+/** Remove ANSI SGR sequences */
+export function stripAnsi(str: string): string {
+  // eslint-disable-next-line no-control-regex
+  return str.replace(/\x1b\[[0-9;]*m/g, '');
+}
+
 /** Strip ANSI codes to get visible length */
 export function visibleLength(str: string): number {
-  // eslint-disable-next-line no-control-regex
-  return str.replace(/\x1b\[[0-9;]*m/g, '').length;
+  return stripAnsi(str).length;
+}
+
+/**
+ * Fill bar colored by pctColor. Clamps both bounds — percentages arrive
+ * from unvalidated external input, and '█'.repeat(negative) throws.
+ */
+export function renderBar(pct: number, width: number): string {
+  const filled = Math.min(width, Math.max(0, Math.round(pct * width / 100)));
+  return color('█'.repeat(filled), pctColor(pct)) + color('▒'.repeat(width - filled), c.gray);
 }
 
 /** Pad a string (accounting for ANSI) to exact visible width */

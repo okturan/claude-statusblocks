@@ -1,19 +1,23 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { mkdtempSync, rmSync, readdirSync } from 'fs';
+import { mkdtempSync, rmSync, readdirSync, utimesSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { normalizeLimits, readRemoteLimits, maybeRefreshRemoteUsage, REMOTE_USAGE_CACHE } from './remote-usage.js';
-import { writeCache } from './cache.js';
+import { normalizeLimits, readRemoteLimits, maybeRefreshRemoteUsage, resetRemoteUsageMemo, storeRemoteLimits, REMOTE_USAGE_CACHE } from './remote-usage.js';
+import { writeCache, acquireMarker } from './cache.js';
 
 // Isolate the cross-process file cache from the developer's real one, and
-// ensure no test can ever reach the spawn path with real machine state.
+// neutralize any ambient kill switch (a user's exported
+// CLAUDE_STATUSBLOCKS_NO_REMOTE=1 must not turn the suite red).
 let cacheDir: string;
 beforeEach(() => {
   cacheDir = mkdtempSync(join(tmpdir(), 'csb-remote-test-'));
   vi.stubEnv('CLAUDE_STATUSBLOCKS_CACHE_DIR', cacheDir);
+  vi.stubEnv('CLAUDE_STATUSBLOCKS_NO_REMOTE', '');
+  resetRemoteUsageMemo();
 });
 afterEach(() => {
   vi.unstubAllEnvs();
+  resetRemoteUsageMemo();
   rmSync(cacheDir, { recursive: true, force: true });
 });
 
@@ -28,6 +32,8 @@ describe('normalizeLimits', () => {
     const limits = normalizeLimits(SERVER_LIMITS);
     expect(limits.map(l => l.label)).toEqual(['5h', '7d', 'Fable']);
     expect(limits.map(l => l.percent)).toEqual([40, 19, 27]);
+    expect(limits.map(l => l.scope)).toEqual([undefined, undefined, 'model']);
+    expect(limits[2]!.match).toBe('fable');
   });
 
   it('parses ISO resets_at into epoch seconds', () => {
@@ -35,12 +41,37 @@ describe('normalizeLimits', () => {
     expect(limits[0]!.resetsAt).toBe(Math.floor(Date.parse('2026-07-17T17:09:59.841702+00:00') / 1000));
   });
 
-  it('labels unknown future kinds by their kind string, and scoped-by-surface by surface', () => {
+  it('keeps the full untruncated name as the match key, truncating only the label', () => {
+    const limits = normalizeLimits([
+      { kind: 'weekly_scoped', percent: 9, scope: { model: { display_name: 'Claude Fable 5' } } },
+    ]);
+    expect(limits[0]!.label).toBe('Claude Fable');
+    expect(limits[0]!.match).toBe('claude fable 5');
+  });
+
+  it('marks surface scopes as surface, and labels unknown generic kinds by their kind', () => {
     const limits = normalizeLimits([
       { kind: 'monthly_all', percent: 5 },
       { kind: 'weekly_scoped', percent: 12, scope: { model: null, surface: 'cowork' } },
     ]);
     expect(limits.map(l => l.label)).toEqual(['monthly_all', 'cowork']);
+    expect(limits.map(l => l.scope)).toEqual([undefined, 'surface']);
+  });
+
+  it('never lets server fields flip generic buckets: scope on weekly_all stays 7d, label is ignored', () => {
+    const limits = normalizeLimits([
+      { kind: 'weekly_all', percent: 30, scope: { surface: 'default' } },
+      { kind: 'session', percent: 42, label: 'Session' },
+    ]);
+    expect(limits.map(l => l.label)).toEqual(['7d', '5h']);
+    expect(limits.map(l => l.scope)).toEqual([undefined, undefined]);
+  });
+
+  it('carries the server model id for stable matching when populated', () => {
+    const limits = normalizeLimits([
+      { kind: 'weekly_scoped', percent: 9, scope: { model: { id: 'claude-fable-5', display_name: 'Fable' } } },
+    ]);
+    expect(limits[0]!.id).toBe('claude-fable-5');
   });
 
   it('skips entries without a numeric percent and clamps/rounds valid ones', () => {
@@ -68,12 +99,6 @@ describe('normalizeLimits', () => {
     expect(normalizeLimits({ limits: [] })).toEqual([]);
     expect(normalizeLimits('nope')).toEqual([]);
   });
-
-  it('marks scoped entries and preserves the flag through re-normalization', () => {
-    const limits = normalizeLimits(SERVER_LIMITS);
-    expect(limits.map(l => !!l.scoped)).toEqual([false, false, true]);
-    expect(normalizeLimits(limits).map(l => !!l.scoped)).toEqual([false, false, true]);
-  });
 });
 
 describe('readRemoteLimits', () => {
@@ -81,25 +106,45 @@ describe('readRemoteLimits', () => {
     expect(readRemoteLimits()).toBeUndefined();
   });
 
-  it('round-trips normalized limits through the cache', () => {
-    writeCache(REMOTE_USAGE_CACHE, normalizeLimits(SERVER_LIMITS));
+  it('round-trips normalized limits through the store/read path', () => {
+    storeRemoteLimits(normalizeLimits(SERVER_LIMITS));
+    resetRemoteUsageMemo();
     const limits = readRemoteLimits();
     expect(limits).toBeDefined();
     expect(limits!.map(l => l.label)).toEqual(['5h', '7d', 'Fable']);
+    expect(limits![2]!.scope).toBe('model');
+    expect(limits![2]!.match).toBe('fable');
     expect(limits![2]!.resetsAt).toBeGreaterThan(0);
   });
 
   it('returns undefined for garbage or empty cached values', () => {
     writeCache(REMOTE_USAGE_CACHE, { not: 'an array' });
+    resetRemoteUsageMemo();
     expect(readRemoteLimits()).toBeUndefined();
     writeCache(REMOTE_USAGE_CACHE, []);
+    resetRemoteUsageMemo();
+    expect(readRemoteLimits()).toBeUndefined();
+    writeCache(REMOTE_USAGE_CACHE, [{ label: '', percent: 5, resetsAt: 0 }]);
+    resetRemoteUsageMemo();
     expect(readRemoteLimits()).toBeUndefined();
   });
 
   it('returns undefined when disabled via env, even with a warm cache', () => {
-    writeCache(REMOTE_USAGE_CACHE, normalizeLimits(SERVER_LIMITS));
+    storeRemoteLimits(normalizeLimits(SERVER_LIMITS));
+    resetRemoteUsageMemo();
     vi.stubEnv('CLAUDE_STATUSBLOCKS_NO_REMOTE', '1');
     expect(readRemoteLimits()).toBeUndefined();
+  });
+});
+
+describe('acquireMarker', () => {
+  it('grants the slot once, then refuses until the marker goes stale', () => {
+    expect(acquireMarker('test-marker', 60000)).toBe(true);
+    expect(acquireMarker('test-marker', 60000)).toBe(false);
+    // Age the marker past the TTL — the next claim should win again.
+    const old = (Date.now() - 120000) / 1000;
+    utimesSync(join(cacheDir, 'test-marker'), old, old);
+    expect(acquireMarker('test-marker', 60000)).toBe(true);
   });
 });
 
@@ -110,14 +155,15 @@ describe('maybeRefreshRemoteUsage', () => {
     expect(readdirSync(cacheDir)).toEqual([]);
   });
 
-  it('does not write a throttle marker while the cache is fresh', () => {
-    writeCache(REMOTE_USAGE_CACHE, normalizeLimits(SERVER_LIMITS));
+  it('does not claim the throttle marker while the cache is fresh', () => {
+    storeRemoteLimits(normalizeLimits(SERVER_LIMITS));
+    resetRemoteUsageMemo();
     maybeRefreshRemoteUsage();
     expect(readdirSync(cacheDir)).toEqual([REMOTE_USAGE_CACHE]);
   });
 
-  it('respects an existing throttle marker without spawning again', () => {
-    writeCache('remote-usage-attempt', 1);
+  it('respects a freshly claimed throttle marker without spawning again', () => {
+    acquireMarker('remote-usage-attempt', 60000);
     maybeRefreshRemoteUsage();
     expect(readdirSync(cacheDir).sort()).toEqual(['remote-usage-attempt']);
   });

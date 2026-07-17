@@ -19,7 +19,10 @@ function parseToken(raw: string): string | null {
 
 export function getOAuthToken(): string | null {
   try {
-    const raw = readFileSync(join(homedir(), '.claude', '.credentials.json'), 'utf8');
+    // Same config-dir resolution as the effort segment: honor a relocated
+    // Claude config, fall back to ~/.claude.
+    const configDir = process.env['CLAUDE_CONFIG_DIR'] || join(homedir(), '.claude');
+    const raw = readFileSync(join(configDir, '.credentials.json'), 'utf8');
     const token = parseToken(raw);
     if (token) return token;
   } catch { /* no credentials file — try the Keychain */ }

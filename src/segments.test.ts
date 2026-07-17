@@ -2,13 +2,22 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { mkdtempSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { visibleLength } from './colors.js';
+import { visibleLength, stripAnsi, c } from './colors.js';
 import { writeCache } from './cache.js';
-import { normalizeLimits, REMOTE_USAGE_CACHE } from './remote-usage.js';
+import { normalizeLimits, resetRemoteUsageMemo, REMOTE_USAGE_CACHE } from './remote-usage.js';
 
 // The usage segment reads remote-usage data from the cross-process file
-// cache — point it at a fresh dir so the developer's real cache can't leak in.
+// cache — point it at a fresh dir so the developer's real cache can't leak
+// in, and neutralize any ambient kill switch so an exported
+// CLAUDE_STATUSBLOCKS_NO_REMOTE=1 can't turn this suite red.
 process.env['CLAUDE_STATUSBLOCKS_CACHE_DIR'] = mkdtempSync(join(tmpdir(), 'csb-segments-test-'));
+delete process.env['CLAUDE_STATUSBLOCKS_NO_REMOTE'];
+
+/** Write the remote-usage cache and drop the per-process memo so reads see it. */
+function setRemoteCache(value: unknown): void {
+  writeCache(REMOTE_USAGE_CACHE, value);
+  resetRemoteUsageMemo();
+}
 import { contextSegment } from './segments/context.js';
 import { modelSegment } from './segments/model.js';
 import { usageSegment } from './segments/usage.js';
@@ -52,6 +61,13 @@ describe('contextSegment', () => {
     const maxLineWidth = Math.max(...block.lines.map(visibleLength));
     expect(block.width).toBe(maxLineWidth);
   });
+
+  it('does not crash on out-of-range used_percentage', () => {
+    const over = makeData({ context_window: { ...makeData().context_window, used_percentage: 120 } });
+    expect(() => contextSegment.render(over, 80)).not.toThrow();
+    const under = makeData({ context_window: { ...makeData().context_window, used_percentage: -5 } });
+    expect(() => contextSegment.render(under, 80)).not.toThrow();
+  });
 });
 
 describe('modelSegment', () => {
@@ -92,7 +108,7 @@ describe('modelSegment', () => {
       cost: { total_cost_usd: 0, total_duration_ms: 26520000, total_api_duration_ms: 0, total_lines_added: 0, total_lines_removed: 0 },
     });
     const block = modelSegment.render(data, 80);
-    const line2 = block.lines[1]!.replace(/\x1b\[[0-9;]*m/g, '');
+    const line2 = stripAnsi(block.lines[1]!);
     // effort value varies by environment; the separators must not
     expect(line2).toMatch(/ · 7h22m · v2\.1\.201$/);
     expect(block.width).toBe(Math.max(...block.lines.map(visibleLength)));
@@ -100,8 +116,29 @@ describe('modelSegment', () => {
 });
 
 describe('usageSegment', () => {
+  afterEach(() => { resetRemoteUsageMemo(); });
+
   it('is disabled without rate_limits', () => {
     expect(usageSegment.enabled(makeData())).toBe(false);
+  });
+
+  it('is disabled when rate_limits is present but empty (no broken empty box)', () => {
+    expect(usageSegment.enabled(makeData({ rate_limits: {} }))).toBe(false);
+  });
+
+  it('clamps a negative used_percentage instead of crashing the render', () => {
+    const data = makeData({
+      rate_limits: { five_hour: { used_percentage: -8, resets_at: Math.floor(Date.now() / 1000) + 3600 } },
+    });
+    const block = usageSegment.render(data, 80);
+    expect(stripAnsi(block.lines[0]!)).toContain('0%');
+  });
+
+  it('renders full weekly countdowns without truncating the unit', () => {
+    const resetsAt = Math.floor((Date.now() + 6 * 86400000 + 23 * 3600000 + 59 * 60000 + 30000) / 1000);
+    const data = makeData({ rate_limits: { seven_day: { used_percentage: 50, resets_at: resetsAt } } });
+    const block = usageSegment.render(data, 80);
+    expect(stripAnsi(block.lines[0]!)).toContain('6d23h59m');
   });
 
   it('is enabled with rate_limits', () => {
@@ -150,24 +187,21 @@ describe('usageSegment', () => {
   });
 
   describe('remote limits', () => {
-    const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '');
     const remote = normalizeLimits([
       { kind: 'session', percent: 40, resets_at: new Date(Date.now() + 3600000).toISOString() },
       { kind: 'weekly_all', percent: 19, resets_at: new Date(Date.now() + 86400000).toISOString() },
       { kind: 'weekly_scoped', percent: 27, resets_at: new Date(Date.now() + 86400000).toISOString(), scope: { model: { display_name: 'Fable' } } },
     ]);
+    const STDIN_RL = {
+      five_hour: { used_percentage: 10, resets_at: Math.floor(Date.now() / 1000) + 3600 },
+      seven_day: { used_percentage: 50, resets_at: Math.floor(Date.now() / 1000) + 86400 },
+    };
 
-    afterEach(() => { writeCache(REMOTE_USAGE_CACHE, []); });
+    afterEach(() => { setRemoteCache([]); });
 
     it('prefers remote limits (including scoped models) over stdin buckets', () => {
-      writeCache(REMOTE_USAGE_CACHE, remote);
-      const data = makeData({
-        model: { id: 'claude-fable-5', display_name: 'Fable 5' },
-        rate_limits: {
-          five_hour: { used_percentage: 10, resets_at: Math.floor(Date.now() / 1000) + 3600 },
-          seven_day: { used_percentage: 50, resets_at: Math.floor(Date.now() / 1000) + 86400 },
-        },
-      });
+      setRemoteCache(remote);
+      const data = makeData({ model: { id: 'claude-fable-5', display_name: 'Fable 5' }, rate_limits: STDIN_RL });
       const block = usageSegment.render(data, 80);
       expect(block.lines).toHaveLength(3);
       const plain = block.lines.map(stripAnsi).join('\n');
@@ -176,22 +210,56 @@ describe('usageSegment', () => {
     });
 
     it('enables the segment from remote data alone', () => {
-      writeCache(REMOTE_USAGE_CACHE, remote);
+      setRemoteCache(remote);
       expect(usageSegment.enabled(makeData())).toBe(true);
     });
 
     it('shows a scoped limit highlighted only when its model is in use', () => {
-      const orange = '\x1b[38;2;217;119;87m';
-      writeCache(REMOTE_USAGE_CACHE, remote);
+      setRemoteCache(remote);
 
       const onFable = makeData({ model: { id: 'claude-fable-5', display_name: 'Fable 5' } });
       const fableLine = usageSegment.render(onFable, 80).lines.find(l => l.includes('Fable'));
-      expect(fableLine).toContain(orange);
+      expect(fableLine).toContain(c.orange);
 
       const onOpus = makeData(); // Opus 4.6 — Fable's scoped limit is not this session's concern
       const opusBlock = usageSegment.render(onOpus, 80);
       expect(opusBlock.lines).toHaveLength(2);
       expect(opusBlock.lines.map(stripAnsi).join('\n')).not.toContain('Fable');
+    });
+
+    it('matches scoped limits bidirectionally on the full scope name', () => {
+      setRemoteCache(normalizeLimits([
+        { kind: 'weekly_scoped', percent: 33, resets_at: new Date(Date.now() + 86400000).toISOString(), scope: { model: { display_name: 'Claude Fable 5' } } },
+      ]));
+      const data = makeData({ model: { id: 'claude-fable-5', display_name: 'Fable 5' }, rate_limits: STDIN_RL });
+      const plain = usageSegment.render(data, 80).lines.map(stripAnsi).join('\n');
+      expect(plain).toContain('33%');
+    });
+
+    it('falls back to stdin buckets when every remote limit is scoped to another model', () => {
+      setRemoteCache(normalizeLimits([
+        { kind: 'weekly_scoped', percent: 27, resets_at: new Date(Date.now() + 86400000).toISOString(), scope: { model: { display_name: 'Fable' } } },
+      ]));
+      const data = makeData({ rate_limits: STDIN_RL }); // Opus session
+      expect(usageSegment.enabled(data)).toBe(true);
+      const block = usageSegment.render(data, 80);
+      expect(block.lines).toHaveLength(2);
+      const plain = block.lines.map(stripAnsi).join('\n');
+      expect(plain).toContain('5h');
+      expect(plain).toContain('7d');
+      expect(plain).not.toContain('Fable');
+    });
+
+    it('never renders surface-scoped limits and stays disabled when nothing else exists', () => {
+      setRemoteCache(normalizeLimits([
+        { kind: 'weekly_scoped', percent: 12, resets_at: new Date(Date.now() + 86400000).toISOString(), scope: { model: null, surface: 'cowork' } },
+      ]));
+      expect(usageSegment.enabled(makeData())).toBe(false);
+      const withStdin = makeData({ rate_limits: STDIN_RL });
+      resetRemoteUsageMemo();
+      const plain = usageSegment.render(withStdin, 80).lines.map(stripAnsi).join('\n');
+      expect(plain).not.toContain('cowork');
+      expect(plain).toContain('5h');
     });
   });
 });
@@ -240,7 +308,7 @@ describe('modelSegment line2 layout', () => {
       cost: { total_cost_usd: 0, total_duration_ms: 7200000, total_api_duration_ms: 0, total_lines_added: 0, total_lines_removed: 0 },
     });
     const block = modelSegment.render(data, 80);
-    const line2Stripped = block.lines[1]!.replace(/\x1b\[[0-9;]*m/g, '');
+    const line2Stripped = stripAnsi(block.lines[1]!);
     expect(line2Stripped).toContain('2h0m');
     expect(line2Stripped).toContain('v2.1.80');
   });
@@ -280,7 +348,7 @@ describe('vimSegment', () => {
   it('renders 1 line with mode', () => {
     const block = vimSegment.render(makeData({ vim: { mode: 'INSERT' } }), 80);
     expect(block.lines).toHaveLength(1);
-    const stripped = block.lines[0]!.replace(/\x1b\[[0-9;]*m/g, '');
+    const stripped = stripAnsi(block.lines[0]!);
     expect(stripped).toBe('INSERT');
   });
 
@@ -308,15 +376,15 @@ describe('agentSegment', () => {
   it('renders 1 line when no type', () => {
     const block = agentSegment.render(makeData({ agent: { name: 'test-runner' } }), 80);
     expect(block.lines).toHaveLength(1);
-    const stripped = block.lines[0]!.replace(/\x1b\[[0-9;]*m/g, '');
+    const stripped = stripAnsi(block.lines[0]!);
     expect(stripped).toBe('test-runner');
   });
 
   it('renders 2 lines when type is present', () => {
     const block = agentSegment.render(makeData({ agent: { name: 'code-architect', type: 'Explore' } }), 80);
     expect(block.lines).toHaveLength(2);
-    const stripped0 = block.lines[0]!.replace(/\x1b\[[0-9;]*m/g, '');
-    const stripped1 = block.lines[1]!.replace(/\x1b\[[0-9;]*m/g, '');
+    const stripped0 = stripAnsi(block.lines[0]!);
+    const stripped1 = stripAnsi(block.lines[1]!);
     expect(stripped0).toBe('code-architect');
     expect(stripped1).toBe('Explore');
   });
@@ -349,7 +417,7 @@ describe('worktreeSegment', () => {
     const data = makeData({ worktree: { name: 'feat', path: '/tmp/feat', branch: 'feature/x', original_branch: 'main' } });
     const block = worktreeSegment.render(data, 80);
     expect(block.lines).toHaveLength(2);
-    const stripped1 = block.lines[1]!.replace(/\x1b\[[0-9;]*m/g, '');
+    const stripped1 = stripAnsi(block.lines[1]!);
     expect(stripped1).toBe('← main');
   });
 
@@ -362,7 +430,7 @@ describe('worktreeSegment', () => {
   it('uses name as fallback when no branch', () => {
     const data = makeData({ worktree: { name: 'my-worktree', path: '/tmp/wt' } });
     const block = worktreeSegment.render(data, 80);
-    const stripped = block.lines[0]!.replace(/\x1b\[[0-9;]*m/g, '');
+    const stripped = stripAnsi(block.lines[0]!);
     expect(stripped).toBe('my-worktree');
   });
 

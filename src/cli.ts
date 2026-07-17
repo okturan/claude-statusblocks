@@ -93,6 +93,9 @@ const MOCK_DATA: StatusLineData = {
 };
 
 function preview() {
+  // Preview must demo MOCK_DATA, not leak the user's real cached usage
+  // (screenshots!) — the usage segment would otherwise read the live cache.
+  process.env['CLAUDE_STATUSBLOCKS_NO_REMOTE'] = '1';
   const config = loadConfig();
   const widths = [120, 80, 50];
 

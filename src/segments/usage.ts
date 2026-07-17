@@ -1,6 +1,6 @@
-import type { Segment } from '../types.js';
-import { color, c, visibleLength, padRight, pctColor } from '../colors.js';
-import { readRemoteLimits, type RemoteLimit } from '../remote-usage.js';
+import type { Segment, StatusLineData } from '../types.js';
+import { color, c, visibleLength, padRight, pctColor, renderBar } from '../colors.js';
+import { readRemoteLimits, KIND_LABELS, type RemoteLimit } from '../remote-usage.js';
 
 const MS_PER_DAY = 86400000;
 const MS_PER_HOUR = 3600000;
@@ -18,40 +18,58 @@ function formatResetTime(epochSec: number): string {
   return `${m}m`;
 }
 
-function miniBar(pct: number, width: number): string {
-  const barColor = pctColor(pct);
-  const filled = Math.min(width, Math.round(pct * width / 100));
-  const empty = width - filled;
-  return color('█'.repeat(filled), barColor) + color('▒'.repeat(empty), c.gray);
+/**
+ * Is a model-scoped limit the session's own? Prefer id equality when the
+ * server populates ids; otherwise a bidirectional substring test on the
+ * FULL scope name (not the truncated display label), so 'Claude Fable 5'
+ * vs a stdin 'Fable 5' still matches. Surface-scoped limits never match —
+ * the statusline is not that surface.
+ */
+function matchesModel(l: RemoteLimit, data: StatusLineData): boolean {
+  if (l.scope !== 'model') return false;
+  const id = (data.model?.id ?? '').toLowerCase();
+  if (l.id && id && l.id.toLowerCase() === id) return true;
+  const name = (data.model?.display_name ?? '').toLowerCase();
+  const key = l.match ?? l.label.toLowerCase();
+  return !!name && !!key && (name.includes(key) || key.includes(name));
+}
+
+function clampPercent(v: number | undefined): number {
+  return Math.min(999, Math.max(0, Math.round(v ?? 0)));
+}
+
+function stdinLimits(data: StatusLineData): RemoteLimit[] {
+  const rl = data.rate_limits;
+  const out: RemoteLimit[] = [];
+  if (rl?.five_hour) out.push({ label: KIND_LABELS['session']!, percent: clampPercent(rl.five_hour.used_percentage), resetsAt: rl.five_hour.resets_at ?? 0 });
+  if (rl?.seven_day) out.push({ label: KIND_LABELS['weekly_all']!, percent: clampPercent(rl.seven_day.used_percentage), resetsAt: rl.seven_day.resets_at ?? 0 });
+  return out;
 }
 
 /**
  * The stdin `rate_limits` field only carries the two generic buckets;
  * model-scoped weekly limits (e.g. Fable) exist only in the remote usage
  * data, so that's preferred when the background refresher has populated
- * the cache. Falls back to stdin buckets whenever remote data is absent.
- *
- * Generic limits always apply; a scoped limit is only the session's
- * concern when it matches the model in use, so others are dropped.
+ * the cache. Generic limits always apply; scoped limits render only for
+ * the model in use. Whenever remote data yields nothing visible — absent,
+ * expired, or entirely filtered out — fall back to the stdin buckets so
+ * valid 5h/7d data is never discarded.
  */
-function limitsToRender(data: Parameters<Segment['render']>[0]): RemoteLimit[] {
+function limitsToRender(data: StatusLineData): RemoteLimit[] {
   const remote = readRemoteLimits();
   if (remote) {
-    const modelName = (data.model?.display_name ?? '').toLowerCase();
-    return remote.filter(l => !l.scoped || (!!modelName && modelName.includes(l.label.toLowerCase())));
+    const visible = remote.filter(l => !l.scope || matchesModel(l, data));
+    if (visible.length > 0) return visible;
   }
-
-  const rl = data.rate_limits;
-  const out: RemoteLimit[] = [];
-  if (rl?.five_hour) out.push({ label: '5h', percent: Math.round(rl.five_hour.used_percentage ?? 0), resetsAt: rl.five_hour.resets_at ?? 0 });
-  if (rl?.seven_day) out.push({ label: '7d', percent: Math.round(rl.seven_day.used_percentage ?? 0), resetsAt: rl.seven_day.resets_at ?? 0 });
-  return out;
+  return stdinLimits(data);
 }
 
 export const usageSegment: Segment = {
   id: 'usage',
   priority: 15,
-  enabled: (data) => !!data.rate_limits || readRemoteLimits() !== undefined,
+  // Mirrors render() exactly: enabled only when at least one limit will
+  // draw, so the layout never boxes an empty width-0 usage card.
+  enabled: (data) => limitsToRender(data).length > 0,
   render(data) {
     const limits = limitsToRender(data);
     if (limits.length === 0) return { id: 'usage', priority: 15, width: 0, lines: [''] };
@@ -64,9 +82,10 @@ export const usageSegment: Segment = {
     // budget being drawn down, so pop the label like the model name.
     const lines = limits.map(l => {
       const pct = padRight(color(`${l.percent}%`, pctColor(l.percent), c.bold), 4);
-      const rst = padRight(color('↻', c.dim) + ' ' + formatResetTime(l.resetsAt), 9);
-      const label = padRight(color(l.label, ...(l.scoped ? [c.orange, c.bold] : [c.dim])), labelW);
-      return `${miniBar(l.percent, barW)} ${pct}${dot}${rst}${dot}${label}`;
+      // Width 10 fits '↻ ' plus the longest weekly countdown ('6d23h59m').
+      const rst = padRight(color('↻', c.dim) + ' ' + formatResetTime(l.resetsAt), 10);
+      const label = padRight(color(l.label, ...(l.scope === 'model' ? [c.orange, c.bold] : [c.dim])), labelW);
+      return `${renderBar(l.percent, barW)} ${pct}${dot}${rst}${dot}${label}`;
     });
 
     const width = Math.max(...lines.map(visibleLength));

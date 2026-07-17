@@ -3,7 +3,7 @@ import { execSync } from 'child_process';
 import { mkdirSync, rmSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
-import { visibleLength } from '../colors.js';
+import { visibleLength, stripAnsi } from '../colors.js';
 import { gitSegment } from './git.js';
 import type { StatusLineData } from '../types.js';
 
@@ -54,7 +54,7 @@ describe('gitSegment', () => {
       expect(block.priority).toBe(40);
       expect(block.lines).toHaveLength(2);
 
-      const stripped = block.lines.map(l => l.replace(/\x1b\[[0-9;]*m/g, ''));
+      const stripped = block.lines.map(l => stripAnsi(l));
       expect(stripped[0]).toBe('test-branch');
       expect(stripped[1]).toContain('modified');
       expect(stripped[1]).toContain('+');
@@ -80,7 +80,7 @@ describe('gitSegment', () => {
 
       expect(gitSegment.enabled(makeData(dir))).toBe(true);
       const block = gitSegment.render(makeData(dir), 80);
-      const branchLine = block.lines[0]!.replace(/\x1b\[[0-9;]*m/g, '');
+      const branchLine = stripAnsi(block.lines[0]!);
       expect(branchLine).toMatch(/^@[0-9a-f]{4,}$/);
     } finally {
       rmSync(dir, { recursive: true, force: true });

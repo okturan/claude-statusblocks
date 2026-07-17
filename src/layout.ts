@@ -11,7 +11,7 @@ import { agentSegment } from './segments/agent.js';
 import { worktreeSegment } from './segments/worktree.js';
 
 const ALL_SEGMENTS: Segment[] = [contextSegment, modelSegment, gitSegment, promoSegment, usageSegment, vimSegment, agentSegment, worktreeSegment];
-const DEFAULT_ORDER = ['context', 'model', 'promo', 'git', 'usage', 'vim', 'agent', 'worktree'];
+export const DEFAULT_ORDER = ['context', 'model', 'promo', 'git', 'usage', 'vim', 'agent', 'worktree'];
 const INK_PADDING = 4;       // Claude Code's outer paddingX: 2 on each side
 // Row 1 needs extra margin because Claude Code's Ink notification panel
 // (e.g. "auto mode temporarily unavail…") overlaps from the right.

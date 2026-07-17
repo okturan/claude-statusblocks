@@ -1,5 +1,5 @@
 import type { Segment } from '../types.js';
-import { color, c, visibleLength, pctColor } from '../colors.js';
+import { color, c, visibleLength, pctColor, renderBar } from '../colors.js';
 
 function formatTokens(n: number): string {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
@@ -22,11 +22,7 @@ export const contextSegment: Segment = {
     const cardWidth = visibleLength(info);
 
     // Line 1: smooth progress bar
-    const filled = Math.round(pct * cardWidth / 100);
-    const empty = cardWidth - filled;
-    const bar = color('█'.repeat(filled), barColor) + color('▒'.repeat(empty), c.gray);
-
-    const lines = [bar, info];
+    const lines = [renderBar(pct, cardWidth), info];
     return { id: 'context', priority: 10, width: cardWidth, lines };
   },
 };
