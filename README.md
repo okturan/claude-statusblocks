@@ -88,6 +88,8 @@ Claude Code doesn't pass terminal width to status line commands ([#22115](https:
 npx claude-statusblocks preview
 ```
 
+Check the installed package version with `claude-statusblocks --version` (or `-v`).
+
 ## Development
 
 ```sh

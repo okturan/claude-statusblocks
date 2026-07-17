@@ -14,6 +14,19 @@ type Settings = {
   [k: string]: unknown;
 };
 
+const PACKAGE_VERSION: string = (() => {
+  const manifest = JSON.parse(
+    readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
+  ) as { version?: unknown };
+  if (
+    typeof manifest.version !== 'string'
+    || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(manifest.version)
+  ) {
+    throw new Error('package.json contains an invalid version');
+  }
+  return manifest.version;
+})();
+
 function settingsPath(): string {
   return join(homedir(), '.claude', 'settings.json');
 }
@@ -151,6 +164,7 @@ ${color('Usage:', c.bold)}
   claude-statusblocks init       Install into Claude Code settings
   claude-statusblocks update     Update installed files to current version
   claude-statusblocks preview    Preview with mock data at various widths
+  claude-statusblocks --version  Print the installed package version
   claude-statusblocks help       Show this help
 
 ${color('Blocks:', c.bold)}
@@ -174,6 +188,7 @@ switch (cmd) {
   case 'init': init(); break;
   case 'update': update(); break;
   case 'preview': preview(); break;
+  case '--version': case '-v': console.log(PACKAGE_VERSION); break;
   case 'help': case '--help': case '-h': help(); break;
   default:
     if (process.stdin.isTTY) { help(); }
