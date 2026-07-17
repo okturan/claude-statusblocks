@@ -17,7 +17,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "vitest run",
-    "preview": "node dist/cli.js preview"
+    "preview": "node dist/cli.js preview",
+    "preview:asset": "npm run build && node scripts/render-readme-preview.mjs --png"
   },
   "keywords": [
     "claude",
