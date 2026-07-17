@@ -37,7 +37,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 
 **Usage data**: Since Claude Code ≥2.1.80, rate limit data (5-hour and 7-day windows) is provided directly in the `rate_limits` field of the statusline JSON. No external API calls or OAuth tokens needed.
 
-**Config** (`src/config.ts`) loads from `~/.claude-statusblocks.json` with env var overrides (`CLAUDE_STATUSBLOCKS_SEGMENTS`, `CLAUDE_STATUSBLOCKS_THEME`). Controls segment order and theme.
+**Config** (`src/config.ts`) loads segment order from `~/.claude-statusblocks.json`, with `CLAUDE_STATUSBLOCKS_SEGMENTS` as an environment override.
 
 **CLI** (`src/cli.ts`) handles subcommands (`init`, `update`, `preview`, `help`). When no TTY is detected (piped input), delegates to `src/index.ts`. The `init` command copies dist files to `~/.claude/statusblocks/` and sets the statusLine command to `node "<home>/.claude/statusblocks/index.js"` for fast direct invocation (bypasses npx overhead). The command string MUST stay quoted with forward slashes — it has to parse identically in sh, Git Bash, cmd, and PowerShell (Windows homes contain backslashes and often spaces). `init` creates `~/.claude/settings.json` if missing but aborts on unparseable JSON. The `update` command refreshes the installed files and migrates any stale command form (old npx invocation or pre-0.5 unquoted paths).
 

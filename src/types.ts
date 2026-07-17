@@ -75,7 +75,6 @@ export interface Campaign {
 
 export interface StatusBlocksConfig {
   segments?: string[];
-  theme?: 'default' | 'minimal' | 'full';
   showCampaigns?: boolean;
   separator?: string;
 }
