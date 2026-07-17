@@ -46,6 +46,15 @@ describe('cli', () => {
   it('shows update command in help', () => {
     const output = runCli('help');
     expect(output).toContain('update');
+    expect(output).toContain('--version');
+  });
+
+  it('reports the package version with long and short flags', () => {
+    const manifest = JSON.parse(
+      readFileSync(join(import.meta.dirname, '..', 'package.json'), 'utf8'),
+    ) as { version: string };
+    expect(runCli('--version').trim()).toBe(manifest.version);
+    expect(runCli('-v').trim()).toBe(manifest.version);
   });
 
   it('shows help when run with no args and TTY', () => {
