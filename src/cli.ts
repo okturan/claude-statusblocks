@@ -172,7 +172,7 @@ ${color('Blocks:', c.bold)}
   model      Model name, directory, effort, duration, version
   promo      Rate promotion status with peak/off-peak countdown
   git        Branch, staged/modified counts, lines added/removed
-  usage      5-hour and 7-day rate limit utilization
+  usage      5-hour, 7-day, and per-model rate limit utilization
   vim        Vim mode indicator (NORMAL/INSERT)
   agent      Active agent name and type
   worktree   Worktree branch and original branch

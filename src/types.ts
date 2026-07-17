@@ -77,4 +77,6 @@ export interface StatusBlocksConfig {
   segments?: string[];
   showCampaigns?: boolean;
   separator?: string;
+  /** Set false to disable the background fetch of remote usage limits */
+  remoteUsage?: boolean;
 }

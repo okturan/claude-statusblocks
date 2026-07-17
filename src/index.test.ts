@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { execSync } from 'child_process';
 import { join } from 'path';
+import { tmpdir } from 'os';
 
 const INDEX = join(import.meta.dirname, '..', 'dist', 'index.js');
 
@@ -10,7 +11,12 @@ function run(input: string): string {
   return execSync(`node "${INDEX}"`, {
     encoding: 'utf8',
     input,
-    env: { ...process.env, CLAUDE_STATUSBLOCKS_NO_UPDATE: '1' },
+    env: {
+      ...process.env,
+      CLAUDE_STATUSBLOCKS_NO_UPDATE: '1',
+      CLAUDE_STATUSBLOCKS_NO_REMOTE: '1',
+      CLAUDE_STATUSBLOCKS_CACHE_DIR: join(tmpdir(), `csb-index-test-${process.pid}`),
+    },
   });
 }
 

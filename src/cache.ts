@@ -10,8 +10,9 @@ import { createHash } from 'crypto';
  * a cache miss.
  */
 function cacheDir(): string {
+  const override = process.env['CLAUDE_STATUSBLOCKS_CACHE_DIR'];
   const uid = typeof process.getuid === 'function' ? `-${process.getuid()}` : '';
-  const dir = join(tmpdir(), `claude-statusblocks${uid}`);
+  const dir = override || join(tmpdir(), `claude-statusblocks${uid}`);
   mkdirSync(dir, { recursive: true });
   return dir;
 }

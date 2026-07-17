@@ -1,5 +1,14 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import { mkdtempSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
 import { visibleLength } from './colors.js';
+import { writeCache } from './cache.js';
+import { normalizeLimits, REMOTE_USAGE_CACHE } from './remote-usage.js';
+
+// The usage segment reads remote-usage data from the cross-process file
+// cache — point it at a fresh dir so the developer's real cache can't leak in.
+process.env['CLAUDE_STATUSBLOCKS_CACHE_DIR'] = mkdtempSync(join(tmpdir(), 'csb-segments-test-'));
 import { contextSegment } from './segments/context.js';
 import { modelSegment } from './segments/model.js';
 import { usageSegment } from './segments/usage.js';
@@ -138,6 +147,51 @@ describe('usageSegment', () => {
     const block = usageSegment.render(data, 80);
     const maxLineWidth = Math.max(...block.lines.map(visibleLength));
     expect(block.width).toBe(maxLineWidth);
+  });
+
+  describe('remote limits', () => {
+    const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, '');
+    const remote = normalizeLimits([
+      { kind: 'session', percent: 40, resets_at: new Date(Date.now() + 3600000).toISOString() },
+      { kind: 'weekly_all', percent: 19, resets_at: new Date(Date.now() + 86400000).toISOString() },
+      { kind: 'weekly_scoped', percent: 27, resets_at: new Date(Date.now() + 86400000).toISOString(), scope: { model: { display_name: 'Fable' } } },
+    ]);
+
+    afterEach(() => { writeCache(REMOTE_USAGE_CACHE, []); });
+
+    it('prefers remote limits (including scoped models) over stdin buckets', () => {
+      writeCache(REMOTE_USAGE_CACHE, remote);
+      const data = makeData({
+        rate_limits: {
+          five_hour: { used_percentage: 10, resets_at: Math.floor(Date.now() / 1000) + 3600 },
+          seven_day: { used_percentage: 50, resets_at: Math.floor(Date.now() / 1000) + 86400 },
+        },
+      });
+      const block = usageSegment.render(data, 80);
+      expect(block.lines).toHaveLength(3);
+      const plain = block.lines.map(stripAnsi).join('\n');
+      expect(plain).toContain('Fable');
+      expect(plain).toContain('27%');
+    });
+
+    it('enables the segment from remote data alone', () => {
+      writeCache(REMOTE_USAGE_CACHE, remote);
+      expect(usageSegment.enabled(makeData())).toBe(true);
+    });
+
+    it('highlights the scoped limit matching the current model', () => {
+      const orange = '\x1b[38;2;217;119;87m';
+      writeCache(REMOTE_USAGE_CACHE, remote);
+
+      const onFable = makeData({ model: { id: 'claude-fable-5', display_name: 'Fable 5' } });
+      const fableLine = usageSegment.render(onFable, 80).lines.find(l => l.includes('Fable'));
+      expect(fableLine).toContain(orange);
+
+      const onOpus = makeData(); // Opus 4.6 — Fable line present but not highlighted
+      const opusLine = usageSegment.render(onOpus, 80).lines.find(l => l.includes('Fable'));
+      expect(opusLine).toBeDefined();
+      expect(opusLine).not.toContain(orange);
+    });
   });
 });
 

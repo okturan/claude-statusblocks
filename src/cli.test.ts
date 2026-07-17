@@ -10,7 +10,12 @@ const CLI = join(import.meta.dirname, '..', 'dist', 'cli.js');
 function runCli(args: string, home?: string): string {
   return execSync(`node "${CLI}" ${args}`, {
     encoding: 'utf8',
-    env: home ? { ...process.env, HOME: home, USERPROFILE: home } : process.env,
+    env: {
+      ...process.env,
+      CLAUDE_STATUSBLOCKS_NO_REMOTE: '1',
+      CLAUDE_STATUSBLOCKS_CACHE_DIR: join(tmpdir(), `csb-cli-test-${process.pid}`),
+      ...(home ? { HOME: home, USERPROFILE: home } : {}),
+    },
   });
 }
 

@@ -8,6 +8,7 @@ import type { StatusLineData } from './types.js';
 import { loadConfig } from './config.js';
 import { render } from './layout.js';
 import { readCache, writeCache, safeKey } from './cache.js';
+import { maybeRefreshRemoteUsage } from './remote-usage.js';
 
 const AUTO_UPDATE_INTERVAL = 86400000; // 24 hours
 const WIDTH_CACHE_TTL = 15000; // resize lag tolerance vs. subprocess cost per render
@@ -104,6 +105,7 @@ process.stdin.on('end', () => {
     const termWidth = detectWidth(String(data.session_id ?? 'default'));
     const output = render(data, termWidth, config);
     process.stdout.write(output + '\n');
+    if (config.remoteUsage !== false) maybeRefreshRemoteUsage();
   } catch (err) {
     process.stderr.write(`[claude-statusblocks] ${err instanceof Error ? err.message : err}\n`);
     process.stdout.write('\n');

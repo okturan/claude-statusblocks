@@ -1,5 +1,6 @@
 import type { Segment } from '../types.js';
 import { color, c, visibleLength, padRight, pctColor } from '../colors.js';
+import { readRemoteLimits, type RemoteLimit } from '../remote-usage.js';
 
 const MS_PER_DAY = 86400000;
 const MS_PER_HOUR = 3600000;
@@ -19,39 +20,53 @@ function formatResetTime(epochSec: number): string {
 
 function miniBar(pct: number, width: number): string {
   const barColor = pctColor(pct);
-  const filled = Math.round(pct * width / 100);
+  const filled = Math.min(width, Math.round(pct * width / 100));
   const empty = width - filled;
   return color('█'.repeat(filled), barColor) + color('▒'.repeat(empty), c.gray);
+}
+
+/**
+ * The stdin `rate_limits` field only carries the two generic buckets;
+ * model-scoped weekly limits (e.g. Fable) exist only in the remote usage
+ * data, so that's preferred when the background refresher has populated
+ * the cache. Falls back to stdin buckets whenever remote data is absent.
+ */
+function limitsToRender(data: Parameters<Segment['render']>[0]): RemoteLimit[] {
+  const remote = readRemoteLimits();
+  if (remote) return remote;
+
+  const rl = data.rate_limits;
+  const out: RemoteLimit[] = [];
+  if (rl?.five_hour) out.push({ label: '5h', percent: Math.round(rl.five_hour.used_percentage ?? 0), resetsAt: rl.five_hour.resets_at ?? 0 });
+  if (rl?.seven_day) out.push({ label: '7d', percent: Math.round(rl.seven_day.used_percentage ?? 0), resetsAt: rl.seven_day.resets_at ?? 0 });
+  return out;
 }
 
 export const usageSegment: Segment = {
   id: 'usage',
   priority: 15,
-  enabled: (data) => !!data.rate_limits,
+  enabled: (data) => !!data.rate_limits || readRemoteLimits() !== undefined,
   render(data) {
-    const rl = data.rate_limits;
-    if (!rl) return { id: 'usage', priority: 15, width: 0, lines: [''] };
+    const limits = limitsToRender(data);
+    if (limits.length === 0) return { id: 'usage', priority: 15, width: 0, lines: [''] };
 
     const barW = 8;
     const dot = color(' · ', c.dim);
+    const labelW = Math.max(...limits.map(l => l.label.length));
 
-    // Line 1: 5-hour usage
-    const s5 = Math.round(rl.five_hour?.used_percentage ?? 0);
-    const s5Color = pctColor(s5);
-    const s5Reset = formatResetTime(rl.five_hour?.resets_at ?? 0);
-    const pct5 = padRight(color(`${s5}%`, s5Color, c.bold), 4);
-    const rst5 = padRight(color('↻', c.dim) + ' ' + s5Reset, 9);
-    const line1 = `${miniBar(s5, barW)} ${pct5}${dot}${rst5}${dot}${color('5h', c.dim)}`;
+    // A scoped limit that matches the session's model is the budget this
+    // session is actually drawing down — pop its label like the model name.
+    const modelName = (data.model?.display_name ?? '').toLowerCase();
+    const isCurrentModel = (l: RemoteLimit) =>
+      !!l.scoped && !!modelName && modelName.includes(l.label.toLowerCase());
 
-    // Line 2: 7-day usage
-    const s7 = Math.round(rl.seven_day?.used_percentage ?? 0);
-    const s7Color = pctColor(s7);
-    const s7Reset = formatResetTime(rl.seven_day?.resets_at ?? 0);
-    const pct7 = padRight(color(`${s7}%`, s7Color, c.bold), 4);
-    const rst7 = padRight(color('↻', c.dim) + ' ' + s7Reset, 9);
-    const line2 = `${miniBar(s7, barW)} ${pct7}${dot}${rst7}${dot}${color('7d', c.dim)}`;
+    const lines = limits.map(l => {
+      const pct = padRight(color(`${l.percent}%`, pctColor(l.percent), c.bold), 4);
+      const rst = padRight(color('↻', c.dim) + ' ' + formatResetTime(l.resetsAt), 9);
+      const label = padRight(color(l.label, ...(isCurrentModel(l) ? [c.orange, c.bold] : [c.dim])), labelW);
+      return `${miniBar(l.percent, barW)} ${pct}${dot}${rst}${dot}${label}`;
+    });
 
-    const lines = [line1, line2];
     const width = Math.max(...lines.map(visibleLength));
     return { id: 'usage', priority: 15, width, lines };
   },

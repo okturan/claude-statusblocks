@@ -12,6 +12,7 @@ export function loadConfig(): StatusBlocksConfig {
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
       if (Array.isArray(parsed.segments)) config.segments = parsed.segments.filter((s: unknown) => typeof s === 'string');
+      if (typeof parsed.remoteUsage === 'boolean') config.remoteUsage = parsed.remoteUsage;
     }
   } catch { /* no config file — use defaults */ }
 

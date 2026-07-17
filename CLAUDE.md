@@ -26,7 +26,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 
 **Segments** (`src/segments/`) are the core rendering units. Each implements the `Segment` interface (`id`, `priority`, `enabled()`, `render()`). Available segments:
 - `context` (priority 10) — context window usage bar with token counts
-- `usage` (priority 15) — 5-hour and 7-day rate limit utilization from `rate_limits` field in statusline JSON (requires Claude Code ≥2.1.80)
+- `usage` (priority 15) — rate limit utilization: remote usage limits (including model-scoped weekly buckets like Fable) when the background-fetched cache is warm, falling back to the `rate_limits` field in statusline JSON (requires Claude Code ≥2.1.80)
 - `promo` (priority 20) — rate promotion status with peak/off-peak countdown
 - `model` (priority 30) — model name, tilde-shortened directory, duration, version
 - `git` (priority 40) — branch name, staged/modified counts, lines added/removed
@@ -35,7 +35,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 
 **Campaigns** (`src/campaigns/`) track Anthropic promotional rate periods. `data.ts` holds campaign definitions (dates, peak hours, multipliers). `engine.ts` evaluates current time against campaigns using `Intl.DateTimeFormat` with `formatToParts` for precise timezone-aware peak detection. Returns state (`active-boosted`, `active-normal`, `weekend`, `upcoming`) with countdown and progress.
 
-**Usage data**: Since Claude Code ≥2.1.80, rate limit data (5-hour and 7-day windows) is provided directly in the `rate_limits` field of the statusline JSON. No external API calls or OAuth tokens needed.
+**Usage data** (`src/remote-usage.ts`, `src/remote-usage-fetch.ts`, `src/credentials.ts`): two tiers. Preferred: remote usage limits from the undocumented OAuth usage endpoint (`api.anthropic.com/api/oauth/usage`) — the same source as claude.ai's Usage page and Claude Code's `/usage` screen. This is the only source that carries **model-scoped weekly limits** (e.g. a separate Fable bucket); the statusline JSON does not include them. The server's `limits` array is rendered generically (`session`→5h, `weekly_all`→7d, `weekly_scoped`→model display name), so new scoped models or changed allocations require no code change. The render path NEVER touches the network: renders read the file cache (5 min display TTL), and `maybeRefreshRemoteUsage()` (called from `index.ts` after output is written) spawns a detached child running `remote-usage-fetch.js` at most once per 60s (throttle marker in the cache). The child looks up the OAuth token (`~/.claude/.credentials.json`, then macOS Keychain via `security`) and writes normalized limits to the cache; every failure is silent. Fallback: the `rate_limits` field (5-hour and 7-day buckets) from the statusline JSON (Claude Code ≥2.1.80). Kill switches: `"remoteUsage": false` in config (stops refresh) or `CLAUDE_STATUSBLOCKS_NO_REMOTE=1` (also stops cache reads — tests set this for subprocess runs). Cache values are re-validated through `normalizeLimits()` on read. `CLAUDE_STATUSBLOCKS_CACHE_DIR` overrides the cache dir so tests never touch (or read!) the developer's real cache.
 
 **Config** (`src/config.ts`) loads segment order from `~/.claude-statusblocks.json`, with `CLAUDE_STATUSBLOCKS_SEGMENTS` as an environment override.
 
