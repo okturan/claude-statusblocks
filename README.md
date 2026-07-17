@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="docs/claude-statusblocks-preview.png" alt="Terminal preview of claude-statusblocks adaptive cards" width="100%">
+  <img src="docs/claude-statusblocks-preview.png" alt="Deterministic claude-statusblocks renderer output showing the same seven cards bin-packed at 120, 80, and 50 terminal columns" width="100%">
 </p>
 
-<p align="center"><em>Real output from <code>npm run preview</code> at 120 columns.</em></p>
+<p align="center"><em>Actual built renderer output from a neutral, deterministic fixture at 120, 80, and 50 columns. The checked-in SVG source is regenerated with <code>npm run preview:asset</code>.</em></p>
 
 # claude-statusblocks
 
@@ -95,6 +95,7 @@ npm run build       # compile TypeScript
 npm run dev         # watch mode
 npm test            # run vitest suite
 npm run preview     # render with mock data
+npm run preview:asset # regenerate the deterministic README preview SVG
 ```
 
 Tests are co-located with source files (`*.test.ts`). The project uses vitest with fake timers for deterministic campaign engine testing.
