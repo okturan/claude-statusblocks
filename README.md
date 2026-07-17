@@ -71,7 +71,6 @@ Or via environment:
 
 ```sh
 CLAUDE_STATUSBLOCKS_SEGMENTS=context,model,usage
-CLAUDE_STATUSBLOCKS_THEME=minimal
 ```
 
 ## Usage data
