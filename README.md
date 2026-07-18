@@ -112,4 +112,4 @@ Use the [support policy](SUPPORT.md) for compatibility and issue-reporting guida
 
 ## License
 
-MIT
+[MIT](./LICENSE)
