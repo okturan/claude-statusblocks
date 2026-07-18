@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync, mkdirSync, cpSync } from 'fs';
-import { join, dirname, sep } from 'path';
+import { readFileSync, writeFileSync, mkdirSync, cpSync, readdirSync, rmSync, existsSync } from 'fs';
+import { join, dirname, basename, sep } from 'path';
 import { homedir } from 'os';
 import { fileURLToPath } from 'url';
 import { render } from './layout.js';
 import { loadConfig } from './config.js';
 import { color, c } from './colors.js';
+import { isValidVersion, isNewerVersion } from './version.js';
 import type { StatusLineData } from './types.js';
 
 type Settings = {
@@ -18,10 +19,7 @@ const PACKAGE_VERSION: string = (() => {
   const manifest = JSON.parse(
     readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
   ) as { version?: unknown };
-  if (
-    typeof manifest.version !== 'string'
-    || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(manifest.version)
-  ) {
+  if (typeof manifest.version !== 'string' || !isValidVersion(manifest.version)) {
     throw new Error('package.json contains an invalid version');
   }
   return manifest.version;
@@ -60,12 +58,44 @@ function installDir(): string {
   return join(homedir(), '.claude', 'statusblocks');
 }
 
+/** Stamp file in the install dir recording which version the files came from. */
+const VERSION_STAMP = '.version';
+
+/** Install-dir files that are ours but not part of dist — never sweep them. */
+const KEEP_FILES = new Set(['.last-update-check', VERSION_STAMP]);
+
+/** Would this dist entry be installed? Mirrors the tarball's test-file exclusion. */
+function isInstallable(path: string): boolean {
+  return !/\.test\./.test(basename(path));
+}
+
+/** The version stamped into the install dir, or '' when unstamped/unreadable. */
+function installedVersion(dest: string): string {
+  try {
+    return readFileSync(join(dest, VERSION_STAMP), 'utf8').trim();
+  } catch {
+    return '';
+  }
+}
+
 /** Copy dist files to ~/.claude/statusblocks/ for fast direct-node invocation */
 function installFiles(): string {
   const dest = installDir();
   const distDir = dirname(fileURLToPath(import.meta.url));
   mkdirSync(dest, { recursive: true });
-  cpSync(distDir, dest, { recursive: true, force: true });
+  cpSync(distDir, dest, { recursive: true, force: true, filter: isInstallable });
+  // Sweep files a previous version installed that this one no longer ships.
+  // Leftovers are live code (ESM imports resolve at run time), and a
+  // mixed-version install is exactly how imports break. Copy-then-sweep, not
+  // clean-then-copy, so a render racing the update never sees an empty dir.
+  for (const rel of readdirSync(dest, { recursive: true }) as string[]) {
+    if (KEEP_FILES.has(rel)) continue;
+    if (existsSync(join(distDir, rel)) && isInstallable(rel)) continue;
+    rmSync(join(dest, rel), { recursive: true, force: true });
+  }
+  // Stamp what's installed: the downgrade guard and the background update
+  // check both compare against this.
+  writeFileSync(join(dest, VERSION_STAMP), PACKAGE_VERSION);
   return dest;
 }
 
@@ -133,9 +163,20 @@ function init() {
   }
 }
 
-function update() {
+function update(force: boolean) {
   console.log(`\n${color('claude-statusblocks', c.orange, c.bold)} update\n`);
   try {
+    // Downgrade guard: update is the automated path (postinstall, the daily
+    // background check), and a stale npx cache once served an old package
+    // here — never let it overwrite a newer install. `init` stays unguarded:
+    // it's an explicit "install THIS version".
+    const installed = installedVersion(installDir());
+    if (!force && isNewerVersion(installed, PACKAGE_VERSION)) {
+      console.log(`  Kept:     installed ${color(installed, c.green)} is newer than this package (${PACKAGE_VERSION})`);
+      console.log(`  ${color('Run with --force to downgrade.', c.dim)}\n`);
+      return;
+    }
+
     const dest = installFiles();
     console.log(`  Updated:  ${color(dest, c.green)}`);
 
@@ -165,7 +206,7 @@ ${color('claude-statusblocks', c.orange, c.bold)} — block-based status line fo
 
 ${color('Usage:', c.bold)}
   claude-statusblocks init       Install into Claude Code settings
-  claude-statusblocks update     Update installed files to current version
+  claude-statusblocks update     Update installed files (--force to downgrade)
   claude-statusblocks preview    Preview with mock data at various widths
   claude-statusblocks --version  Print the installed package version
   claude-statusblocks help       Show this help
@@ -189,7 +230,7 @@ ${color('Customize:', c.bold)}
 const cmd = process.argv[2];
 switch (cmd) {
   case 'init': init(); break;
-  case 'update': update(); break;
+  case 'update': update(process.argv.includes('--force')); break;
   case 'preview': preview(); break;
   case '--version': case '-v': console.log(PACKAGE_VERSION); break;
   case 'help': case '--help': case '-h': help(); break;

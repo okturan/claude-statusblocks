@@ -160,6 +160,74 @@ describe('cli update', () => {
     }
   });
 
+  it('stamps the installed version and skips test files', () => {
+    const home = freshHome('update-stamp');
+    try {
+      runCli('update', home);
+      const dest = join(home, '.claude', 'statusblocks');
+      const manifest = JSON.parse(
+        readFileSync(join(import.meta.dirname, '..', 'package.json'), 'utf8'),
+      ) as { version: string };
+      expect(readFileSync(join(dest, '.version'), 'utf8').trim()).toBe(manifest.version);
+      expect(existsSync(join(dest, 'index.js'))).toBe(true);
+      // Mirrors the npm tarball: dist/**/*.test.* is never installed
+      expect(existsSync(join(dest, 'cli.test.js'))).toBe(false);
+    } finally {
+      rmSync(home, { recursive: true, force: true });
+    }
+  });
+
+  it('sweeps stale files from older installs but keeps the update marker', () => {
+    const home = freshHome('update-sweep');
+    try {
+      const dest = join(home, '.claude', 'statusblocks');
+      mkdirSync(join(dest, 'segments'), { recursive: true });
+      writeFileSync(join(dest, 'removed-segment.js'), '// stale');
+      writeFileSync(join(dest, 'segments', 'removed.js'), '// stale');
+      writeFileSync(join(dest, '.last-update-check'), '12345');
+      runCli('update', home);
+      expect(existsSync(join(dest, 'removed-segment.js'))).toBe(false);
+      expect(existsSync(join(dest, 'segments', 'removed.js'))).toBe(false);
+      expect(readFileSync(join(dest, '.last-update-check'), 'utf8')).toBe('12345');
+      expect(existsSync(join(dest, 'index.js'))).toBe(true);
+    } finally {
+      rmSync(home, { recursive: true, force: true });
+    }
+  });
+
+  it('refuses to overwrite a newer installed version', () => {
+    const home = freshHome('update-downgrade');
+    try {
+      const dest = join(home, '.claude', 'statusblocks');
+      mkdirSync(dest, { recursive: true });
+      writeFileSync(join(dest, '.version'), '99.0.0');
+      writeFileSync(join(dest, 'canary.js'), '// newer install');
+      const output = runCli('update', home);
+      expect(output).toContain('99.0.0');
+      expect(existsSync(join(dest, 'canary.js'))).toBe(true);
+      expect(readFileSync(join(dest, '.version'), 'utf8')).toBe('99.0.0');
+      expect(existsSync(join(dest, 'index.js'))).toBe(false);
+    } finally {
+      rmSync(home, { recursive: true, force: true });
+    }
+  });
+
+  it('downgrades when --force is passed', () => {
+    const home = freshHome('update-force');
+    try {
+      const dest = join(home, '.claude', 'statusblocks');
+      mkdirSync(dest, { recursive: true });
+      writeFileSync(join(dest, '.version'), '99.0.0');
+      writeFileSync(join(dest, 'canary.js'), '// newer install');
+      runCli('update --force', home);
+      expect(existsSync(join(dest, 'canary.js'))).toBe(false);
+      expect(existsSync(join(dest, 'index.js'))).toBe(true);
+      expect(readFileSync(join(dest, '.version'), 'utf8')).not.toBe('99.0.0');
+    } finally {
+      rmSync(home, { recursive: true, force: true });
+    }
+  });
+
   it('leaves foreign statusline commands untouched', () => {
     const home = freshHome('update-foreign');
     try {

@@ -8,7 +8,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 
 ## Commands
 
-- `npm run build` — compile TypeScript (`tsc`) to `dist/`
+- `npm run build` — compile TypeScript (`tsc`) to `dist/` (prebuild wipes `dist/` first so deleted sources can't linger as stale artifacts and get published/installed)
 - `npm run dev` — watch mode (`tsc --watch`)
 - `npm run preview` — render mock data at multiple widths (`node dist/cli.js preview`)
 - `claude-statusblocks init` — writes `statusLine` config into `~/.claude/settings.json`
@@ -39,7 +39,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 
 **Config** (`src/config.ts`) loads segment order from `~/.claude-statusblocks.json`, with `CLAUDE_STATUSBLOCKS_SEGMENTS` as an environment override.
 
-**CLI** (`src/cli.ts`) handles subcommands (`init`, `update`, `preview`, `help`). When no TTY is detected (piped input), delegates to `src/index.ts`. The `init` command copies dist files to `~/.claude/statusblocks/` and sets the statusLine command to `node "<home>/.claude/statusblocks/index.js"` for fast direct invocation (bypasses npx overhead). The command string MUST stay quoted with forward slashes — it has to parse identically in sh, Git Bash, cmd, and PowerShell (Windows homes contain backslashes and often spaces). `init` creates `~/.claude/settings.json` if missing but aborts on unparseable JSON. The `update` command refreshes the installed files and migrates any stale command form (old npx invocation or pre-0.5 unquoted paths).
+**CLI** (`src/cli.ts`) handles subcommands (`init`, `update`, `preview`, `help`). When no TTY is detected (piped input), delegates to `src/index.ts`. The `init` command copies dist files to `~/.claude/statusblocks/` and sets the statusLine command to `node "<home>/.claude/statusblocks/index.js"` for fast direct invocation (bypasses npx overhead). The command string MUST stay quoted with forward slashes — it has to parse identically in sh, Git Bash, cmd, and PowerShell (Windows homes contain backslashes and often spaces). `init` creates `~/.claude/settings.json` if missing but aborts on unparseable JSON. The `update` command refreshes the installed files and migrates any stale command form (old npx invocation or pre-0.5 unquoted paths). Installs go through `installFiles()`: copy dist (excluding `*.test.*`, mirroring the npm tarball), sweep files the incoming version no longer ships (copy-then-sweep, never clean-then-copy — a concurrent render must not see an empty dir; leftover mixed-version files are live ESM code and how imports break), then stamp the installed version into `.version`. `update` (but NOT `init`, which is an explicit "install THIS version") has a downgrade guard: it refuses when the `.version` stamp is strictly newer than the running package, unless `--force` is passed. This matters because `update` is the automated path — `postinstall.cjs` delegates to it, and the daily auto-update runs it — and a stale npx cache once served an old package that clobbered a newer local install. Version comparison lives in `src/version.ts` (`isValidVersion` is also the injection gate for shell interpolation).
 
 ## Key Patterns
 
@@ -48,7 +48,7 @@ Claude-statusblocks is an opinionated, block-based status line for Claude Code. 
 - Box titles are rendered in the top border: `╭─ title ──────╮`.
 - The `Block` type's `width` is the visible (ANSI-stripped) width, not byte length.
 - The git segment caches results for 5 seconds via the cross-process file cache in `src/cache.ts` (a module-level cache alone would never hit — each render is a new process). Detached HEAD renders as `@<short-sha>`.
-- The daily background self-update (`maybeAutoUpdate` in `src/index.ts`) is disabled by `CLAUDE_STATUSBLOCKS_NO_UPDATE=1` — tests set this so runs never mutate the developer's real `~/.claude/statusblocks/`.
+- The daily background self-update (`maybeAutoUpdate` in `src/index.ts`) spawns the installed `update-check.js` detached, which resolves the registry's latest version over HTTPS and runs `npx -y claude-statusblocks@<exact-version> update` only when it's strictly newer than the `.version` stamp. Never spawn `npx pkg@latest` directly: npx serves stale cached resolutions of `latest`, which once downgraded a newer local install. The registry response is validated with `isValidVersion` before shell interpolation. Disabled by `CLAUDE_STATUSBLOCKS_NO_UPDATE=1` — tests set this so runs never mutate the developer's real `~/.claude/statusblocks/`.
 - Code must stay Windows-safe: no Unix-only subprocesses outside `process.platform !== 'win32'` guards, no unquoted paths in generated commands, and all detached spawns go through `spawnDetached()` in `src/spawn.ts` (sole owner of the detached/`windowsHide`/unref contract). CI runs the suite on ubuntu/macos/windows.
 - ESM-only (`"type": "module"` in package.json) — all local imports use `.js` extensions. Do NOT use `require()` — it will crash silently in production.
 - Claude Code's Ink renderer uses `wrap="truncate"` (hardcoded). Lines exceeding available width get truncated with `…`. Design all output to fit within `termWidth - 44` chars.

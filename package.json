@@ -1,6 +1,6 @@
 {
   "name": "claude-statusblocks",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Opinionated, adaptive block-based status line for Claude Code with bin-packing layout, rate limit tracking, and campaign monitoring",
   "type": "module",
   "bin": {
@@ -14,6 +14,7 @@
   ],
   "scripts": {
     "postinstall": "node postinstall.cjs",
+    "prebuild": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "vitest run",

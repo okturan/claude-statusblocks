@@ -14,7 +14,13 @@ import { spawnDetached } from './spawn.js';
 const AUTO_UPDATE_INTERVAL = 86400000; // 24 hours
 const WIDTH_CACHE_TTL = 15000; // resize lag tolerance vs. subprocess cost per render
 
-/** Once per day, spawn a background npx process to update ~/.claude/statusblocks/ */
+/**
+ * Once per day, spawn the detached update checker over the installed copy.
+ * The checker (update-check.js) resolves the registry's latest version and
+ * runs `npx claude-statusblocks@<that-exact-version> update` only when it's
+ * strictly newer than the install stamp — spawning `npx pkg@latest` directly
+ * from here once downgraded a newer local install via a stale npx cache.
+ */
 function maybeAutoUpdate() {
   if (process.env.CLAUDE_STATUSBLOCKS_NO_UPDATE) return;
   try {
@@ -28,7 +34,7 @@ function maybeAutoUpdate() {
 
     writeFileSync(checkFile, String(Date.now()));
 
-    spawnDetached('npx -y claude-statusblocks@latest update', undefined, { shell: true });
+    spawnDetached(process.execPath, [join(dir, 'update-check.js')]);
   } catch { /* auto-update is best-effort */ }
 }
 
