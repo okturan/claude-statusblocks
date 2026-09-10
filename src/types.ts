@@ -28,6 +28,9 @@ export interface StatusLineData {
     seven_day?: { used_percentage: number; resets_at: number };
   };
   exceeds_200k_tokens: boolean;
+  /** Resolved effort level, sent by Claude Code ≥2.1.2xx. Authoritative: reflects
+   *  ultracode (which forces xhigh and ignores modelSettings) and per-model overrides. */
+  effort?: { level: string };
   session_id: string;
   transcript_path?: string;
   output_style?: { name: string };

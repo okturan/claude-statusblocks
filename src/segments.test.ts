@@ -113,6 +113,19 @@ describe('modelSegment', () => {
     expect(line2).toMatch(/ · 7h22m · v2\.1\.201$/);
     expect(block.width).toBe(Math.max(...block.lines.map(visibleLength)));
   });
+
+  it('renders the payload effort.level (ultracode → xhigh) over env/settings heuristics', () => {
+    const saved = process.env.CLAUDE_EFFORT;
+    process.env.CLAUDE_EFFORT = 'low';
+    try {
+      const line2 = (level: string) =>
+        stripAnsi(modelSegment.render(makeData({ effort: { level } }), 80).lines[1]!);
+      expect(line2('ultracode')).toMatch(/^xhigh\b/);
+      expect(line2('medium')).toMatch(/^medium\b/);
+    } finally {
+      if (saved === undefined) delete process.env.CLAUDE_EFFORT; else process.env.CLAUDE_EFFORT = saved;
+    }
+  });
 });
 
 describe('usageSegment', () => {

@@ -41,7 +41,7 @@ After v0.4.1, updates happen automatically — the statusline checks for new ver
 | Card | Shows |
 |------|-------|
 | **context** | Context window fill bar, percentage, used/total token count |
-| **model** | Model name, tilde-shortened directory, effort level, session duration, version |
+| **model** | Model name, tilde-shortened directory, effort level (as reported by Claude Code, so ultracode shows as `xhigh`), session duration, version |
 | **promo** | 2x off-peak / peak status with countdown to next transition |
 | **git** | Branch, staged/modified counts, lines added/removed |
 | **usage** | Rate limit utilization with reset countdowns: one line per limit window. Limits sharing a window (e.g. the all-models 7d and a model-scoped Fable bucket, which reset together) collapse to whichever is closer to its cap — the label flips when the other becomes binding |

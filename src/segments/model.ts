@@ -87,7 +87,7 @@ export const modelSegment: Segment = {
     const line1 = `${nameStyled}${sep}${color(dir, c.dim)}`;
 
     // Line 2: effort · duration · version, spread across line1 width
-    const effort = resolveEffort(data.transcript_path, data.model.id);
+    const effort = resolveEffort(data.transcript_path, data.model.id, data.effort?.level);
     const effortStr = effort ? color(effort, EFFORT_COLORS[effort] ?? c.dim) : '';
 
     let durationStr = '';

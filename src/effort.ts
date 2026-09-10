@@ -7,8 +7,19 @@ export type EffortLevel = 'low' | 'medium' | 'high' | 'xhigh' | 'max';
 // Matches either:
 //   - old/custom format: "<level> effort" (e.g. "with high effort")
 //   - new built-in /effort format: "Set effort level to <level>"
-const EFFORT_RE = /<local-command-stdout>[\s\S]*?\b(?:(low|medium|high|xhigh|max)\s+effort|effort\s+level\s+to\s+(low|medium|high|xhigh|max))\b[\s\S]*?<\/local-command-stdout>/i;
+// `/effort ultracode` is accepted by Claude Code and resolves to xhigh (ultracode
+// forces xhigh); it must be matched too, or the scan would fall through to an
+// older /effort line and show a stale level.
+const EFFORT_RE = /<local-command-stdout>[\s\S]*?\b(?:(low|medium|high|xhigh|max|ultracode)\s+effort|effort\s+level\s+to\s+(low|medium|high|xhigh|max|ultracode))\b[\s\S]*?<\/local-command-stdout>/i;
 const VALID_LEVELS = new Set<EffortLevel>(['low', 'medium', 'high', 'xhigh', 'max']);
+
+/** Map a raw level string (payload, transcript, env) to a valid EffortLevel or null */
+function normalizeLevel(raw: unknown): EffortLevel | null {
+  if (typeof raw !== 'string') return null;
+  const v = raw.toLowerCase();
+  if (v === 'ultracode') return 'xhigh';
+  return VALID_LEVELS.has(v as EffortLevel) ? (v as EffortLevel) : null;
+}
 
 let cache: { effort: EffortLevel | null; ts: number } | null = null;
 const CACHE_TTL = 5000;
@@ -27,7 +38,7 @@ function readEffortFromTranscript(path: string): EffortLevel | null {
           ? msg.map((b: { text?: string }) => b.text ?? '').join('')
           : '';
         const match = EFFORT_RE.exec(text);
-        if (match) return (match[1] ?? match[2])!.toLowerCase() as EffortLevel;
+        if (match) return normalizeLevel((match[1] ?? match[2])!);
       } catch { /* malformed JSONL entry — skip to next line */ }
     }
   } catch { /* transcript file missing or unreadable — fall through to settings */ }
@@ -75,11 +86,18 @@ function inferDefaultFromModel(modelId?: string): EffortLevel | null {
 }
 
 /** Resolve effort level.
- *  Priority: transcript /effort → $CLAUDE_EFFORT → settings.effortLevel → CLAUDE_CODE_EFFORT_LEVEL → model default.
+ *  Priority: payload effort.level → transcript /effort → $CLAUDE_EFFORT → settings.effortLevel
+ *            → CLAUDE_CODE_EFFORT_LEVEL → model default.
  *
- *  Transcript wins so /effort updates show in the status line even when
- *  CLAUDE_CODE_EFFORT_LEVEL is pinned in the user's shell or settings.json env block. */
-export function resolveEffort(transcriptPath?: string, modelId?: string): EffortLevel | null {
+ *  The payload level is what Claude Code is actually using after every override
+ *  (ultracode forces xhigh and ignores modelSettings; /effort ultracode; per-model
+ *  settings), so it always wins when present. The heuristics below only serve
+ *  older Claude Code versions that don't send it. Transcript beats env so /effort
+ *  updates show even when CLAUDE_CODE_EFFORT_LEVEL is pinned in the user's shell. */
+export function resolveEffort(transcriptPath?: string, modelId?: string, payloadLevel?: string): EffortLevel | null {
+  const fromPayload = normalizeLevel(payloadLevel);
+  if (fromPayload) return fromPayload;
+
   const now = Date.now();
   if (cache && now - cache.ts < CACHE_TTL) return cache.effort;
 

@@ -27,6 +27,37 @@ describe('resolveEffort', () => {
     }
   });
 
+  it('prefers the payload effort.level over everything else', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'payload-wins.jsonl');
+    writeFileSync(path, JSON.stringify({
+      message: { content: '<local-command-stdout>Set effort level to low</local-command-stdout>' }
+    }) + '\n');
+    process.env.CLAUDE_EFFORT = 'medium';
+    expect(resolveEffort(path, 'claude-fable-5-1', 'xhigh')).toBe('xhigh');
+  });
+
+  it('maps a payload level of ultracode to xhigh', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    expect(resolveEffort(undefined, undefined, 'ultracode')).toBe('xhigh');
+  });
+
+  it('ignores an unknown payload level and falls back', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    process.env.CLAUDE_EFFORT = 'high';
+    expect(resolveEffort(undefined, undefined, 'bogus')).toBe('high');
+  });
+
+  it('treats /effort ultracode in the transcript as xhigh instead of skipping to a stale line', async () => {
+    const { resolveEffort } = await import('./effort.js');
+    const path = join(tmpDir, 'ultracode.jsonl');
+    writeFileSync(path, [
+      JSON.stringify({ message: { content: '<local-command-stdout>Set effort level to low (this session only)</local-command-stdout>' } }),
+      JSON.stringify({ message: { content: '<local-command-stdout>Set effort level to ultracode (this session only)</local-command-stdout>' } }),
+    ].join('\n') + '\n');
+    expect(resolveEffort(path)).toBe('xhigh');
+  });
+
   it('parses the last matching effort from transcript JSONL', async () => {
     const { resolveEffort } = await import('./effort.js');
     const path = join(tmpDir, 'multi.jsonl');
