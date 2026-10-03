@@ -46,33 +46,6 @@ function stdinLimits(data: StatusLineData): RemoteLimit[] {
   return out;
 }
 
-/** Same refill instant (within tolerance) means the same rate-limit window. */
-function sameWindow(a: RemoteLimit, b: RemoteLimit): boolean {
-  return a.resetsAt > 0 && b.resetsAt > 0 && Math.abs(a.resetsAt - b.resetsAt) <= 120;
-}
-
-/**
- * Limits sharing a window refill together, so the higher percentage is
- * strictly the one that locks first — only it earns a line. This keeps the
- * card at one line per window (5h + weekly) instead of growing a row per
- * scoped model, and the weekly label flips (e.g. Fable → 7d) the moment
- * the other bucket becomes the binding one, so the crossover stays visible.
- */
-function collapseSameWindow(limits: RemoteLimit[]): RemoteLimit[] {
-  const out: RemoteLimit[] = [];
-  for (const l of limits) {
-    const i = out.findIndex(o => sameWindow(o, l));
-    if (i === -1) { out.push(l); continue; }
-    const kept = out[i]!;
-    // Higher percent binds first; on a tie the model-scoped one is the
-    // more specific answer to "what stops this session".
-    if (l.percent > kept.percent || (l.percent === kept.percent && l.scope === 'model' && kept.scope !== 'model')) {
-      out[i] = l;
-    }
-  }
-  return out;
-}
-
 /**
  * The stdin `rate_limits` field only carries the two generic buckets;
  * model-scoped weekly limits (e.g. Fable) exist only in the remote usage
@@ -81,12 +54,23 @@ function collapseSameWindow(limits: RemoteLimit[]): RemoteLimit[] {
  * the model in use. Whenever remote data yields nothing visible — absent,
  * expired, or entirely filtered out — fall back to the stdin buckets so
  * valid 5h/7d data is never discarded.
+ *
+ * When the session's model has its own weekly bucket (e.g. Fable), that
+ * bucket REPLACES the all-models 7d row: the card shows 5h + Fable, and
+ * that's it. The two are not nested — Claude Code tracks the Fable bucket
+ * as its own "overage-included" weekly window funded by usage credits,
+ * and a Fable session keeps running with the all-models bucket at 100% —
+ * so the 7d figure says nothing about what stops this session. Never
+ * pick between them by percentage: that hid the governing 1% Fable row
+ * behind a full 7d bar.
  */
 function limitsToRender(data: StatusLineData): RemoteLimit[] {
   const remote = readRemoteLimits();
   if (remote) {
     const visible = remote.filter(l => !l.scope || matchesModel(l, data));
-    if (visible.length > 0) return collapseSameWindow(visible);
+    const scopedWeekly = visible.some(l => l.scope === 'model');
+    const rows = scopedWeekly ? visible.filter(l => l.label !== KIND_LABELS['weekly_all']) : visible;
+    if (rows.length > 0) return rows;
   }
   return stdinLimits(data);
 }
