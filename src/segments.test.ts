@@ -212,41 +212,42 @@ describe('usageSegment', () => {
 
     afterEach(() => { setRemoteCache([]); });
 
-    it('prefers remote limits and shows the session model\'s own weekly bucket instead of 7d', () => {
+    it('prefers remote limits and renders every applicable bucket on its own line', () => {
       setRemoteCache(remote);
       const data = makeData({ model: { id: 'claude-fable-5', display_name: 'Fable 5' }, rate_limits: STDIN_RL });
       const block = usageSegment.render(data, 80);
-      // On Fable: 5h + Fable, that's it. The all-models 7d row and the
-      // stdin 50% are not shown.
-      expect(block.lines).toHaveLength(2);
+      // On Fable: 5h, 7d and Fable all gate the session, so all three
+      // render. The stdin 50% is not used at all.
+      expect(block.lines).toHaveLength(3);
       const plain = block.lines.map(stripAnsi).join('\n');
       expect(plain).toContain('5h');
       expect(plain).toContain('40%');
+      expect(plain).toContain('7d');
+      expect(plain).toContain('19%');
       expect(plain).toContain('Fable');
       expect(plain).toContain('27%');
-      expect(plain).not.toContain('7d');
-      expect(plain).not.toContain('19%');
       expect(plain).not.toContain('50%');
     });
 
-    it('shows the Fable bucket, not the exhausted all-models bucket, on a Fable session', () => {
-      // Real-world shape: all-models weekly at 100% while a Fable session
-      // keeps running on its own 1% bucket. The 1% is the number that
-      // governs this session; the 100% must never replace it.
+    it('keeps both the exhausted all-models bucket and the Fable bucket visible on a Fable session', () => {
+      // Real-world shape: the all-models weekly hit 100% and locked a
+      // Fable session out while the Fable bucket sat at 3%. Neither row
+      // may hide the other — the 100% is what bites, the 3% is the
+      // session's own budget.
       const reset = new Date(Date.now() + 86400000).toISOString();
       setRemoteCache(normalizeLimits([
         { kind: 'session', percent: 5, resets_at: new Date(Date.now() + 3600000).toISOString() },
         { kind: 'weekly_all', percent: 100, resets_at: reset },
-        { kind: 'weekly_scoped', percent: 1, resets_at: reset, scope: { model: { display_name: 'Fable' } } },
+        { kind: 'weekly_scoped', percent: 3, resets_at: reset, scope: { model: { display_name: 'Fable' } } },
       ]));
       const data = makeData({ model: { id: 'claude-fable-5-1', display_name: 'Fable 5.1' } });
       const lines = usageSegment.render(data, 80).lines.map(stripAnsi);
-      expect(lines).toHaveLength(2);
+      expect(lines).toHaveLength(3);
       expect(lines[0]).toContain('5h');
-      expect(lines[1]).toContain('1%');
-      expect(lines[1]).toContain('Fable');
-      expect(lines.join('\n')).not.toContain('100%');
-      expect(lines.join('\n')).not.toContain('7d');
+      expect(lines[1]).toContain('100%');
+      expect(lines[1]).toContain('7d');
+      expect(lines[2]).toContain('3%');
+      expect(lines[2]).toContain('Fable');
     });
 
     it('enables the segment from remote data alone', () => {

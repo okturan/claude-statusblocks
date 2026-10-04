@@ -55,22 +55,20 @@ function stdinLimits(data: StatusLineData): RemoteLimit[] {
  * expired, or entirely filtered out — fall back to the stdin buckets so
  * valid 5h/7d data is never discarded.
  *
- * When the session's model has its own weekly bucket (e.g. Fable), that
- * bucket REPLACES the all-models 7d row: the card shows 5h + Fable, and
- * that's it. The two are not nested — Claude Code tracks the Fable bucket
- * as its own "overage-included" weekly window funded by usage credits,
- * and a Fable session keeps running with the all-models bucket at 100% —
- * so the 7d figure says nothing about what stops this session. Never
- * pick between them by percentage: that hid the governing 1% Fable row
- * behind a full 7d bar.
+ * Every applicable limit gets its own line — on a Fable session that is
+ * 5h, 7d AND Fable. BOTH weekly buckets gate a Fable session: a user was
+ * locked out ("weekly limit · resets 7pm", the all-models reset) while the
+ * Fable bucket sat at 3%, so dropping the 7d row hides the limit that
+ * actually bites. Never merge the two rows by percentage either: that
+ * once hid the Fable row entirely. (A session can briefly keep running
+ * past 100% of the all-models bucket — Claude Code's usage-limit grace
+ * zone — which is not evidence that the buckets are independent.)
  */
 function limitsToRender(data: StatusLineData): RemoteLimit[] {
   const remote = readRemoteLimits();
   if (remote) {
     const visible = remote.filter(l => !l.scope || matchesModel(l, data));
-    const scopedWeekly = visible.some(l => l.scope === 'model');
-    const rows = scopedWeekly ? visible.filter(l => l.label !== KIND_LABELS['weekly_all']) : visible;
-    if (rows.length > 0) return rows;
+    if (visible.length > 0) return visible;
   }
   return stdinLimits(data);
 }
