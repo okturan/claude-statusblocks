@@ -55,14 +55,14 @@ function stdinLimits(data: StatusLineData): RemoteLimit[] {
  * expired, or entirely filtered out — fall back to the stdin buckets so
  * valid 5h/7d data is never discarded.
  *
- * Every applicable limit gets its own line — on a Fable session that is
- * 5h, 7d AND Fable. BOTH weekly buckets gate a Fable session: a user was
- * locked out ("weekly limit · resets 7pm", the all-models reset) while the
- * Fable bucket sat at 3%, so dropping the 7d row hides the limit that
- * actually bites. Never merge the two rows by percentage either: that
- * once hid the Fable row entirely. (A session can briefly keep running
- * past 100% of the all-models bucket — Claude Code's usage-limit grace
- * zone — which is not evidence that the buckets are independent.)
+ * BOTH weekly buckets gate a Fable session: a user was locked out
+ * ("weekly limit · resets 7pm", the all-models reset) while the Fable
+ * bucket sat at 3%. So neither weekly figure may be hidden — but the card
+ * stays two lines (the user's call). Buckets sharing a reset window are
+ * paired onto ONE line: the one closer to its cap is the primary (bar,
+ * percent, label), the other trails as a dim "label pct" annotation.
+ * (A session briefly running past 100% of the all-models bucket is Claude
+ * Code's usage-limit grace zone, not evidence the buckets are independent.)
  */
 function limitsToRender(data: StatusLineData): RemoteLimit[] {
   const remote = readRemoteLimits();
@@ -71,6 +71,32 @@ function limitsToRender(data: StatusLineData): RemoteLimit[] {
     if (visible.length > 0) return visible;
   }
   return stdinLimits(data);
+}
+
+/** A rendered line: the binding limit plus, optionally, a same-window companion. */
+interface Row { primary: RemoteLimit; secondary?: RemoteLimit }
+
+/** Same refill instant (within tolerance) means the same rate-limit window. */
+function sameWindow(a: RemoteLimit, b: RemoteLimit): boolean {
+  return a.resetsAt > 0 && b.resetsAt > 0 && Math.abs(a.resetsAt - b.resetsAt) <= 120;
+}
+
+/**
+ * Pair limits that reset together onto one line. The higher percentage
+ * is the one that locks first, so it leads; on a tie the model-scoped one
+ * is the more specific answer to "what stops this session". The other
+ * stays visible as the line's annotation — never dropped.
+ */
+function pairSameWindow(limits: RemoteLimit[]): Row[] {
+  const rows: Row[] = [];
+  for (const l of limits) {
+    const row = rows.find(r => !r.secondary && sameWindow(r.primary, l));
+    if (!row) { rows.push({ primary: l }); continue; }
+    const p = row.primary;
+    const lLeads = l.percent > p.percent || (l.percent === p.percent && l.scope === 'model' && p.scope !== 'model');
+    if (lLeads) { row.primary = l; row.secondary = p; } else { row.secondary = l; }
+  }
+  return rows;
 }
 
 export const usageSegment: Segment = {
@@ -83,18 +109,24 @@ export const usageSegment: Segment = {
     const limits = limitsToRender(data);
     if (limits.length === 0) return { id: 'usage', priority: 15, width: 0, lines: [''] };
 
+    const rows = pairSameWindow(limits);
     const barW = 8;
     const dot = color(' · ', c.dim);
-    const labelW = Math.max(...limits.map(l => l.label.length));
+    const labelW = Math.max(...rows.map(r => r.primary.label.length));
+    // Scoped limits belong to the session's model — that's the budget
+    // being drawn down, so pop the label like the model name.
+    const labelColors = (l: RemoteLimit) => l.scope === 'model' ? [c.orange, c.bold] : [c.dim];
 
-    // Surviving scoped limits belong to the session's model — that's the
-    // budget being drawn down, so pop the label like the model name.
-    const lines = limits.map(l => {
+    const lines = rows.map(({ primary: l, secondary: s }) => {
       const pct = padRight(color(`${l.percent}%`, pctColor(l.percent), c.bold), 4);
       // Width 10 fits '↻ ' plus the longest weekly countdown ('6d23h59m').
       const rst = padRight(color('↻', c.dim) + ' ' + formatResetTime(l.resetsAt), 10);
-      const label = padRight(color(l.label, ...(l.scope === 'model' ? [c.orange, c.bold] : [c.dim])), labelW);
-      return `${renderBar(l.percent, barW)} ${pct}${dot}${rst}${dot}${label}`;
+      const label = padRight(color(l.label, ...labelColors(l)), labelW);
+      const line = `${renderBar(l.percent, barW)} ${pct}${dot}${rst}${dot}${label}`;
+      if (!s) return line;
+      // Same-window companion: label in its own colour, percent in the
+      // usual severity colour, both dimmed so the primary stays the headline.
+      return `${line}${dot}${color(s.label, ...labelColors(s), c.dim)} ${color(`${s.percent}%`, pctColor(s.percent), c.dim)}`;
     });
 
     const width = Math.max(...lines.map(visibleLength));

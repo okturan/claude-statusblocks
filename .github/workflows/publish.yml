@@ -70,13 +70,13 @@ jobs:
           # npm records the source commit as gitHead. Resolve it even for an
           # existing version so a release backfill never tags a later main SHA.
           source_sha=
-          for attempt in {1..10}; do
+          for attempt in {1..30}; do
             source_sha=$(npm view "$package@$version" gitHead 2>/dev/null || true)
             if [[ "$source_sha" =~ ^[0-9a-f]{40}$ ]]; then
               break
             fi
-            echo "Waiting for $package@$version metadata (attempt $attempt/10)"
-            sleep 3
+            echo "Waiting for $package@$version metadata (attempt $attempt/30)"
+            sleep 6
           done
 
           if [[ ! "$source_sha" =~ ^[0-9a-f]{40}$ ]]; then
