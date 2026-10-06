@@ -67,7 +67,12 @@ function stdinLimits(data: StatusLineData): RemoteLimit[] {
 function limitsToRender(data: StatusLineData): RemoteLimit[] {
   const remote = readRemoteLimits();
   if (remote) {
-    const visible = remote.filter(l => !l.scope || matchesModel(l, data));
+    const now = Date.now() / 1000;
+    const visible = remote
+      .filter(l => !l.scope || matchesModel(l, data))
+      // A cached window whose reset has passed has rolled over: nothing is
+      // used in the new one yet. (Keep resetsAt so same-window pairing holds.)
+      .map(l => (l.resetsAt > 0 && l.resetsAt <= now ? { ...l, percent: 0 } : l));
     if (visible.length > 0) return visible;
   }
   return stdinLimits(data);

@@ -35,6 +35,13 @@ function settingsPath(): string {
  * and PowerShell. Backslashes would be eaten as escapes by bash on Windows,
  * and unquoted paths break on spaces (e.g. C:\Users\First Last).
  */
+/**
+ * Re-run the status line every N seconds even when idle. Claude Code only
+ * re-renders on events otherwise, so the card would sit on whatever it drew
+ * last (e.g. pre-refresh usage numbers) until the next keystroke.
+ */
+const REFRESH_INTERVAL_SECONDS = 30;
+
 function statusLineCommand(dest: string): string {
   return `node "${join(dest, 'index.js').split(sep).join('/')}"`;
 }
@@ -149,7 +156,7 @@ function init() {
 
     const settings = readSettings();
     const oldCommand = settings.statusLine?.command;
-    settings.statusLine = { type: 'command', command, padding: 0 };
+    settings.statusLine = { type: 'command', command, padding: 0, refreshInterval: REFRESH_INTERVAL_SECONDS };
     writeFileSync(settingsPath(), JSON.stringify(settings, null, 2) + '\n');
     if (oldCommand && oldCommand !== command) console.log(`  Replaced: ${color(oldCommand, c.dim)}`);
     console.log(`  Installed: ${color(command, c.green)}`);
@@ -186,10 +193,21 @@ function update(force: boolean) {
       const settings = readSettings();
       const cmd = String(settings.statusLine?.command ?? '');
       const command = statusLineCommand(dest);
-      if (cmd && isOurCommand(cmd) && cmd !== command) {
-        settings.statusLine = { type: 'command', ...settings.statusLine, command };
-        writeFileSync(settingsPath(), JSON.stringify(settings, null, 2) + '\n');
-        console.log(`  Migrated: ${color(command, c.cyan)}`);
+      if (cmd && isOurCommand(cmd)) {
+        let changed = false;
+        if (cmd !== command) {
+          settings.statusLine = { type: 'command', ...settings.statusLine, command };
+          console.log(`  Migrated: ${color(command, c.cyan)}`);
+          changed = true;
+        }
+        // Pre-0.6.9 installs have no idle refresh; add it, but never
+        // override a value the user set themselves.
+        if (settings.statusLine && settings.statusLine.refreshInterval === undefined) {
+          settings.statusLine = { ...settings.statusLine, refreshInterval: REFRESH_INTERVAL_SECONDS };
+          console.log(`  Added:    ${color(`refreshInterval ${REFRESH_INTERVAL_SECONDS}s`, c.cyan)}`);
+          changed = true;
+        }
+        if (changed) writeFileSync(settingsPath(), JSON.stringify(settings, null, 2) + '\n');
       }
     } catch { /* settings update is best-effort */ }
 

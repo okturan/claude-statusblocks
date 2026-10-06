@@ -86,6 +86,7 @@ describe('cli init', () => {
       const settings = readSettings(home);
       expect(settings.statusLine.type).toBe('command');
       expect(settings.statusLine.padding).toBe(0);
+      expect(settings.statusLine.refreshInterval).toBe(30);
       const cmd: string = settings.statusLine.command;
       // Quoted + forward slashes: parses the same in sh, Git Bash, cmd, PowerShell
       expect(cmd).toMatch(/^node ".*statusblocks\/index\.js"$/);
@@ -228,6 +229,38 @@ describe('cli update', () => {
     }
   });
 
+  it('adds refreshInterval to an up-to-date install that lacks it', () => {
+    const home = freshHome('update-refresh');
+    try {
+      runCli('init', home);
+      const path = join(home, '.claude', 'settings.json');
+      const before = readSettings(home);
+      delete before.statusLine.refreshInterval;
+      writeFileSync(path, JSON.stringify(before));
+      runCli('update', home);
+      const after = readSettings(home);
+      expect(after.statusLine.refreshInterval).toBe(30);
+      expect(after.statusLine.command).toBe(before.statusLine.command);
+    } finally {
+      rmSync(home, { recursive: true, force: true });
+    }
+  });
+
+  it('never overrides a refreshInterval the user set', () => {
+    const home = freshHome('update-refresh-user');
+    try {
+      runCli('init', home);
+      const path = join(home, '.claude', 'settings.json');
+      const before = readSettings(home);
+      before.statusLine.refreshInterval = 5;
+      writeFileSync(path, JSON.stringify(before));
+      runCli('update', home);
+      expect(readSettings(home).statusLine.refreshInterval).toBe(5);
+    } finally {
+      rmSync(home, { recursive: true, force: true });
+    }
+  });
+
   it('leaves foreign statusline commands untouched', () => {
     const home = freshHome('update-foreign');
     try {
@@ -239,6 +272,7 @@ describe('cli update', () => {
       runCli('update', home);
       const settings = readSettings(home);
       expect(settings.statusLine.command).toBe('my-custom-statusline');
+      expect(settings.statusLine.refreshInterval).toBeUndefined();
     } finally {
       rmSync(home, { recursive: true, force: true });
     }

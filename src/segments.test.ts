@@ -243,6 +243,19 @@ describe('usageSegment', () => {
       expect(lines[1]).toMatch(/100%.*7d.*Fable 3%/);
     });
 
+    it('zeroes a cached window whose reset has already passed', () => {
+      // An idle hour can leave a cached 5h entry from before its reset;
+      // the window has rolled over, so it must not show the old percent.
+      setRemoteCache(normalizeLimits([
+        { kind: 'session', percent: 64, resets_at: new Date(Date.now() - 60000).toISOString() },
+        { kind: 'weekly_all', percent: 11, resets_at: new Date(Date.now() + 86400000).toISOString() },
+      ]));
+      const lines = usageSegment.render(makeData(), 80).lines.map(stripAnsi);
+      expect(lines).toHaveLength(2);
+      expect(lines[0]).toMatch(/0%.*5h/);
+      expect(lines[0]).not.toContain('64%');
+    });
+
     it('prefers the model-scoped bucket to lead on a same-window percentage tie', () => {
       const reset = new Date(Date.now() + 86400000).toISOString();
       setRemoteCache(normalizeLimits([

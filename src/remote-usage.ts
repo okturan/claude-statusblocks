@@ -30,8 +30,15 @@ export interface RemoteLimit {
 
 export const REMOTE_USAGE_CACHE = 'remote-usage';
 const REFRESH_THROTTLE_MARKER = 'remote-usage-attempt';
-/** Serve cached limits for up to 5 min — stale beats a blocking fetch */
-const DISPLAY_TTL = 300000;
+/**
+ * Serve cached limits for up to an hour. Stale remote data beats the stdin
+ * fallback: stdin rate_limits are just as stale (they come from the last
+ * API response) and lose the scoped Fable bucket and, once it lapses, the
+ * 5h window — a 5-minute TTL made every render after a short idle fall
+ * back to a misleading one-line card. Windows whose reset has passed are
+ * zeroed at render time, so an old entry can't overstate usage.
+ */
+const DISPLAY_TTL = 3600000;
 /** Kick off a background refresh when the cache is older than this */
 const REFRESH_INTERVAL = 60000;
 
